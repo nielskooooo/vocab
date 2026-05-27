@@ -127,6 +127,19 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(
 .pchip{padding:5px 13px;border-radius:100px;font-size:12.5px;border:1px solid var(--border);background:var(--bg2);color:var(--ink-soft);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
 .pchip.on{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
 
+/* Field order list */
+.field-order-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.field-order-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--ink-soft);cursor:grab;user-select:none;}
+.field-order-item.dragging{opacity:.4;}
+.field-order-item.drag-over{border-color:var(--accent);background:var(--accent-light);}
+.field-order-handle{color:var(--ink-muted);font-size:16px;flex-shrink:0;cursor:grab;}
+.field-order-name{flex:1;}
+.field-order-arrows{display:flex;flex-direction:column;gap:1px;}
+.field-order-arrows button{background:none;border:none;cursor:pointer;color:var(--ink-muted);font-size:13px;line-height:1;padding:1px 3px;border-radius:3px;}
+.field-order-arrows button:hover{color:var(--accent);}
+.field-order-remove{background:none;border:none;cursor:pointer;color:var(--ink-muted);font-size:15px;padding:2px 4px;border-radius:4px;line-height:1;}
+.field-order-remove:hover{color:#c0392b;}
+
 /* Full card modal */
 .fullcard-box{max-width:480px;}
 .fullcard-box .form-input{background:var(--bg2);}
@@ -333,13 +346,65 @@ textarea.form-input{resize:none;line-height:1.5;}
 
 <!-- Add language modal -->
 <div class="overlay" id="m-addlang">
-  <div class="mbox">
+  <div class="mbox" style="max-width:460px">
     <h3>Add a language</h3>
-    <div class="form-row"><label class="form-label">Language name</label><input class="form-input" id="nl-name" placeholder="e.g. Norwegian"/></div>
-    <div class="form-row"><label class="form-label">Flag emoji</label><input class="form-input" id="nl-flag" placeholder="🇳🇴" style="width:90px;font-size:22px"/></div>
     <div class="form-row">
-      <label class="form-label">Card fields — tap to select (in completion order)</label>
+      <label class="form-label">Language</label>
+      <select class="form-input" id="nl-name" onchange="onLangSelect()">
+        <option value="">— choose a language —</option>
+        <option value="Afrikaans|🇿🇦">🇿🇦 Afrikaans</option>
+        <option value="Arabic|🇸🇦">🇸🇦 Arabic</option>
+        <option value="Cantonese|🇭🇰">🇭🇰 Cantonese</option>
+        <option value="Czech|🇨🇿">🇨🇿 Czech</option>
+        <option value="Danish|🇩🇰">🇩🇰 Danish</option>
+        <option value="Dutch|🇳🇱">🇳🇱 Dutch</option>
+        <option value="Finnish|🇫🇮">🇫🇮 Finnish</option>
+        <option value="French|🇫🇷">🇫🇷 French</option>
+        <option value="German|🇩🇪">🇩🇪 German</option>
+        <option value="Greek|🇬🇷">🇬🇷 Greek</option>
+        <option value="Hebrew|🇮🇱">🇮🇱 Hebrew</option>
+        <option value="Hindi|🇮🇳">🇮🇳 Hindi</option>
+        <option value="Hungarian|🇭🇺">🇭🇺 Hungarian</option>
+        <option value="Indonesian|🇮🇩">🇮🇩 Indonesian</option>
+        <option value="Italian|🇮🇹">🇮🇹 Italian</option>
+        <option value="Japanese|🇯🇵">🇯🇵 Japanese</option>
+        <option value="Korean|🇰🇷">🇰🇷 Korean</option>
+        <option value="Mandarin|🇨🇳">🇨🇳 Mandarin</option>
+        <option value="Norwegian|🇳🇴">🇳🇴 Norwegian</option>
+        <option value="Farsi|🇮🇷">🇮🇷 Farsi</option>
+        <option value="Polish|🇵🇱">🇵🇱 Polish</option>
+        <option value="Portuguese|🇵🇹">🇵🇹 Portuguese</option>
+        <option value="Romanian|🇷🇴">🇷🇴 Romanian</option>
+        <option value="Russian|🇷🇺">🇷🇺 Russian</option>
+        <option value="Spanish|🇪🇸">🇪🇸 Spanish</option>
+        <option value="Swahili|🇰🇪">🇰🇪 Swahili</option>
+        <option value="Swedish|🇸🇪">🇸🇪 Swedish</option>
+        <option value="Thai|🇹🇭">🇹🇭 Thai</option>
+        <option value="Turkish|🇹🇷">🇹🇷 Turkish</option>
+        <option value="Ukrainian|🇺🇦">🇺🇦 Ukrainian</option>
+        <option value="Vietnamese|🇻🇳">🇻🇳 Vietnamese</option>
+        <option value="custom|🌐">🌐 Other / custom…</option>
+      </select>
+    </div>
+    <div class="form-row" id="nl-custom-row" style="display:none">
+      <label class="form-label">Custom language name</label>
+      <input class="form-input" id="nl-custom-name" placeholder="e.g. Esperanto"/>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Card fields
+        <span style="font-weight:400;color:var(--ink-muted)"> — click presets to toggle, or add your own below</span>
+      </label>
       <div class="presets" id="nl-presets"></div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <input class="form-input" id="nl-custom-field" placeholder="Add a custom field…" style="font-size:13px;padding:8px 12px" onkeydown="if(event.key==='Enter'){event.preventDefault();addModalField()}"/>
+        <button class="btn btn-ghost btn-sm" onclick="addModalField()"><i class="ti ti-plus"></i></button>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Field order
+        <span style="font-weight:400;color:var(--ink-muted)"> — drag to reorder, or use arrows</span>
+      </label>
+      <div id="nl-field-order"></div>
     </div>
     <div class="mactions">
       <button class="btn btn-ghost btn-sm" onclick="closeM('m-addlang')">Cancel</button>
@@ -446,7 +511,6 @@ const PRESET_FIELDS = ['Translation','Romanisation','Example sentence','Notes','
 
 let languages = [], words = [];
 let activeLang = null, currentView = 'capture';
-let selPresets = new Set(['Translation','Example sentence','Notes']);
 let stepData = {wordId:null, step:0, draft:{}, conceptDraft:''};
 let detailWordId = null;
 
@@ -490,7 +554,9 @@ sb.auth.onAuthStateChange(async (event, session) => {
   if (session) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    await loadAll(); render();
+    await loadAll();
+    await seedDefaultLanguages();
+    render();
   } else {
     document.getElementById('app').style.display = 'none';
     document.getElementById('login-screen').style.display = 'flex';
@@ -884,25 +950,133 @@ async function deleteFromDetail() {
 }
 
 // ── Languages ──
+let modalFields = []; // ordered list of fields being built in the modal
+let dragSrcIdx = null;
+
 function openAddLang() {
-  selPresets = new Set(['Translation','Example sentence','Notes']);
-  document.getElementById('nl-name').value='';
-  document.getElementById('nl-flag').value='';
-  document.getElementById('nl-presets').innerHTML = PRESET_FIELDS.map(f =>
-    `<span class="pchip ${selPresets.has(f)?'on':''}" onclick="toggleP('${f}',this)">${f}</span>`).join('');
+  modalFields = ['Translation','Example sentence','Notes'];
+  document.getElementById('nl-name').value = '';
+  document.getElementById('nl-custom-row').style.display = 'none';
+  document.getElementById('nl-custom-name').value = '';
+  document.getElementById('nl-custom-field').value = '';
+  renderModalPresets();
+  renderModalFieldOrder();
   document.getElementById('m-addlang').classList.add('open');
 }
-function toggleP(f,el){ selPresets.has(f)?(selPresets.delete(f),el.classList.remove('on')):(selPresets.add(f),el.classList.add('on')); }
+
+function onLangSelect() {
+  const val = document.getElementById('nl-name').value;
+  const isCustom = val === 'custom|🌐';
+  document.getElementById('nl-custom-row').style.display = isCustom ? '' : 'none';
+}
+
+function renderModalPresets() {
+  document.getElementById('nl-presets').innerHTML = PRESET_FIELDS.map(f => {
+    const on = modalFields.includes(f);
+    return `<span class="pchip ${on?'on':''}" onclick="toggleModalPreset('${f}',this)">${f}</span>`;
+  }).join('');
+}
+
+function toggleModalPreset(f, el) {
+  if (modalFields.includes(f)) {
+    modalFields = modalFields.filter(x => x !== f);
+    el.classList.remove('on');
+  } else {
+    modalFields.push(f);
+    el.classList.add('on');
+  }
+  renderModalFieldOrder();
+}
+
+function addModalField() {
+  const inp = document.getElementById('nl-custom-field');
+  const f = inp.value.trim();
+  if (!f || modalFields.includes(f)) { inp.value=''; return; }
+  modalFields.push(f);
+  inp.value = '';
+  renderModalPresets();
+  renderModalFieldOrder();
+}
+
+function renderModalFieldOrder() {
+  const list = document.getElementById('nl-field-order');
+  if (!modalFields.length) { list.innerHTML = `<p style="font-size:12px;color:var(--ink-muted);padding:6px 0">No fields selected yet.</p>`; return; }
+  list.innerHTML = `<ul class="field-order-list" id="fo-list">` +
+    modalFields.map((f,i) => `
+      <li class="field-order-item" draggable="true" data-idx="${i}"
+        ondragstart="foDragStart(event,${i})" ondragover="foDragOver(event,${i})" ondrop="foDrop(event,${i})" ondragend="foDragEnd()">
+        <i class="ti ti-grip-vertical field-order-handle"></i>
+        <span class="field-order-name">${f}</span>
+        <div class="field-order-arrows">
+          <button onclick="foMove(${i},-1)" title="Move up" ${i===0?'disabled':''}>▲</button>
+          <button onclick="foMove(${i},1)" title="Move down" ${i===modalFields.length-1?'disabled':''}>▼</button>
+        </div>
+        <button class="field-order-remove" onclick="foRemove(${i})" title="Remove">×</button>
+      </li>`).join('') + `</ul>`;
+}
+
+function foMove(idx, dir) {
+  const ni = idx + dir;
+  if (ni < 0 || ni >= modalFields.length) return;
+  [modalFields[idx], modalFields[ni]] = [modalFields[ni], modalFields[idx]];
+  renderModalPresets();
+  renderModalFieldOrder();
+}
+
+function foRemove(idx) {
+  modalFields.splice(idx, 1);
+  renderModalPresets();
+  renderModalFieldOrder();
+}
+
+function foDragStart(e, idx) { dragSrcIdx = idx; e.currentTarget.classList.add('dragging'); }
+function foDragOver(e, idx) {
+  e.preventDefault();
+  document.querySelectorAll('.field-order-item').forEach((el,i) => el.classList.toggle('drag-over', i===idx && idx!==dragSrcIdx));
+}
+function foDrop(e, idx) {
+  e.preventDefault();
+  if (dragSrcIdx === null || dragSrcIdx === idx) return;
+  const moved = modalFields.splice(dragSrcIdx, 1)[0];
+  modalFields.splice(idx, 0, moved);
+  renderModalPresets();
+  renderModalFieldOrder();
+}
+function foDragEnd() {
+  dragSrcIdx = null;
+  document.querySelectorAll('.field-order-item').forEach(el => { el.classList.remove('dragging','drag-over'); });
+}
+
 async function saveLang() {
-  const name = document.getElementById('nl-name').value.trim();
-  const flag = document.getElementById('nl-flag').value.trim()||'🌐';
-  if (!name) return;
-  const id = name.toLowerCase().replace(/\s+/g,'_')+'_'+Date.now();
-  const fields = [...selPresets];
-  const { data, error } = await sb.from('languages').insert({ id, name, flag, fields }).select().single();
+  const sel = document.getElementById('nl-name').value;
+  if (!sel) { toast('Please select a language'); return; }
+  let name, flag;
+  if (sel === 'custom|🌐') {
+    name = document.getElementById('nl-custom-name').value.trim();
+    flag = '🌐';
+    if (!name) { toast('Please enter a language name'); return; }
+  } else {
+    [name, flag] = sel.split('|');
+  }
+  if (!modalFields.length) { toast('Please select at least one field'); return; }
+  const id = name.toLowerCase().replace(/\s+/g,'_') + '_' + Date.now();
+  const { data, error } = await sb.from('languages').insert({ id, name, flag, fields: [...modalFields] }).select().single();
   if (error) { toast('Error saving language'); return; }
   languages.push(data);
   closeM('m-addlang');
+}
+
+async function seedDefaultLanguages() {
+  if (languages.length > 0) return;
+  const defaults = [
+    { id:'russian_default', name:'Russian', flag:'🇷🇺', fields:['Translation','Romanisation','Example sentence','Notes'] },
+    { id:'thai_default',    name:'Thai',    flag:'🇹🇭', fields:['Translation','Romanisation','Example sentence','Category'] },
+  ];
+  for (const l of defaults) {
+    const { data } = await sb.from('languages').insert(l).select().single();
+    if (data) languages.push(data);
+  }
+  render();
 }
 async function removeLang(id) {
   if (!confirm('Remove this language? Your words will be kept.')) return;
