@@ -225,7 +225,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v15</div>
+      <div class="logo-sub">Personal vocabulary builder · v16</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -297,7 +297,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v15</div>
+    <div class="logo-sub">Personal vocabulary builder · v16</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -529,7 +529,6 @@ sb.auth.onAuthStateChange(async(event,session)=>{
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='block';
     await loadAll();
-    await seedDefaults();
     render();
   } else {
     document.getElementById('app').style.display='none';
@@ -546,18 +545,6 @@ async function loadAll(){
   languages=rl.data||[];
   words=(rw.data||[]).map(w=>({...w,langId:w.lang_id}));
   links=rk.data||[];
-}
-
-async function seedDefaults(){
-  if(languages.length>0) return;
-  const defs=[
-    {id:'russian_default',name:'Russian',flag:'🇷🇺',fields:['Translation','Romanisation','Example sentence','Notes']},
-    {id:'thai_default',name:'Thai',flag:'🇹🇭',fields:['Translation','Romanisation','Example sentence','Category']},
-  ];
-  for(const l of defs){
-    const {data}=await sb.from('languages').upsert(l).select().single();
-    if(data) languages.push(data);
-  }
 }
 
 // ── Nav ──
