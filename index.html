@@ -225,7 +225,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v18</div>
+      <div class="logo-sub">Personal vocabulary builder · v19</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -297,7 +297,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v18</div>
+    <div class="logo-sub">Personal vocabulary builder · v19</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -475,6 +475,31 @@ const LANG_FLAGS = {
 };
 function flagForLang(name){ return LANG_FLAGS[name.toLowerCase().trim()]||'🌐'; }
 
+// ── DB helpers (raw fetch, bypasses Supabase JS session management) ──
+const DB = SUPABASE_URL + '/rest/v1';
+function dbHeaders(extra={}){
+  return {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json',...extra};
+}
+async function dbInsert(table,body){
+  const r=await fetch(`${DB}/${table}`,{method:'POST',headers:dbHeaders({'Prefer':'return=representation'}),body:JSON.stringify(body)});
+  const data=await r.json();
+  if(!r.ok) return {data:null,error:{message:data.message||data.details||JSON.stringify(data)}};
+  return {data:Array.isArray(data)?data[0]:data,error:null};
+}
+async function dbUpdate(table,body,match){
+  const q=Object.entries(match).map(([k,v])=>`${k}=eq.${v}`).join('&');
+  const r=await fetch(`${DB}/${table}?${q}`,{method:'PATCH',headers:dbHeaders({'Prefer':'return=representation'}),body:JSON.stringify(body)});
+  if(!r.ok){const d=await r.json();return {error:{message:d.message||JSON.stringify(d)}};}
+  return {error:null};
+}
+async function dbDelete(table,match){
+  const q=Object.entries(match).map(([k,v])=>`${k}=eq.${v}`).join('&');
+  await fetch(`${DB}/${table}?${q}`,{method:'DELETE',headers:dbHeaders()});
+}
+async function dbDeleteOr(table,orClause){
+  await fetch(`${DB}/${table}?or=${encodeURIComponent('('+orClause+')')}`,{method:'DELETE',headers:dbHeaders()});
+}
+
 // ── State ──
 let languages=[], words=[], links=[];
 let activeLang=null, currentView='capture';
@@ -540,14 +565,25 @@ sb.auth.onAuthStateChange(async(event,session)=>{
 });
 
 async function loadAll(){
-  const [rl,rw,rk]=await Promise.all([
-    sb.from('languages').select('*').order('created_at'),
-    sb.from('words').select('*').order('created_at'),
-    sb.from('links').select('*'),
-  ]);
-  languages=rl.data||[];
-  words=(rw.data||[]).map(w=>({...w,langId:w.lang_id}));
-  links=rk.data||[];
+  try {
+    const headers = {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json'
+    };
+    const base = SUPABASE_URL + '/rest/v1';
+    const [rl,rw,rk] = await Promise.all([
+      fetch(base+'/languages?select=*&order=created_at', {headers}).then(r=>r.json()),
+      fetch(base+'/words?select=*&order=created_at', {headers}).then(r=>r.json()),
+      fetch(base+'/links?select=*', {headers}).then(r=>r.json()),
+    ]);
+    languages = Array.isArray(rl) ? rl : [];
+    words = (Array.isArray(rw) ? rw : []).map(w=>({...w,langId:w.lang_id}));
+    links = Array.isArray(rk) ? rk : [];
+  } catch(e) {
+    toast('Could not load data: '+e.message);
+    languages=[]; words=[]; links=[];
+  }
 }
 
 // ── Nav ──
@@ -680,7 +716,7 @@ async function addWord(){
   if(!word||!langId){toast('Please select a language and enter a word');return;}
   const btn=document.querySelector('.capture-row .btn-primary');
   btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin .7s linear infinite"></i>';
-  const {data,error}=await sb.from('words').insert({word,lang_id:langId,status:'pending',fields:{}}).select().single();
+  const {data,error}=await dbInsert('words',{word,lang_id:langId,status:'pending',fields:{}});
   btn.disabled=false; btn.innerHTML='<i class="ti ti-bolt"></i> Quick add';
   if(error){toast('Error: '+error.message);return;}
   words.push({...data,langId:data.lang_id});
@@ -689,7 +725,7 @@ async function addWord(){
 }
 async function delWord(id){
   if(!confirm('Delete this word?')) return;
-  await sb.from('words').delete().eq('id',id);
+  await dbDelete('words',{id});
   words=words.filter(w=>sid(w.id)!==sid(id));
   render();
 }
@@ -727,7 +763,7 @@ async function saveFullCard(){
     if(el) fields[f]=el.value.trim();
   });
   const status=Object.values(fields).some(v=>v)?'complete':'pending';
-  const {data,error}=await sb.from('words').insert({word,lang_id:langId,status,fields}).select().single();
+  const {data,error}=await dbInsert('words',{word,lang_id:langId,status,fields});
   if(error){toast('Error: '+error.message);return;}
   words.push({...data,langId:data.lang_id});
   // auto-link by translation
@@ -786,7 +822,7 @@ async function commitStep(){
   word.fields={...stepData.draft};
   const newStatus=fields.some(f=>word.fields[f])?'complete':'pending';
   word.status=newStatus;
-  const {error}=await sb.from('words').update({fields:word.fields,status:newStatus}).eq('id',word.id);
+  const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus},{id:word.id});
   if(error){toast('Error saving: '+error.message);return;}
   if(word.fields['Translation']) await autoLinkByTranslation(word);
   closeM('m-complete');
@@ -834,14 +870,14 @@ async function createLink(aId,bId,showToast=true){
   const a=sid(aId),b=sid(bId);
   const already=links.find(l=>(sid(l.word_id_a)===a&&sid(l.word_id_b)===b)||(sid(l.word_id_a)===b&&sid(l.word_id_b)===a));
   if(already) return;
-  const {data,error}=await sb.from('links').insert({word_id_a:aId,word_id_b:bId}).select().single();
+  const {data,error}=await dbInsert('links',{word_id_a:aId,word_id_b:bId});
   if(error&&!error.message.includes('unique')){if(showToast)toast('Error: '+error.message);return;}
   if(data) links.push(data);
   if(showToast) toast('Words linked');
 }
 async function removeLink(aId,bId){
   const a=sid(aId),b=sid(bId);
-  await sb.from('links').delete().or(`and(word_id_a.eq.${a},word_id_b.eq.${b}),and(word_id_a.eq.${b},word_id_b.eq.${a})`);
+  await dbDeleteOr('links',`and(word_id_a.eq.${a},word_id_b.eq.${b}),and(word_id_a.eq.${b},word_id_b.eq.${a})`);
   links=links.filter(l=>!((sid(l.word_id_a)===a&&sid(l.word_id_b)===b)||(sid(l.word_id_a)===b&&sid(l.word_id_b)===a)));
   openDetail(detailWordId);
 }
@@ -977,7 +1013,7 @@ async function saveEdit(){
   });
   const newStatus=fields.some(f=>word.fields[f])?'complete':'pending';
   word.status=newStatus;
-  const {error}=await sb.from('words').update({fields:word.fields,status:newStatus}).eq('id',word.id);
+  const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus},{id:word.id});
   if(error){toast('Error: '+error.message);return;}
   if(word.fields['Translation']) await autoLinkByTranslation(word);
   closeM('m-edit');
@@ -986,7 +1022,7 @@ async function saveEdit(){
 }
 async function deleteFromDetail(){
   if(!confirm('Delete this word?')) return;
-  await sb.from('words').delete().eq('id',detailWordId);
+  await dbDelete('words',{id:detailWordId});
   words=words.filter(w=>sid(w.id)!==sid(detailWordId));
   links=links.filter(l=>sid(l.word_id_a)!==sid(detailWordId)&&sid(l.word_id_b)!==sid(detailWordId));
   closeM('m-detail');
@@ -1131,7 +1167,7 @@ async function saveLang(){
   const id=name.toLowerCase().replace(/\s+/g,'_')+'_'+Date.now();
   const btn=document.querySelector('#m-addlang .btn-primary');
   btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin .7s linear infinite"></i> Saving…';
-  const {data,error}=await sb.from('languages').insert({id,name,flag,fields:[...modalFields]}).select().single();
+  const {data,error}=await dbInsert('languages',{id,name,flag,fields:[...modalFields]});
   btn.disabled=false; btn.innerHTML='Add language';
   if(error){
     errEl.textContent='Error: '+error.message;
@@ -1145,7 +1181,7 @@ async function saveLang(){
 }
 async function removeLang(id){
   if(!confirm('Remove this language? Words will be kept.')) return;
-  await sb.from('languages').delete().eq('id',id);
+  await dbDelete('languages',{id});
   languages=languages.filter(l=>l.id!==id);
   if(activeLang===id) activeLang=null;
   render();
@@ -1154,12 +1190,12 @@ async function addField(langId){
   const inp=document.getElementById('nf-'+langId);
   const f=inp.value.trim();if(!f) return;
   const l=glang(langId);
-  if(l&&!l.fields.includes(f)){l.fields.push(f);await sb.from('languages').update({fields:l.fields}).eq('id',langId);render();}
+  if(l&&!l.fields.includes(f)){l.fields.push(f);await dbUpdate('languages',{fields:l.fields},{id:langId});render();}
   inp.value='';
 }
 async function removeField(langId,field){
   const l=glang(langId);
-  if(l){l.fields=l.fields.filter(x=>x!==field);await sb.from('languages').update({fields:l.fields}).eq('id',langId);render();}
+  if(l){l.fields=l.fields.filter(x=>x!==field);await dbUpdate('languages',{fields:l.fields},{id:langId});render();}
 }
 function closeM(id){document.getElementById(id).classList.remove('open');render();}
 </script>
