@@ -225,7 +225,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v14</div>
+      <div class="logo-sub">Personal vocabulary builder · v15</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -297,7 +297,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v14</div>
+    <div class="logo-sub">Personal vocabulary builder · v15</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -431,7 +431,21 @@ textarea.form-input{resize:none;line-height:1.5;}
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- Edit word modal -->
+<div class="overlay" id="m-edit">
+  <div class="mbox" style="max-width:480px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <h3 style="margin:0" id="edit-title"></h3>
+      <button class="icon-btn" type="button" onclick="closeM('m-edit')"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="font-size:12px;color:var(--ink-muted);margin-bottom:20px" id="edit-lang"></div>
+    <div id="edit-fields"></div>
+    <div class="mactions">
+      <button class="btn btn-ghost btn-sm" type="button" onclick="closeM('m-edit')">Cancel</button>
+      <button class="btn btn-primary btn-sm" type="button" onclick="saveEdit()"><i class="ti ti-check"></i> Save changes</button>
+    </div>
+  </div>
+</div>
 
 <script>
 'use strict';
@@ -801,16 +815,18 @@ function stepSkip(){
 
 // ── Auto-link by translation ──
 async function autoLinkByTranslation(savedWord){
-  const trans=(savedWord.fields&&savedWord.fields['Translation']||'').toLowerCase().trim();
-  if(!trans) return;
+  const trans=(savedWord.fields&&savedWord.fields['Translation']||'');
+  const parts=trans.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  if(!parts.length) return;
   const matches=words.filter(w=>
     sid(w.id)!==sid(savedWord.id)&&
     w.status==='complete'&&
-    (w.fields&&w.fields['Translation']||'').toLowerCase().trim()===trans
+    parts.some(p=>{
+      const wt=(w.fields&&w.fields['Translation']||'');
+      return wt.split(',').map(s=>s.trim().toLowerCase()).includes(p);
+    })
   );
-  for(const m of matches){
-    await createLink(savedWord.id,m.id,false);
-  }
+  for(const m of matches) await createLink(savedWord.id,m.id,false);
 }
 
 // ── Links ──
@@ -838,6 +854,13 @@ async function removeLink(aId,bId){
 }
 
 // ── Detail ──
+function formatTranslation(val){
+  if(!val) return '';
+  const parts=val.split(',').map(s=>s.trim()).filter(Boolean);
+  if(parts.length<=1) return val;
+  return parts.map((p,i)=>`<span style="display:block">${i+1}. ${p}</span>`).join('');
+}
+
 function openDetail(id){
   const word=gword(id);
   if(!word) return;
@@ -849,18 +872,33 @@ function openDetail(id){
   const fields=l?l.fields:[];
   document.getElementById('dw-fields').innerHTML=fields.map(f=>{
     const v=(word.fields||{})[f];if(!v) return '';
-    return `<div class="detail-field"><div class="detail-field-label">${f}</div><div class="detail-field-value">${v}</div></div>`;
+    const display=f==='Translation'?formatTranslation(v):v;
+    return `<div class="detail-field"><div class="detail-field-label">${f}</div><div class="detail-field-value">${display}</div></div>`;
   }).join('');
   // Related
-  const linked=getLinkedWords(id);
-  // Also find auto-matches by translation not yet in links
-  const trans=(word.fields&&word.fields['Translation']||'').toLowerCase().trim();
-  const autoMatches=trans?words.filter(w=>
-    sid(w.id)!==sid(id)&&
+  renderRelated(id,word);
+  // Always open modal
+  document.getElementById('m-detail').classList.add('open');
+}
+
+function getAutoMatches(word,linked){
+  const trans=(word.fields&&word.fields['Translation']||'');
+  const parts=trans.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  if(!parts.length) return [];
+  return words.filter(w=>
+    sid(w.id)!==sid(word.id)&&
     w.status==='complete'&&
-    (w.fields&&w.fields['Translation']||'').toLowerCase().trim()===trans&&
-    !linked.find(lw=>sid(lw.id)===sid(w.id))
-  ):[];
+    !linked.find(lw=>sid(lw.id)===sid(w.id))&&
+    parts.some(p=>{
+      const wt=(w.fields&&w.fields['Translation']||'');
+      return wt.split(',').map(s=>s.trim().toLowerCase()).includes(p);
+    })
+  );
+}
+
+function renderRelated(id,word){
+  const linked=getLinkedWords(id);
+  const autoMatches=getAutoMatches(word,linked);
   const allRelated=[...linked,...autoMatches];
   if(!allRelated.length){document.getElementById('dw-related').innerHTML='';return;}
   const same=allRelated.filter(w=>w.langId===word.langId);
@@ -875,7 +913,6 @@ function openDetail(id){
     html+=other.map(w=>relChip(w,id)).join('');
   }
   document.getElementById('dw-related').innerHTML=html;
-  document.getElementById('m-detail').classList.add('open');
 }
 function relChip(w,sourceId){
   const l=glang(w.langId);
@@ -893,7 +930,67 @@ function relChip(w,sourceId){
   <button class="icon-btn" style="font-size:13px;padding:3px" title="Remove link" onclick="removeLink(${sourceId},${w.id})"><i class="ti ti-x"></i></button>`;
 }
 function switchDetail(id){detailWordId=id;openDetail(id);}
-function editWord(){closeM('m-detail');openComplete(detailWordId);}
+function editWord(){
+  const word=gword(detailWordId);
+  if(!word) return;
+  const l=glang(word.langId);
+  const fields=l?l.fields:[];
+  document.getElementById('edit-title').textContent=word.word;
+  document.getElementById('edit-lang').textContent=l?l.flag+' '+l.name:'';
+  // Check if any linked word has an example sentence to suggest
+  const linked=[...getLinkedWords(detailWordId),...getAutoMatches(word,getLinkedWords(detailWordId))];
+  const exampleSuggestions=linked
+    .filter(w=>(w.fields&&w.fields['Example sentence']))
+    .map(w=>({lang:glang(w.langId),ex:w.fields['Example sentence']}));
+  document.getElementById('edit-fields').innerHTML=fields.map(f=>{
+    const v=(word.fields||{})[f]||'';
+    const isLong=f==='Example sentence'||f==='Notes';
+    const hint=FIELD_HINTS[f]?`<div style="font-size:11px;color:var(--ink-muted);margin-top:4px">${FIELD_HINTS[f]}</div>`:'';
+    const transhint=f==='Translation'?`<div style="font-size:11px;color:var(--ink-muted);margin-top:4px">Separate multiple translations with commas, e.g. "to do, to make"</div>`:'';
+    // Example sentence suggestion
+    let sugg='';
+    if(f==='Example sentence'&&exampleSuggestions.length){
+      sugg=exampleSuggestions.map(({lang:sl,ex})=>`
+        <div style="margin-top:6px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--ink-soft)">
+          <div style="font-size:10px;color:var(--ink-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">${sl?sl.flag+' '+sl.name:''} — suggested</div>
+          <div style="font-style:italic;margin-bottom:5px">"${ex}"</div>
+          <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:4px 10px" onclick="useExampleSuggestion('${ex.replace(/'/g,"\\'")}')">Use as starting point</button>
+        </div>`).join('');
+    }
+    return `<div class="form-row">
+      <label class="form-label">${f}</label>
+      ${isLong
+        ?`<textarea class="form-input" id="ef-${f.replace(/\s/g,'_')}" rows="3" placeholder="${f}…">${v}</textarea>`
+        :`<input class="form-input" id="ef-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…" value="${v}"/>`}
+      ${hint}${transhint}${sugg}
+    </div>`;
+  }).join('');
+  document.getElementById('m-edit').classList.add('open');
+}
+
+function useExampleSuggestion(text){
+  const el=document.getElementById('ef-Example_sentence');
+  if(el){el.value=text;el.focus();}
+}
+
+async function saveEdit(){
+  const word=gword(detailWordId);
+  if(!word) return;
+  const l=glang(word.langId);
+  const fields=l?l.fields:[];
+  fields.forEach(f=>{
+    const el=document.getElementById('ef-'+f.replace(/\s/g,'_'));
+    if(el) word.fields[f]=el.value.trim();
+  });
+  const newStatus=fields.some(f=>word.fields[f])?'complete':'pending';
+  word.status=newStatus;
+  const {error}=await sb.from('words').update({fields:word.fields,status:newStatus}).eq('id',word.id);
+  if(error){toast('Error: '+error.message);return;}
+  if(word.fields['Translation']) await autoLinkByTranslation(word);
+  closeM('m-edit');
+  openDetail(detailWordId);
+  toast('Changes saved');
+}
 async function deleteFromDetail(){
   if(!confirm('Delete this word?')) return;
   await sb.from('words').delete().eq('id',detailWordId);
