@@ -225,7 +225,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v17</div>
+      <div class="logo-sub">Personal vocabulary builder · v18</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -297,7 +297,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v17</div>
+    <div class="logo-sub">Personal vocabulary builder · v18</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -524,12 +524,14 @@ async function signOut(){
 
 // ── Boot ──
 sb.auth.onAuthStateChange(async(event,session)=>{
-  console.log('Auth event:', event, 'session:', !!session);
   document.getElementById('loading-screen').style.display='none';
   if(session){
     document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').style.display='block';
+    document.getElementById('loading-screen').style.display='flex';
+    document.getElementById('app').style.display='none';
     await loadAll();
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('app').style.display='block';
     render();
   } else {
     document.getElementById('app').style.display='none';
@@ -538,19 +540,14 @@ sb.auth.onAuthStateChange(async(event,session)=>{
 });
 
 async function loadAll(){
-  console.log('loadAll: fetching...');
   const [rl,rw,rk]=await Promise.all([
     sb.from('languages').select('*').order('created_at'),
     sb.from('words').select('*').order('created_at'),
     sb.from('links').select('*'),
   ]);
-  console.log('languages result:', JSON.stringify(rl));
-  console.log('words result:', JSON.stringify(rw));
-  console.log('links result:', JSON.stringify(rk));
   languages=rl.data||[];
   words=(rw.data||[]).map(w=>({...w,langId:w.lang_id}));
   links=rk.data||[];
-  console.log('loaded:', languages.length, 'languages,', words.length, 'words,', links.length, 'links');
 }
 
 // ── Nav ──
@@ -681,10 +678,13 @@ async function addWord(){
   const langId=document.getElementById('clang').value;
   const word=input.value.trim();
   if(!word||!langId){toast('Please select a language and enter a word');return;}
-  input.value=''; input.focus();
+  const btn=document.querySelector('.capture-row .btn-primary');
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin .7s linear infinite"></i>';
   const {data,error}=await sb.from('words').insert({word,lang_id:langId,status:'pending',fields:{}}).select().single();
+  btn.disabled=false; btn.innerHTML='<i class="ti ti-bolt"></i> Quick add';
   if(error){toast('Error: '+error.message);return;}
   words.push({...data,langId:data.lang_id});
+  input.value=''; input.focus();
   render();
 }
 async function delWord(id){
@@ -1129,9 +1129,10 @@ async function saveLang(){
   if(!modalFields.length){errEl.textContent='Please add at least one field.';errEl.style.display='block';return;}
   const flag=flagForLang(name);
   const id=name.toLowerCase().replace(/\s+/g,'_')+'_'+Date.now();
-  console.log('Saving language:', {id,name,flag,fields:modalFields});
+  const btn=document.querySelector('#m-addlang .btn-primary');
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin .7s linear infinite"></i> Saving…';
   const {data,error}=await sb.from('languages').insert({id,name,flag,fields:[...modalFields]}).select().single();
-  console.log('Result — data:', data, 'error:', error);
+  btn.disabled=false; btn.innerHTML='Add language';
   if(error){
     errEl.textContent='Error: '+error.message;
     errEl.style.display='block';
