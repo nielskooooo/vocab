@@ -129,16 +129,36 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(
 
 /* Field order list */
 .field-order-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
-.field-order-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--ink-soft);cursor:grab;user-select:none;}
-.field-order-item.dragging{opacity:.4;}
-.field-order-item.drag-over{border-color:var(--accent);background:var(--accent-light);}
-.field-order-handle{color:var(--ink-muted);font-size:16px;flex-shrink:0;cursor:grab;}
-.field-order-name{flex:1;}
-.field-order-arrows{display:flex;flex-direction:column;gap:1px;}
-.field-order-arrows button{background:none;border:none;cursor:pointer;color:var(--ink-muted);font-size:13px;line-height:1;padding:1px 3px;border-radius:3px;}
-.field-order-arrows button:hover{color:var(--accent);}
-.field-order-remove{background:none;border:none;cursor:pointer;color:var(--ink-muted);font-size:15px;padding:2px 4px;border-radius:4px;line-height:1;}
+.field-order-item{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 11px;background:var(--bg2);
+  border:1px solid var(--border2);border-radius:8px;
+  font-size:13px;color:var(--ink-soft);
+  cursor:grab;user-select:none;
+  transition:transform .15s, box-shadow .15s, background .15s, border-color .15s;
+  position:relative;
+}
+.field-order-item:active{cursor:grabbing;}
+.field-order-item.dragging{
+  opacity:0;pointer-events:none;
+}
+.field-order-item.drag-above{
+  transform:translateY(4px);
+  border-top-color:var(--accent);
+}
+.field-order-item.drag-below{
+  transform:translateY(-4px);
+  border-bottom-color:var(--accent);
+}
+.field-order-handle{color:var(--ink-muted);font-size:16px;flex-shrink:0;}
+.field-order-name{flex:1;color:var(--ink);}
+.field-order-remove{background:none;border:none;cursor:pointer;color:var(--ink-muted);font-size:16px;padding:2px 4px;border-radius:4px;line-height:1;}
 .field-order-remove:hover{color:#c0392b;}
+.fo-placeholder{
+  border:2px dashed var(--accent);border-radius:8px;
+  background:var(--accent-light);height:40px;
+  transition:height .15s;
+}
 
 /* Full card modal */
 .fullcard-box{max-width:480px;}
@@ -349,50 +369,12 @@ textarea.form-input{resize:none;line-height:1.5;}
   <div class="mbox" style="max-width:460px">
     <h3>Add a language</h3>
     <div class="form-row">
-      <label class="form-label">Language</label>
-      <select class="form-input" id="nl-name" onchange="onLangSelect()">
-        <option value="">— choose a language —</option>
-        <option value="Afrikaans|🇿🇦">🇿🇦 Afrikaans</option>
-        <option value="Arabic|🇸🇦">🇸🇦 Arabic</option>
-        <option value="Cantonese|🇭🇰">🇭🇰 Cantonese</option>
-        <option value="Czech|🇨🇿">🇨🇿 Czech</option>
-        <option value="Danish|🇩🇰">🇩🇰 Danish</option>
-        <option value="Dutch|🇳🇱">🇳🇱 Dutch</option>
-        <option value="Finnish|🇫🇮">🇫🇮 Finnish</option>
-        <option value="French|🇫🇷">🇫🇷 French</option>
-        <option value="German|🇩🇪">🇩🇪 German</option>
-        <option value="Greek|🇬🇷">🇬🇷 Greek</option>
-        <option value="Hebrew|🇮🇱">🇮🇱 Hebrew</option>
-        <option value="Hindi|🇮🇳">🇮🇳 Hindi</option>
-        <option value="Hungarian|🇭🇺">🇭🇺 Hungarian</option>
-        <option value="Indonesian|🇮🇩">🇮🇩 Indonesian</option>
-        <option value="Italian|🇮🇹">🇮🇹 Italian</option>
-        <option value="Japanese|🇯🇵">🇯🇵 Japanese</option>
-        <option value="Korean|🇰🇷">🇰🇷 Korean</option>
-        <option value="Mandarin|🇨🇳">🇨🇳 Mandarin</option>
-        <option value="Norwegian|🇳🇴">🇳🇴 Norwegian</option>
-        <option value="Farsi|🇮🇷">🇮🇷 Farsi</option>
-        <option value="Polish|🇵🇱">🇵🇱 Polish</option>
-        <option value="Portuguese|🇵🇹">🇵🇹 Portuguese</option>
-        <option value="Romanian|🇷🇴">🇷🇴 Romanian</option>
-        <option value="Russian|🇷🇺">🇷🇺 Russian</option>
-        <option value="Spanish|🇪🇸">🇪🇸 Spanish</option>
-        <option value="Swahili|🇰🇪">🇰🇪 Swahili</option>
-        <option value="Swedish|🇸🇪">🇸🇪 Swedish</option>
-        <option value="Thai|🇹🇭">🇹🇭 Thai</option>
-        <option value="Turkish|🇹🇷">🇹🇷 Turkish</option>
-        <option value="Ukrainian|🇺🇦">🇺🇦 Ukrainian</option>
-        <option value="Vietnamese|🇻🇳">🇻🇳 Vietnamese</option>
-        <option value="custom|🌐">🌐 Other / custom…</option>
-      </select>
-    </div>
-    <div class="form-row" id="nl-custom-row" style="display:none">
-      <label class="form-label">Custom language name</label>
-      <input class="form-input" id="nl-custom-name" placeholder="e.g. Esperanto"/>
+      <label class="form-label">Language name</label>
+      <input class="form-input" id="nl-name" placeholder="e.g. Norwegian, Swahili, Latin…" autocomplete="off"/>
     </div>
     <div class="form-row">
       <label class="form-label">Card fields
-        <span style="font-weight:400;color:var(--ink-muted)"> — click presets to toggle, or add your own below</span>
+        <span style="font-weight:400;color:var(--ink-muted)"> — toggle defaults or add your own</span>
       </label>
       <div class="presets" id="nl-presets"></div>
       <div style="display:flex;gap:8px;margin-top:10px">
@@ -402,7 +384,7 @@ textarea.form-input{resize:none;line-height:1.5;}
     </div>
     <div class="form-row">
       <label class="form-label">Field order
-        <span style="font-weight:400;color:var(--ink-muted)"> — drag to reorder, or use arrows</span>
+        <span style="font-weight:400;color:var(--ink-muted)"> — drag to reorder</span>
       </label>
       <div id="nl-field-order"></div>
     </div>
@@ -507,7 +489,7 @@ const FIELD_HINTS = {
   'Plural form':'The plural form of this word.',
   'Part of speech':'e.g. noun, verb, adjective…',
 };
-const PRESET_FIELDS = ['Translation','Romanisation','Example sentence','Notes','Category','Gender','Plural form','Part of speech'];
+const PRESET_FIELDS = ['Translation','Example sentence','Notes'];
 
 let languages = [], words = [];
 let activeLang = null, currentView = 'capture';
@@ -572,6 +554,7 @@ async function loadAll() {
   words = (wds || []).map(w => ({...w, langId: w.lang_id}));
 }
 
+function getWord(id) { return words.find(w => String(w.id) === String(id)); }
 function getLang(id) { return languages.find(l => l.id === id); }
 
 // ── Concept helpers ──
@@ -725,18 +708,20 @@ async function addWord() {
   const input = document.getElementById('cinput');
   const langId = document.getElementById('clang').value;
   const word = input.value.trim();
-  if (!word||!langId) return;
+  if (!word || !langId) { toast('Please select a language and enter a word'); return; }
   input.value = ''; input.focus();
-  const { data, error } = await sb.from('words').insert({ word, lang_id:langId, status:'pending', fields:{} }).select().single();
-  if (error) { toast('Error saving word'); return; }
-  words.push({...data, langId:data.lang_id});
+  const { data, error } = await sb.from('words')
+    .insert({ word, lang_id: langId, status: 'pending', fields: {} })
+    .select().single();
+  if (error) { toast('Error: ' + error.message); return; }
+  words.push({ ...data, langId: data.lang_id });
   render();
 }
 
 async function delWord(id) {
   if (!confirm('Delete this word?')) return;
   await sb.from('words').delete().eq('id', id);
-  words = words.filter(w => w.id!==id);
+  words = words.filter(w => String(w.id) !== String(id));
   render();
 }
 
@@ -789,7 +774,7 @@ async function saveFullCard() {
 // ── Step-by-step completion ──
 // Steps: 0..fields.length-1 = field steps, fields.length = concept step
 function openComplete(id) {
-  const word = words.find(w => w.id===id);
+  const word = getWord(id);
   if (!word) return;
   const l = getLang(word.langId);
   stepData = {wordId:id, step:0, draft:{...(word.fields||{})}, conceptDraft: word.concept||''};
@@ -800,13 +785,13 @@ function openComplete(id) {
 }
 
 function totalSteps() {
-  const word = words.find(w => w.id===stepData.wordId);
+  const word = getWord(stepData.wordId);
   const l = getLang(word.langId);
   return (l ? l.fields.length : 0) + 1; // +1 for concept
 }
 
 function renderStep() {
-  const word = words.find(w => w.id===stepData.wordId);
+  const word = getWord(stepData.wordId);
   const l = getLang(word.langId);
   const fields = l ? l.fields : [];
   const total = totalSteps();
@@ -846,7 +831,7 @@ function renderStep() {
 }
 
 function saveCurrentInput() {
-  const word = words.find(w => w.id===stepData.wordId);
+  const word = getWord(stepData.wordId);
   const l = getLang(word.langId);
   const fields = l ? l.fields : [];
   const el = document.getElementById('sinp');
@@ -860,15 +845,18 @@ function saveCurrentInput() {
 }
 
 async function commitStep() {
-  const word = words.find(w => w.id===stepData.wordId);
+  const word = getWord(stepData.wordId);
+  if (!word) { closeM('m-complete'); return; }
   const l = getLang(word.langId);
   const fields = l ? l.fields : [];
   word.fields = {...stepData.draft};
   word.concept = stepData.conceptDraft || null;
   const newStatus = fields.some(f => word.fields[f]) ? 'complete' : 'pending';
   word.status = newStatus;
-  await sb.from('words').update({ fields:word.fields, status:newStatus, concept:word.concept }).eq('id', word.id);
+  const { error } = await sb.from('words').update({ fields:word.fields, status:newStatus, concept:word.concept }).eq('id', word.id);
+  if (error) { toast('Error saving: ' + error.message); return; }
   closeM('m-complete');
+  toast('Word saved');
 }
 
 function stepNext() {
@@ -885,7 +873,7 @@ function stepSkip() {
 
 // ── Detail ──
 function openDetail(id) {
-  const word = words.find(w => w.id===id);
+  const word = getWord(id);
   if (!word) return;
   detailWordId = id;
   const l = getLang(word.langId);
@@ -945,29 +933,38 @@ function editWord() { closeM('m-detail'); openComplete(detailWordId); }
 async function deleteFromDetail() {
   if (!confirm('Delete this word?')) return;
   await sb.from('words').delete().eq('id', detailWordId);
-  words = words.filter(w => w.id!==detailWordId);
+  words = words.filter(w => String(w.id) !== String(detailWordId));
   closeM('m-detail');
 }
 
 // ── Languages ──
-let modalFields = []; // ordered list of fields being built in the modal
+let modalFields = [];
 let dragSrcIdx = null;
+let dragGhost = null;
+
+const LANG_FLAGS = {
+  afrikaans:'🇿🇦',arabic:'🇸🇦',cantonese:'🇭🇰',czech:'🇨🇿',danish:'🇩🇰',
+  dutch:'🇳🇱',finnish:'🇫🇮',french:'🇫🇷',german:'🇩🇪',greek:'🇬🇷',
+  hebrew:'🇮🇱',hindi:'🇮🇳',hungarian:'🇭🇺',indonesian:'🇮🇩',italian:'🇮🇹',
+  japanese:'🇯🇵',korean:'🇰🇷',mandarin:'🇨🇳',norwegian:'🇳🇴',farsi:'🇮🇷',
+  persian:'🇮🇷',polish:'🇵🇱',portuguese:'🇵🇹',romanian:'🇷🇴',russian:'🇷🇺',
+  spanish:'🇪🇸',swahili:'🇰🇪',swedish:'🇸🇪',thai:'🇹🇭',turkish:'🇹🇷',
+  ukrainian:'🇺🇦',vietnamese:'🇻🇳',welsh:'🏴󠁧󠁢󠁷󠁬󠁳󠁿',irish:'🇮🇪',catalan:'🏳️',
+  latin:'🏛️',esperanto:'🌍',
+};
+
+function flagForLang(name) {
+  return LANG_FLAGS[name.toLowerCase().trim()] || '🌐';
+}
 
 function openAddLang() {
   modalFields = ['Translation','Example sentence','Notes'];
   document.getElementById('nl-name').value = '';
-  document.getElementById('nl-custom-row').style.display = 'none';
-  document.getElementById('nl-custom-name').value = '';
   document.getElementById('nl-custom-field').value = '';
   renderModalPresets();
   renderModalFieldOrder();
   document.getElementById('m-addlang').classList.add('open');
-}
-
-function onLangSelect() {
-  const val = document.getElementById('nl-name').value;
-  const isCustom = val === 'custom|🌐';
-  document.getElementById('nl-custom-row').style.display = isCustom ? '' : 'none';
+  setTimeout(() => document.getElementById('nl-name').focus(), 80);
 }
 
 function renderModalPresets() {
@@ -991,7 +988,8 @@ function toggleModalPreset(f, el) {
 function addModalField() {
   const inp = document.getElementById('nl-custom-field');
   const f = inp.value.trim();
-  if (!f || modalFields.includes(f)) { inp.value=''; return; }
+  if (!f) return;
+  if (modalFields.map(x=>x.toLowerCase()).includes(f.toLowerCase())) { inp.value=''; return; }
   modalFields.push(f);
   inp.value = '';
   renderModalPresets();
@@ -1000,27 +998,60 @@ function addModalField() {
 
 function renderModalFieldOrder() {
   const list = document.getElementById('nl-field-order');
-  if (!modalFields.length) { list.innerHTML = `<p style="font-size:12px;color:var(--ink-muted);padding:6px 0">No fields selected yet.</p>`; return; }
+  if (!modalFields.length) {
+    list.innerHTML = `<p style="font-size:12px;color:var(--ink-muted);padding:6px 0">No fields selected yet.</p>`;
+    return;
+  }
   list.innerHTML = `<ul class="field-order-list" id="fo-list">` +
-    modalFields.map((f,i) => `
+    modalFields.map((f, i) => `
       <li class="field-order-item" draggable="true" data-idx="${i}"
-        ondragstart="foDragStart(event,${i})" ondragover="foDragOver(event,${i})" ondrop="foDrop(event,${i})" ondragend="foDragEnd()">
+        ondragstart="foDragStart(event,${i})"
+        ondragover="foDragOver(event,${i})"
+        ondrop="foDrop(event,${i})"
+        ondragend="foDragEnd()">
         <i class="ti ti-grip-vertical field-order-handle"></i>
         <span class="field-order-name">${f}</span>
-        <div class="field-order-arrows">
-          <button onclick="foMove(${i},-1)" title="Move up" ${i===0?'disabled':''}>▲</button>
-          <button onclick="foMove(${i},1)" title="Move down" ${i===modalFields.length-1?'disabled':''}>▼</button>
-        </div>
         <button class="field-order-remove" onclick="foRemove(${i})" title="Remove">×</button>
       </li>`).join('') + `</ul>`;
 }
 
-function foMove(idx, dir) {
-  const ni = idx + dir;
-  if (ni < 0 || ni >= modalFields.length) return;
-  [modalFields[idx], modalFields[ni]] = [modalFields[ni], modalFields[idx]];
+function foDragStart(e, idx) {
+  dragSrcIdx = idx;
+  e.dataTransfer.effectAllowed = 'move';
+  // hide original after brief delay so browser can snapshot it
+  requestAnimationFrame(() => {
+    const items = document.querySelectorAll('.field-order-item');
+    if (items[idx]) items[idx].classList.add('dragging');
+  });
+}
+
+function foDragOver(e, idx) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  if (idx === dragSrcIdx) return;
+  document.querySelectorAll('.field-order-item').forEach((el, i) => {
+    el.classList.remove('drag-above','drag-below');
+    if (i === idx) {
+      el.classList.add(idx < dragSrcIdx ? 'drag-above' : 'drag-below');
+    }
+  });
+}
+
+function foDrop(e, idx) {
+  e.preventDefault();
+  if (dragSrcIdx === null || dragSrcIdx === idx) return;
+  const moved = modalFields.splice(dragSrcIdx, 1)[0];
+  modalFields.splice(idx, 0, moved);
   renderModalPresets();
   renderModalFieldOrder();
+  dragSrcIdx = null;
+}
+
+function foDragEnd() {
+  dragSrcIdx = null;
+  document.querySelectorAll('.field-order-item').forEach(el => {
+    el.classList.remove('dragging','drag-above','drag-below');
+  });
 }
 
 function foRemove(idx) {
@@ -1029,41 +1060,19 @@ function foRemove(idx) {
   renderModalFieldOrder();
 }
 
-function foDragStart(e, idx) { dragSrcIdx = idx; e.currentTarget.classList.add('dragging'); }
-function foDragOver(e, idx) {
-  e.preventDefault();
-  document.querySelectorAll('.field-order-item').forEach((el,i) => el.classList.toggle('drag-over', i===idx && idx!==dragSrcIdx));
-}
-function foDrop(e, idx) {
-  e.preventDefault();
-  if (dragSrcIdx === null || dragSrcIdx === idx) return;
-  const moved = modalFields.splice(dragSrcIdx, 1)[0];
-  modalFields.splice(idx, 0, moved);
-  renderModalPresets();
-  renderModalFieldOrder();
-}
-function foDragEnd() {
-  dragSrcIdx = null;
-  document.querySelectorAll('.field-order-item').forEach(el => { el.classList.remove('dragging','drag-over'); });
-}
-
 async function saveLang() {
-  const sel = document.getElementById('nl-name').value;
-  if (!sel) { toast('Please select a language'); return; }
-  let name, flag;
-  if (sel === 'custom|🌐') {
-    name = document.getElementById('nl-custom-name').value.trim();
-    flag = '🌐';
-    if (!name) { toast('Please enter a language name'); return; }
-  } else {
-    [name, flag] = sel.split('|');
-  }
-  if (!modalFields.length) { toast('Please select at least one field'); return; }
+  const name = document.getElementById('nl-name').value.trim();
+  if (!name) { toast('Please enter a language name'); return; }
+  if (!modalFields.length) { toast('Please add at least one field'); return; }
+  const flag = flagForLang(name);
   const id = name.toLowerCase().replace(/\s+/g,'_') + '_' + Date.now();
-  const { data, error } = await sb.from('languages').insert({ id, name, flag, fields: [...modalFields] }).select().single();
-  if (error) { toast('Error saving language'); return; }
+  const { data, error } = await sb.from('languages')
+    .insert({ id, name, flag, fields: [...modalFields] })
+    .select().single();
+  if (error) { toast('Error saving language: ' + error.message); return; }
   languages.push(data);
   closeM('m-addlang');
+  toast(`${flag} ${name} added`);
 }
 
 async function seedDefaultLanguages() {
@@ -1073,7 +1082,9 @@ async function seedDefaultLanguages() {
     { id:'thai_default',    name:'Thai',    flag:'🇹🇭', fields:['Translation','Romanisation','Example sentence','Category'] },
   ];
   for (const l of defaults) {
-    const { data } = await sb.from('languages').insert(l).select().single();
+    const existing = languages.find(x => x.id === l.id);
+    if (existing) continue;
+    const { data } = await sb.from('languages').upsert(l).select().single();
     if (data) languages.push(data);
   }
   render();
