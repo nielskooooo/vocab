@@ -320,8 +320,8 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="overlay" id="m-addlang">
   <div class="mbox" style="max-width:460px">
     <h3>Add a language</h3>
+    <div id="addlang-error" style="display:none;font-size:13px;color:#c0392b;background:#fdf0f0;border:1px solid rgba(192,57,43,.2);border-radius:8px;padding:10px 13px;margin-bottom:14px"></div>
     <div class="form-row">
-      <label class="form-label">Language name</label>
       <input class="form-input" id="nl-name" placeholder="e.g. Norwegian, Swahili, Latin…" autocomplete="off" spellcheck="false"/>
     </div>
     <div class="form-row">
@@ -435,9 +435,9 @@ textarea.form-input{resize:none;line-height:1.5;}
 
 <script>
 'use strict';
-const SUPABASE_URL = 'https://gpessepxegxwwlhjsqmz.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwZXNzZXB4ZWd4d3dsaGpzcW16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODYzMjUsImV4cCI6MjA5NTQ2MjMyNX0._Y1yGL2_wa6O4YJUYrVFHkzV-dk1H73LjaV5Co4U4Wg';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+window.SUPABASE_URL = 'https://gpessepxegxwwlhjsqmz.supabase.co';
+window.SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwZXNzZXB4ZWd4d3dsaGpzcW16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODYzMjUsImV4cCI6MjA5NTQ2MjMyNX0._Y1yGL2_wa6O4YJUYrVFHkzV-dk1H73LjaV5Co4U4Wg';
+window.sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const FIELD_HINTS = {
   'Translation':'The meaning in your native language.',
@@ -961,6 +961,7 @@ function openAddLang(){
   modalFields=['Translation','Example sentence','Notes'];
   document.getElementById('nl-name').value='';
   document.getElementById('nl-custom-field').value='';
+  document.getElementById('addlang-error').style.display='none';
   renderModalPresets();
   renderModalFieldOrder();
   document.getElementById('m-addlang').classList.add('open');
@@ -1031,13 +1032,21 @@ function foRemove(idx){
   renderModalFieldOrder();
 }
 async function saveLang(){
+  const errEl=document.getElementById('addlang-error');
+  errEl.style.display='none';
   const name=document.getElementById('nl-name').value.trim();
-  if(!name){toast('Please enter a language name');return;}
-  if(!modalFields.length){toast('Please add at least one field');return;}
+  if(!name){errEl.textContent='Please enter a language name.';errEl.style.display='block';return;}
+  if(!modalFields.length){errEl.textContent='Please add at least one field.';errEl.style.display='block';return;}
   const flag=flagForLang(name);
   const id=name.toLowerCase().replace(/\s+/g,'_')+'_'+Date.now();
+  console.log('Saving language:', {id,name,flag,fields:modalFields});
   const {data,error}=await sb.from('languages').insert({id,name,flag,fields:[...modalFields]}).select().single();
-  if(error){toast('Error: '+error.message);return;}
+  console.log('Result — data:', data, 'error:', error);
+  if(error){
+    errEl.textContent='Error: '+error.message;
+    errEl.style.display='block';
+    return;
+  }
   languages.push(data);
   closeM('m-addlang');
   toast(flag+' '+name+' added');
