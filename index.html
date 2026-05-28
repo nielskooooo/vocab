@@ -225,7 +225,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v16</div>
+      <div class="logo-sub">Personal vocabulary builder · v17</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -297,7 +297,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v16</div>
+    <div class="logo-sub">Personal vocabulary builder · v17</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -524,6 +524,7 @@ async function signOut(){
 
 // ── Boot ──
 sb.auth.onAuthStateChange(async(event,session)=>{
+  console.log('Auth event:', event, 'session:', !!session);
   document.getElementById('loading-screen').style.display='none';
   if(session){
     document.getElementById('login-screen').style.display='none';
@@ -537,14 +538,19 @@ sb.auth.onAuthStateChange(async(event,session)=>{
 });
 
 async function loadAll(){
+  console.log('loadAll: fetching...');
   const [rl,rw,rk]=await Promise.all([
     sb.from('languages').select('*').order('created_at'),
     sb.from('words').select('*').order('created_at'),
     sb.from('links').select('*'),
   ]);
+  console.log('languages result:', JSON.stringify(rl));
+  console.log('words result:', JSON.stringify(rw));
+  console.log('links result:', JSON.stringify(rk));
   languages=rl.data||[];
   words=(rw.data||[]).map(w=>({...w,langId:w.lang_id}));
   links=rk.data||[];
+  console.log('loaded:', languages.length, 'languages,', words.length, 'words,', links.length, 'links');
 }
 
 // ── Nav ──
