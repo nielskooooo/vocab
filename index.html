@@ -31,7 +31,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(
 .logo-wordmark em{color:var(--accent);font-style:italic;}
 .logo-sub{font-size:11px;color:var(--ink-muted);margin-top:4px;}
 .nav{padding:10px 8px;flex:1;}
-.nav-btn{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;transition:background .15s,color .15s;margin-bottom:2px;position:relative;}
+.nav-btn{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;transition:background .15s,color .15s;margin-bottom:2px;}
 .nav-btn i{font-size:17px;opacity:.65;flex-shrink:0;}
 .nav-btn:hover{background:var(--bg);color:var(--ink);}
 .nav-btn.active{background:var(--bg);color:var(--accent);font-weight:500;}
@@ -46,7 +46,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(
 .add-lang-btn{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:8px;font-size:12.5px;color:var(--ink-muted);cursor:pointer;border:none;background:none;width:100%;font-family:'DM Sans',sans-serif;transition:color .15s;}
 .add-lang-btn:hover{color:var(--accent);}
 .bottom-nav{padding:8px;border-top:1px solid var(--border);}
-.topbar{height:var(--nav-h);padding:0 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;background:var(--bg);flex-shrink:0;gap:14px;}
+.topbar{height:var(--nav-h);padding:0 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;background:var(--bg);flex-shrink:0;}
 .topbar-title{font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(--ink);letter-spacing:-.01em;flex:1;}
 .menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--ink-soft);font-size:22px;padding:4px;}
 .content{flex:1;overflow-y:auto;padding:28px 28px 40px;}
@@ -63,14 +63,12 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(
 .icon-btn:hover{color:var(--accent);background:var(--accent-light);}
 .badge{display:inline-block;font-size:11px;padding:3px 9px;border-radius:100px;}
 .badge-pend{background:var(--yellow-light);color:var(--yellow-text);border:1px solid rgba(232,194,10,.25);}
-.badge-done{background:var(--green-light);color:var(--green);border:1px solid rgba(45,122,79,.2);}
 .section-label{font-size:10px;font-weight:500;color:var(--ink-muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px;}
 .word-row{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
 .word-row:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(232,98,10,.08);}
 .word-row-text{font-size:15px;font-weight:500;color:var(--ink);flex:1;}
 .empty-state{text-align:center;padding:60px 20px;color:var(--ink-muted);font-size:13.5px;line-height:2;}
 .empty-state i{font-size:30px;display:block;margin-bottom:12px;opacity:.3;}
-
 /* Capture */
 .capture-box{background:var(--bg);border:1px solid var(--border2);border-radius:14px;padding:24px;margin-bottom:24px;}
 .capture-desc{font-size:13.5px;color:var(--ink-muted);margin-bottom:18px;line-height:1.65;}
@@ -83,7 +81,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(
 .capture-divider{display:flex;align-items:center;gap:12px;margin:16px 0 4px;}
 .capture-divider span{font-size:11px;color:var(--ink-muted);white-space:nowrap;}
 .capture-divider::before,.capture-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-
 /* Vocabulary */
 .lex-filters{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap;}
 .filter-chip{padding:6px 16px;border-radius:100px;font-size:12.5px;border:1px solid var(--border);background:var(--bg2);color:var(--ink-soft);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
@@ -92,12 +89,9 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(
 .vc{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px 18px;cursor:pointer;transition:border-color .15s;}
 .vc:hover{border-color:var(--border2);}
 .vc-word{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--ink);margin-bottom:3px;letter-spacing:-.01em;}
-.vc-trans{font-size:13px;color:var(--ink-soft);margin-bottom:8px;}
-.vc-romanisation{font-size:12px;color:var(--ink-muted);font-style:italic;margin-bottom:3px;}
-.vc-example{font-size:12px;color:var(--ink-muted);font-style:italic;margin-bottom:3px;}
+.vc-trans{font-size:13px;color:var(--ink-soft);margin-bottom:6px;}
+.vc-meta{font-size:12px;color:var(--ink-muted);font-style:italic;margin-bottom:2px;}
 .vc-tag{font-size:11px;padding:2px 9px;border-radius:10px;background:var(--accent-light);color:var(--accent);border:1px solid rgba(232,98,10,.2);margin-top:8px;display:inline-block;}
-.vc-concept{font-size:11px;padding:2px 9px;border-radius:10px;background:#f0edf8;color:#5b4a8a;border:1px solid rgba(91,74,138,.2);margin-top:4px;display:inline-flex;align-items:center;gap:4px;}
-
 /* Settings */
 .set-section-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--ink);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
 .set-hint{font-size:12px;color:var(--ink-muted);margin-top:-8px;margin-bottom:16px;line-height:1.6;}
@@ -112,74 +106,35 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(
 .add-field-row{display:flex;gap:8px;}
 .add-field-input{flex:1;padding:8px 12px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);outline:none;}
 .add-field-input:focus{border-color:var(--accent);}
-
 /* Modals */
 .overlay{display:none;position:fixed;inset:0;background:rgba(26,26,24,.5);align-items:center;justify-content:center;z-index:200;padding:20px;}
 .overlay.open{display:flex;}
-.mbox{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border2);box-shadow:0 16px 60px rgba(0,0,0,.16);max-height:90vh;overflow-y:auto;}
+.mbox{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:420px;border:1px solid var(--border2);box-shadow:0 16px 60px rgba(0,0,0,.16);max-height:90vh;overflow-y:auto;}
 .mbox h3{font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(--ink);margin-bottom:20px;}
 .form-row{margin-bottom:15px;}
 .form-label{display:block;font-size:12px;font-weight:500;color:var(--ink-soft);margin-bottom:6px;letter-spacing:.02em;}
-.form-input{width:100%;padding:11px 14px;border:1.5px solid var(--border2);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);outline:none;}
+.form-input{width:100%;padding:11px 14px;border:1.5px solid var(--border2);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);outline:none;transition:border-color .15s;}
 .form-input:focus{border-color:var(--accent);background:var(--bg);}
+textarea.form-input{resize:none;line-height:1.5;}
 .mactions{display:flex;gap:9px;justify-content:flex-end;margin-top:20px;}
 .presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
 .pchip{padding:5px 13px;border-radius:100px;font-size:12.5px;border:1px solid var(--border);background:var(--bg2);color:var(--ink-soft);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
 .pchip.on{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
-
-/* Field order list */
-.field-order-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
-.field-order-item{
-  display:flex;align-items:center;gap:8px;
-  padding:9px 11px;background:var(--bg2);
-  border:1px solid var(--border2);border-radius:8px;
-  font-size:13px;color:var(--ink-soft);
-  cursor:grab;user-select:none;
-  transition:transform .15s, box-shadow .15s, background .15s, border-color .15s;
-  position:relative;
-}
-.field-order-item:active{cursor:grabbing;}
-.field-order-item.dragging{
-  opacity:0;pointer-events:none;
-}
-.field-order-item.drag-above{
-  transform:translateY(4px);
-  border-top-color:var(--accent);
-}
-.field-order-item.drag-below{
-  transform:translateY(-4px);
-  border-bottom-color:var(--accent);
-}
-.field-order-handle{color:var(--ink-muted);font-size:16px;flex-shrink:0;}
-.field-order-name{flex:1;color:var(--ink);}
-.field-order-remove{background:none;border:none;cursor:pointer;color:var(--ink-muted);font-size:16px;padding:2px 4px;border-radius:4px;line-height:1;}
-.field-order-remove:hover{color:#c0392b;}
-.fo-placeholder{
-  border:2px dashed var(--accent);border-radius:8px;
-  background:var(--accent-light);height:40px;
-  transition:height .15s;
-}
-
-/* Full card modal */
-.fullcard-box{max-width:480px;}
-.fullcard-box .form-input{background:var(--bg2);}
-.fullcard-box .form-input:focus{background:var(--bg);}
-textarea.form-input{resize:none;line-height:1.5;}
-
-/* Concept autocomplete */
-.concept-wrap{position:relative;}
-.concept-suggestions{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;box-shadow:0 6px 24px rgba(0,0,0,.1);z-index:300;margin-top:3px;overflow:hidden;display:none;}
-.concept-suggestions.open{display:block;}
-.concept-suggestion{padding:9px 14px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:8px;}
-.concept-suggestion:hover{background:var(--accent-light);color:var(--accent);}
-.concept-suggestion i{font-size:14px;opacity:.6;}
-
+/* Field order */
+.fo-list{list-style:none;display:flex;flex-direction:column;gap:5px;margin-top:2px;}
+.fo-item{display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:9px;font-size:13.5px;color:var(--ink);cursor:grab;user-select:none;transition:border-color .2s,background .2s,transform .15s;}
+.fo-item:active{cursor:grabbing;}
+.fo-item.fo-dragging{opacity:0;}
+.fo-item.fo-over{border-color:var(--accent);background:var(--accent-light);transform:scale(1.01);}
+.fo-handle{color:var(--ink-muted);font-size:16px;flex-shrink:0;}
+.fo-name{flex:1;}
+.fo-remove{background:none;border:none;cursor:pointer;color:var(--ink-muted);font-size:17px;padding:2px 4px;border-radius:4px;line-height:1;transition:color .15s;}
+.fo-remove:hover{color:#c0392b;}
 /* Complete modal */
 .cbox{max-width:460px;}
-.cbox-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
 .cbox-word{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--accent);letter-spacing:-.02em;line-height:1.1;}
 .cbox-lang{font-size:12px;color:var(--ink-muted);margin-bottom:20px;margin-top:4px;}
-.prog-wrap{margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+.prog-wrap{margin-bottom:4px;display:flex;align-items:center;gap:10px;}
 .prog-track{flex:1;height:4px;background:var(--bg3);border-radius:10px;overflow:hidden;}
 .prog-fill{height:100%;background:var(--accent);border-radius:10px;transition:width .35s cubic-bezier(.4,0,.2,1);}
 .prog-text{font-size:11px;color:var(--ink-muted);white-space:nowrap;}
@@ -191,21 +146,26 @@ textarea.form-input{resize:none;line-height:1.5;}
 .step-nav{display:flex;align-items:center;justify-content:space-between;margin-top:20px;}
 .skip-btn{font-size:12.5px;color:var(--ink-muted);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:5px 8px;border-radius:7px;}
 .skip-btn:hover{color:var(--ink);}
-
 /* Detail modal */
 .detail-word{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--ink);margin-bottom:4px;}
-.detail-lang{font-size:12px;color:var(--ink-muted);margin-bottom:20px;}
-.detail-field{margin-bottom:14px;}
+.detail-lang{font-size:12px;color:var(--ink-muted);margin-bottom:18px;}
+.detail-field{margin-bottom:13px;}
 .detail-field-label{font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
-.detail-field-value{font-size:14px;color:var(--ink-soft);line-height:1.6;}
+.detail-field-value{font-size:14px;color:var(--ink-soft);line-height:1.65;}
 .detail-divider{height:1px;background:var(--border);margin:18px 0;}
-.related-section-title{font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-.related-word-chip{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:9px;background:var(--bg2);border:1px solid var(--border);font-size:13px;color:var(--ink-soft);cursor:pointer;margin:0 6px 6px 0;transition:all .15s;font-family:'DM Sans',sans-serif;}
-.related-word-chip:hover{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
-.related-word-chip .rw-word{font-weight:500;color:var(--ink);}
-.related-word-chip:hover .rw-word{color:var(--accent);}
-.concept-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 10px;border-radius:10px;background:#f0edf8;color:#5b4a8a;border:1px solid rgba(91,74,138,.2);margin-bottom:14px;}
-
+.related-title{font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.related-sublabel{font-size:11px;color:var(--ink-muted);margin-bottom:6px;margin-top:10px;}
+.related-chip{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:9px;background:var(--bg2);border:1px solid var(--border);font-size:13px;color:var(--ink-soft);cursor:pointer;margin:0 6px 6px 0;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.related-chip:hover{border-color:var(--accent);background:var(--accent-light);}
+.related-chip .rc-word{font-weight:500;color:var(--ink);}
+.related-chip:hover .rc-word{color:var(--accent);}
+/* Link search */
+.link-search-wrap{position:relative;}
+.link-results{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;box-shadow:0 6px 24px rgba(0,0,0,.1);z-index:300;margin-top:3px;overflow:hidden;display:none;max-height:200px;overflow-y:auto;}
+.link-results.open{display:block;}
+.link-result-item{padding:9px 14px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);}
+.link-result-item:last-child{border-bottom:none;}
+.link-result-item:hover{background:var(--accent-light);color:var(--accent);}
 /* Login */
 .login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg2);padding:20px;}
 .login-box{background:#fff;border-radius:16px;padding:36px;width:100%;max-width:360px;border:1px solid var(--border2);box-shadow:0 8px 40px rgba(0,0,0,.1);}
@@ -213,16 +173,13 @@ textarea.form-input{resize:none;line-height:1.5;}
 .login-logo em{color:var(--accent);font-style:italic;}
 .login-sub{font-size:13px;color:var(--ink-muted);margin-bottom:28px;line-height:1.5;}
 .login-error{font-size:13px;color:#c0392b;background:#fdf0f0;border:1px solid rgba(192,57,43,.2);border-radius:8px;padding:10px 13px;margin-bottom:14px;display:none;}
-
 /* Toast */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:10px 18px;border-radius:100px;opacity:0;transition:all .3s;z-index:999;pointer-events:none;white-space:nowrap;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:10px 18px;border-radius:100px;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
 /* Loading */
 .loading-screen{display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg2);font-size:13px;color:var(--ink-muted);}
 .spinner{width:24px;height:24px;border:2.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin-right:12px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-
 /* Mobile */
 .mobile-header{display:none;height:56px;background:var(--bg);border-bottom:1px solid var(--border);padding:0 18px;align-items:center;justify-content:space-between;flex-shrink:0;}
 .mobile-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--ink);}
@@ -231,7 +188,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 .mob-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 16px;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--ink-muted);font-size:11px;border-radius:8px;transition:color .15s;position:relative;}
 .mob-btn i{font-size:22px;}
 .mob-btn.active{color:var(--accent);}
-.mob-badge{position:absolute;top:4px;right:10px;background:var(--accent);color:#fff;font-size:10px;border-radius:10px;padding:0 5px;min-width:16px;text-align:center;line-height:16px;display:none;}
+.mob-badge{position:absolute;top:4px;right:8px;background:var(--accent);color:#fff;font-size:10px;border-radius:10px;padding:0 5px;min-width:16px;text-align:center;line-height:16px;display:none;}
 .drawer-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,24,.4);z-index:150;}
 .drawer-overlay.open{display:block;}
 .drawer{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--bg2);border-right:1px solid var(--border);z-index:151;transform:translateX(-100%);transition:transform .25s;display:flex;flex-direction:column;}
@@ -249,7 +206,6 @@ textarea.form-input{resize:none;line-height:1.5;}
 </style>
 </head>
 <body>
-
 <div id="loading-screen" class="loading-screen"><div class="spinner"></div> Loading…</div>
 
 <div id="login-screen" class="login-screen" style="display:none">
@@ -295,7 +251,6 @@ textarea.form-input{resize:none;line-height:1.5;}
     </div>
     <div class="content">
 
-      <!-- Capture -->
       <div class="view active" id="view-capture">
         <div class="capture-box">
           <p class="capture-desc">Save a word in seconds — fill in the details later.</p>
@@ -311,19 +266,16 @@ textarea.form-input{resize:none;line-height:1.5;}
         <div id="recent-list"></div>
       </div>
 
-      <!-- Completion -->
       <div class="view" id="view-queue"><div id="queue-list"></div></div>
 
-      <!-- Vocabulary -->
       <div class="view" id="view-lexicon">
         <div class="lex-filters" id="lex-filters"></div>
         <div class="vocab-grid" id="vocab-grid"></div>
       </div>
 
-      <!-- Settings -->
       <div class="view" id="view-settings">
         <div class="set-section-title">Language configuration</div>
-        <p class="set-hint">Fields are shown in this order during completion.</p>
+        <p class="set-hint">Fields shown in this order during completion.</p>
         <div id="set-langs"></div>
         <button class="btn btn-ghost btn-sm" onclick="openAddLang()" style="margin-top:12px"><i class="ti ti-plus"></i> Add language</button>
       </div>
@@ -370,37 +322,34 @@ textarea.form-input{resize:none;line-height:1.5;}
     <h3>Add a language</h3>
     <div class="form-row">
       <label class="form-label">Language name</label>
-      <input class="form-input" id="nl-name" placeholder="e.g. Norwegian, Swahili, Latin…" autocomplete="off"/>
+      <input class="form-input" id="nl-name" placeholder="e.g. Norwegian, Swahili, Latin…" autocomplete="off" spellcheck="false"/>
     </div>
     <div class="form-row">
-      <label class="form-label">Card fields
-        <span style="font-weight:400;color:var(--ink-muted)"> — toggle defaults or add your own</span>
-      </label>
+      <label class="form-label">Card fields <span style="font-weight:400;color:var(--ink-muted)">— toggle or add your own</span></label>
       <div class="presets" id="nl-presets"></div>
       <div style="display:flex;gap:8px;margin-top:10px">
-        <input class="form-input" id="nl-custom-field" placeholder="Add a custom field…" style="font-size:13px;padding:8px 12px" onkeydown="if(event.key==='Enter'){event.preventDefault();addModalField()}"/>
-        <button class="btn btn-ghost btn-sm" onclick="addModalField()"><i class="ti ti-plus"></i></button>
+        <input class="form-input" id="nl-custom-field" placeholder="Add a custom field…" style="font-size:13px;padding:8px 12px" autocomplete="off"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();addModalField()}"/>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="addModalField()"><i class="ti ti-plus"></i></button>
       </div>
     </div>
     <div class="form-row">
-      <label class="form-label">Field order
-        <span style="font-weight:400;color:var(--ink-muted)"> — drag to reorder</span>
-      </label>
-      <div id="nl-field-order"></div>
+      <label class="form-label">Field order <span style="font-weight:400;color:var(--ink-muted)">— drag to reorder</span></label>
+      <ul class="fo-list" id="nl-field-order"></ul>
     </div>
     <div class="mactions">
-      <button class="btn btn-ghost btn-sm" onclick="closeM('m-addlang')">Cancel</button>
-      <button class="btn btn-primary btn-sm" onclick="saveLang()">Add language</button>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="closeM('m-addlang')">Cancel</button>
+      <button class="btn btn-primary btn-sm" type="button" onclick="saveLang()">Add language</button>
     </div>
   </div>
 </div>
 
 <!-- Full card modal -->
 <div class="overlay" id="m-fullcard">
-  <div class="mbox fullcard-box" style="max-width:480px">
+  <div class="mbox" style="max-width:480px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
       <h3 style="margin:0">New card</h3>
-      <button class="icon-btn" onclick="closeM('m-fullcard')"><i class="ti ti-x"></i></button>
+      <button class="icon-btn" type="button" onclick="closeM('m-fullcard')"><i class="ti ti-x"></i></button>
     </div>
     <div class="form-row">
       <label class="form-label">Language</label>
@@ -411,29 +360,22 @@ textarea.form-input{resize:none;line-height:1.5;}
       <input class="form-input" id="fc-word" placeholder="e.g. привет" autocomplete="off" spellcheck="false"/>
     </div>
     <div id="fc-fields"></div>
-    <div class="form-row">
-      <label class="form-label">Concept tag <span style="font-weight:400;color:var(--ink-muted)">(optional — links equivalent words across languages)</span></label>
-      <div class="concept-wrap">
-        <input class="form-input" id="fc-concept" placeholder="e.g. greeting" autocomplete="off" oninput="showConceptSuggestions('fc-concept','fc-concept-sugg')" onblur="hideConceptSuggestions('fc-concept-sugg')"/>
-        <div class="concept-suggestions" id="fc-concept-sugg"></div>
-      </div>
-    </div>
     <div class="mactions">
-      <button class="btn btn-ghost btn-sm" onclick="closeM('m-fullcard')">Cancel</button>
-      <button class="btn btn-primary btn-sm" onclick="saveFullCard()"><i class="ti ti-check"></i> Save card</button>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="closeM('m-fullcard')">Cancel</button>
+      <button class="btn btn-primary btn-sm" type="button" onclick="saveFullCard()"><i class="ti ti-check"></i> Save card</button>
     </div>
   </div>
 </div>
 
-<!-- Step-by-step completion modal -->
+<!-- Completion modal -->
 <div class="overlay" id="m-complete">
   <div class="mbox cbox">
-    <div class="cbox-header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
       <div>
         <div class="cbox-word" id="cw-word"></div>
         <div class="cbox-lang" id="cw-lang"></div>
       </div>
-      <button class="icon-btn" onclick="closeM('m-complete')" style="margin-top:2px"><i class="ti ti-x"></i></button>
+      <button class="icon-btn" type="button" onclick="closeM('m-complete')" style="margin-top:4px"><i class="ti ti-x"></i></button>
     </div>
     <div class="prog-wrap">
       <div class="prog-track"><div class="prog-fill" id="cprog"></div></div>
@@ -442,12 +384,11 @@ textarea.form-input{resize:none;line-height:1.5;}
     <div class="step-field-name" id="cfield-name"></div>
     <div id="cfield-input"></div>
     <div class="step-hint" id="cfield-hint"></div>
-    <!-- concept step rendered inline via renderStep when index === fields.length -->
     <div class="step-nav">
-      <button class="skip-btn" onclick="stepSkip()">Skip for now</button>
+      <button class="skip-btn" type="button" onclick="stepSkip()">Skip for now</button>
       <div style="display:flex;gap:8px;align-items:center">
-        <button class="btn btn-ghost btn-sm" id="c-back" onclick="stepBack()" style="display:none"><i class="ti ti-arrow-left"></i> Back</button>
-        <button class="btn btn-primary btn-sm" id="c-next" onclick="stepNext()">Next <i class="ti ti-arrow-right"></i></button>
+        <button class="btn btn-ghost btn-sm" type="button" id="c-back" onclick="stepBack()" style="display:none"><i class="ti ti-arrow-left"></i> Back</button>
+        <button class="btn btn-primary btn-sm" type="button" id="c-next" onclick="stepNext()">Next <i class="ti ti-arrow-right"></i></button>
       </div>
     </div>
   </div>
@@ -455,19 +396,38 @@ textarea.form-input{resize:none;line-height:1.5;}
 
 <!-- Word detail modal -->
 <div class="overlay" id="m-detail">
-  <div class="mbox" style="max-width:440px">
+  <div class="mbox" style="max-width:460px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
       <div class="detail-word" id="dw-word"></div>
-      <button class="icon-btn" onclick="closeM('m-detail')"><i class="ti ti-x"></i></button>
+      <button class="icon-btn" type="button" onclick="closeM('m-detail')"><i class="ti ti-x"></i></button>
     </div>
     <div class="detail-lang" id="dw-lang"></div>
-    <div id="dw-concept"></div>
     <div id="dw-fields"></div>
     <div id="dw-related"></div>
     <div class="mactions">
-      <button class="btn btn-ghost btn-sm" onclick="editWord()"><i class="ti ti-pencil"></i> Edit</button>
-      <button class="btn btn-ghost btn-sm" onclick="deleteFromDetail()" style="color:#c0392b;border-color:rgba(192,57,43,.3)"><i class="ti ti-trash"></i> Delete</button>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="openLinkModal()"><i class="ti ti-link"></i> Link word</button>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="editWord()"><i class="ti ti-pencil"></i> Edit</button>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="deleteFromDetail()" style="color:#c0392b;border-color:rgba(192,57,43,.3)"><i class="ti ti-trash"></i></button>
     </div>
+  </div>
+</div>
+
+<!-- Link word modal -->
+<div class="overlay" id="m-link">
+  <div class="mbox" style="max-width:420px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <h3 style="margin:0">Link to another word</h3>
+      <button class="icon-btn" type="button" onclick="closeM('m-link')"><i class="ti ti-x"></i></button>
+    </div>
+    <p style="font-size:13px;color:var(--ink-muted);margin-bottom:18px;line-height:1.6">Manually link <strong id="link-source-word"></strong> to any word in your vocabulary — useful for concepts that don't share an exact translation.</p>
+    <div class="form-row">
+      <label class="form-label">Search for a word to link</label>
+      <div class="link-search-wrap">
+        <input class="form-input" id="link-search" placeholder="Type a word…" autocomplete="off" oninput="searchLinkWords()" onblur="hideLinkResults()"/>
+        <div class="link-results" id="link-results"></div>
+      </div>
+    </div>
+    <div id="link-existing" style="margin-top:4px"></div>
   </div>
 </div>
 
@@ -482,7 +442,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const FIELD_HINTS = {
   'Translation':'The meaning in your native language.',
   'Romanisation':'Phonetic spelling using the Latin alphabet.',
-  'Example sentence':'Write your own sentence — the best way to remember a word.',
+  'Example sentence':'Write your own sentence — the best way to remember it.',
   'Notes':'Grammar notes, associations, memory tricks…',
   'Category':'e.g. Travel, Food, Greetings, Work…',
   'Gender':'e.g. masculine, feminine, neuter',
@@ -490,458 +450,6 @@ const FIELD_HINTS = {
   'Part of speech':'e.g. noun, verb, adjective…',
 };
 const PRESET_FIELDS = ['Translation','Example sentence','Notes'];
-
-let languages = [], words = [];
-let activeLang = null, currentView = 'capture';
-let stepData = {wordId:null, step:0, draft:{}, conceptDraft:''};
-let detailWordId = null;
-
-// ── Toast ──
-function toast(msg, dur=2500) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), dur);
-}
-
-// ── Auth ──
-async function signIn() {
-  const email = document.getElementById('login-email').value.trim();
-  const pw = document.getElementById('login-password').value;
-  const btn = document.getElementById('signin-btn');
-  const err = document.getElementById('login-error');
-  err.style.display = 'none'; btn.disabled = true; btn.textContent = 'Signing in…';
-  const { error } = await sb.auth.signInWithPassword({ email, password: pw });
-  btn.disabled = false; btn.textContent = 'Sign in';
-  if (error) { err.textContent = error.message; err.style.display = 'block'; }
-}
-async function signUp() {
-  const email = document.getElementById('login-email').value.trim();
-  const pw = document.getElementById('login-password').value;
-  const err = document.getElementById('login-error');
-  err.style.display = 'none';
-  if (!email||!pw) { err.textContent='Please enter email and password.'; err.style.display='block'; return; }
-  const { error } = await sb.auth.signUp({ email, password: pw });
-  if (error) { err.textContent = error.message; err.style.display = 'block'; }
-  else toast('Account created — check your email to confirm, then sign in.', 5000);
-}
-async function signOut() {
-  await sb.auth.signOut();
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-}
-
-// ── Boot ──
-sb.auth.onAuthStateChange(async (event, session) => {
-  document.getElementById('loading-screen').style.display = 'none';
-  if (session) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    await loadAll();
-    await seedDefaultLanguages();
-    render();
-  } else {
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'flex';
-  }
-});
-
-async function loadAll() {
-  const [{ data: langs }, { data: wds }] = await Promise.all([
-    sb.from('languages').select('*').order('created_at'),
-    sb.from('words').select('*').order('created_at'),
-  ]);
-  languages = langs || [];
-  words = (wds || []).map(w => ({...w, langId: w.lang_id}));
-}
-
-function getWord(id) { return words.find(w => String(w.id) === String(id)); }
-function getLang(id) { return languages.find(l => l.id === id); }
-
-// ── Concept helpers ──
-function allConcepts() {
-  return [...new Set(words.map(w => w.concept).filter(Boolean))].sort();
-}
-
-function showConceptSuggestions(inputId, suggId) {
-  const val = document.getElementById(inputId).value.trim().toLowerCase();
-  const sugg = document.getElementById(suggId);
-  const matches = allConcepts().filter(c => c.toLowerCase().includes(val) && c.toLowerCase() !== val);
-  if (!matches.length || !val) { sugg.classList.remove('open'); return; }
-  sugg.innerHTML = matches.slice(0,6).map(c =>
-    `<div class="concept-suggestion" onmousedown="pickConcept('${inputId}','${suggId}','${c}')"><i class="ti ti-link"></i>${c}</div>`
-  ).join('');
-  sugg.classList.add('open');
-}
-
-function hideConceptSuggestions(suggId) {
-  setTimeout(() => document.getElementById(suggId)?.classList.remove('open'), 150);
-}
-
-function pickConcept(inputId, suggId, val) {
-  document.getElementById(inputId).value = val;
-  document.getElementById(suggId).classList.remove('open');
-}
-
-// ── Navigation ──
-function go(view) {
-  currentView = view;
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-btn[data-view],.mob-btn[data-view]').forEach(b => b.classList.remove('active'));
-  document.getElementById('view-'+view).classList.add('active');
-  document.querySelectorAll('[data-view="'+view+'"]').forEach(b => b.classList.add('active'));
-  const titles = {capture:'Quick add',queue:'Completion',lexicon:'My vocabulary',settings:'Settings'};
-  const t = titles[view]||view;
-  document.getElementById('topbar-title').textContent = t;
-  document.getElementById('mobile-title').textContent = t;
-  render();
-}
-function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawer-overlay').classList.add('open'); }
-function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawer-overlay').classList.remove('open'); }
-
-// ── Render ──
-function updateBadges() {
-  const n = words.filter(w => w.status==='pending').length;
-  ['nb1','mb1'].forEach(id => { const el=document.getElementById(id); el.textContent=n; el.style.display=n?'':'none'; });
-}
-
-function renderLangPills() {
-  const html = languages.map(l => {
-    const n = words.filter(w => w.langId===l.id).length;
-    return `<button class="lang-btn ${activeLang===l.id?'active':''}" onclick="toggleLang('${l.id}')">
-      <span style="font-size:16px">${l.flag}</span><span style="color:#1a1a18">${l.name}</span>
-      <span class="lang-count">${n}</span></button>`;
-  }).join('');
-  document.getElementById('lang-pills').innerHTML = html;
-  document.getElementById('drawer-lang-pills').innerHTML = html;
-}
-function toggleLang(id) { activeLang = activeLang===id ? null : id; render(); }
-
-function renderCapture() {
-  const sel = document.getElementById('clang');
-  const cur = sel.value;
-  sel.innerHTML = languages.map(l => `<option value="${l.id}">${l.flag} ${l.name}</option>`).join('');
-  if (cur && languages.find(l => l.id===cur)) sel.value = cur;
-  const pending = words.filter(w => w.status==='pending');
-  document.getElementById('rlabel').textContent = pending.length ? `Pending completion (${pending.length})` : 'Recently added';
-  const c = document.getElementById('recent-list');
-  if (!pending.length) { c.innerHTML=`<div class="empty-state"><i class="ti ti-leaf"></i>Add your first word above.</div>`; return; }
-  c.innerHTML = pending.slice().reverse().map(w => {
-    const l = getLang(w.langId);
-    return `<div class="word-row" onclick="openComplete(${w.id})">
-      <span style="font-size:18px">${l?l.flag:''}</span>
-      <span class="word-row-text">${w.word}</span>
-      <span class="badge badge-pend">Pending</span>
-      <button class="icon-btn" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
-    </div>`;
-  }).join('');
-}
-
-function renderQueue() {
-  const pending = words.filter(w => w.status==='pending');
-  const c = document.getElementById('queue-list');
-  if (!pending.length) { c.innerHTML=`<div class="empty-state"><i class="ti ti-circle-check"></i>You're all caught up.</div>`; return; }
-  c.innerHTML = `<p style="font-size:13.5px;color:var(--ink-muted);margin-bottom:18px;line-height:1.7">${pending.length} word${pending.length>1?'s':''} waiting. Click any word to fill in its fields one by one.</p>` +
-    pending.map(w => {
-      const l = getLang(w.langId);
-      return `<div class="word-row" onclick="openComplete(${w.id})">
-        <span style="font-size:18px">${l?l.flag:''}</span>
-        <span class="word-row-text">${w.word}</span>
-        <span style="font-size:12px;color:var(--ink-muted);margin-right:4px">${l?l.name:''}</span>
-        <span class="badge badge-pend">Incomplete</span>
-        <button class="icon-btn" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
-      </div>`;
-    }).join('');
-}
-
-function renderLexicon() {
-  document.getElementById('lex-filters').innerHTML = [{id:null,name:'All',flag:''},...languages].map(l =>
-    `<button class="filter-chip ${activeLang===l.id?'active':''}" onclick="toggleLang(${l.id?`'${l.id}'`:'null'})">${l.flag} ${l.name}</button>`
-  ).join('');
-  let ws = words.filter(w => w.status==='complete');
-  if (activeLang) ws = ws.filter(w => w.langId===activeLang);
-  const g = document.getElementById('vocab-grid');
-  if (!ws.length) { g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-books"></i>No completed words yet.</div>`; return; }
-  g.innerHTML = ws.map(w => {
-    const l = getLang(w.langId); const f = w.fields||{};
-    return `<div class="vc" onclick="openDetail(${w.id})">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-        <span style="font-size:15px">${l?l.flag:''}</span><span class="vc-word">${w.word}</span>
-      </div>
-      ${f['Translation']?`<div class="vc-trans">${f['Translation']}</div>`:''}
-      ${f['Romanisation']?`<div class="vc-romanisation">${f['Romanisation']}</div>`:''}
-      ${f['Example sentence']?`<div class="vc-example">"${f['Example sentence'].substring(0,60)}${f['Example sentence'].length>60?'…':''}"</div>`:''}
-      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">
-        ${f['Category']?`<span class="vc-tag">${f['Category']}</span>`:''}
-        ${w.concept?`<span class="vc-concept"><i class="ti ti-link" style="font-size:10px"></i>${w.concept}</span>`:''}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderSettings() {
-  document.getElementById('set-langs').innerHTML = languages.map(l => `
-    <div class="lang-cfg">
-      <div class="lang-cfg-top">
-        <span style="font-size:24px">${l.flag}</span>
-        <span class="lang-cfg-name">${l.name}</span>
-        <button class="icon-btn" onclick="removeLang('${l.id}')"><i class="ti ti-trash"></i></button>
-      </div>
-      <div class="ftags-label">Card fields (completion order)</div>
-      <div class="ftags">${l.fields.map(f=>`<span class="ftag">${f}<button onclick="removeField('${l.id}','${f}')">×</button></span>`).join('')}</div>
-      <div class="add-field-row">
-        <input class="add-field-input" id="nf-${l.id}" placeholder="Add a custom field…" onkeydown="if(event.key==='Enter')addField('${l.id}')"/>
-        <button class="btn btn-ghost btn-sm" onclick="addField('${l.id}')"><i class="ti ti-plus"></i></button>
-      </div>
-    </div>`).join('');
-}
-
-function render() {
-  renderLangPills(); updateBadges();
-  if (currentView==='capture') renderCapture();
-  if (currentView==='queue') renderQueue();
-  if (currentView==='lexicon') renderLexicon();
-  if (currentView==='settings') renderSettings();
-}
-
-// ── Quick add ──
-async function addWord() {
-  const input = document.getElementById('cinput');
-  const langId = document.getElementById('clang').value;
-  const word = input.value.trim();
-  if (!word || !langId) { toast('Please select a language and enter a word'); return; }
-  input.value = ''; input.focus();
-  const { data, error } = await sb.from('words')
-    .insert({ word, lang_id: langId, status: 'pending', fields: {} })
-    .select().single();
-  if (error) { toast('Error: ' + error.message); return; }
-  words.push({ ...data, langId: data.lang_id });
-  render();
-}
-
-async function delWord(id) {
-  if (!confirm('Delete this word?')) return;
-  await sb.from('words').delete().eq('id', id);
-  words = words.filter(w => String(w.id) !== String(id));
-  render();
-}
-
-// ── Full card ──
-function openFullCard() {
-  const sel = document.getElementById('fc-lang');
-  sel.innerHTML = languages.map(l => `<option value="${l.id}">${l.flag} ${l.name}</option>`).join('');
-  document.getElementById('fc-word').value = '';
-  document.getElementById('fc-concept').value = '';
-  renderFullCardFields();
-  document.getElementById('m-fullcard').classList.add('open');
-  setTimeout(() => document.getElementById('fc-word').focus(), 80);
-}
-
-function renderFullCardFields() {
-  const langId = document.getElementById('fc-lang').value;
-  const l = getLang(langId);
-  const fields = l ? l.fields : [];
-  document.getElementById('fc-fields').innerHTML = fields.map(f => {
-    const isLong = f==='Example sentence'||f==='Notes';
-    return `<div class="form-row">
-      <label class="form-label">${f}</label>
-      ${isLong
-        ? `<textarea class="form-input" id="fcf-${f.replace(/\s/g,'_')}" rows="2" placeholder="${f}…"></textarea>`
-        : `<input class="form-input" id="fcf-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…"/>`}
-    </div>`;
-  }).join('');
-}
-
-async function saveFullCard() {
-  const langId = document.getElementById('fc-lang').value;
-  const word = document.getElementById('fc-word').value.trim();
-  const concept = document.getElementById('fc-concept').value.trim() || null;
-  if (!word||!langId) { toast('Please enter a word'); return; }
-  const l = getLang(langId);
-  const fields = {};
-  if (l) l.fields.forEach(f => {
-    const el = document.getElementById('fcf-'+f.replace(/\s/g,'_'));
-    if (el) fields[f] = el.value.trim();
-  });
-  const hasContent = Object.values(fields).some(v => v);
-  const status = hasContent ? 'complete' : 'pending';
-  const { data, error } = await sb.from('words').insert({ word, lang_id:langId, status, fields, concept }).select().single();
-  if (error) { toast('Error saving card'); return; }
-  words.push({...data, langId:data.lang_id});
-  closeM('m-fullcard');
-  toast('Card saved');
-}
-
-// ── Step-by-step completion ──
-// Steps: 0..fields.length-1 = field steps, fields.length = concept step
-function openComplete(id) {
-  const word = getWord(id);
-  if (!word) return;
-  const l = getLang(word.langId);
-  stepData = {wordId:id, step:0, draft:{...(word.fields||{})}, conceptDraft: word.concept||''};
-  document.getElementById('cw-word').textContent = word.word;
-  document.getElementById('cw-lang').textContent = l ? l.flag+' '+l.name : '';
-  renderStep();
-  document.getElementById('m-complete').classList.add('open');
-}
-
-function totalSteps() {
-  const word = getWord(stepData.wordId);
-  const l = getLang(word.langId);
-  return (l ? l.fields.length : 0) + 1; // +1 for concept
-}
-
-function renderStep() {
-  const word = getWord(stepData.wordId);
-  const l = getLang(word.langId);
-  const fields = l ? l.fields : [];
-  const total = totalSteps();
-  const step = stepData.step;
-  const pct = Math.round(step / total * 100);
-
-  document.getElementById('cprog').style.width = pct+'%';
-  document.getElementById('cprog-text').textContent = `${step+1} / ${total}`;
-
-  const isConceptStep = step === fields.length;
-  const isLast = step >= total-1;
-
-  if (isConceptStep) {
-    document.getElementById('cfield-name').textContent = 'Concept tag';
-    document.getElementById('cfield-input').innerHTML = `
-      <div class="concept-wrap">
-        <input class="step-input" id="sinp" type="text" placeholder="e.g. greeting, food, travel…" value="${stepData.conceptDraft||''}" 
-          oninput="showConceptSuggestions('sinp','sinp-sugg')" onblur="hideConceptSuggestions('sinp-sugg')" autocomplete="off"/>
-        <div class="concept-suggestions" id="sinp-sugg"></div>
-      </div>`;
-    document.getElementById('cfield-hint').textContent = 'Links this word to its equivalents in other languages and synonyms in the same language.';
-  } else {
-    const field = fields[step]||'';
-    document.getElementById('cfield-name').textContent = field;
-    const val = stepData.draft[field]||'';
-    const isLong = field==='Example sentence'||field==='Notes';
-    document.getElementById('cfield-input').innerHTML = isLong
-      ? `<textarea class="step-input" id="sinp" rows="3" placeholder="${field}…">${val}</textarea>`
-      : `<input class="step-input" id="sinp" type="text" placeholder="${field}…" value="${val}"/>`;
-    document.getElementById('cfield-hint').textContent = FIELD_HINTS[field]||'';
-  }
-
-  document.getElementById('sinp').onkeydown = e => { if(e.key==='Enter'&&!e.shiftKey) stepNext(); };
-  document.getElementById('c-next').innerHTML = isLast ? '<i class="ti ti-check"></i> Save word' : 'Next <i class="ti ti-arrow-right"></i>';
-  document.getElementById('c-back').style.display = step>0 ? '' : 'none';
-  setTimeout(() => document.getElementById('sinp')?.focus(), 80);
-}
-
-function saveCurrentInput() {
-  const word = getWord(stepData.wordId);
-  const l = getLang(word.langId);
-  const fields = l ? l.fields : [];
-  const el = document.getElementById('sinp');
-  if (!el) return;
-  if (stepData.step === fields.length) {
-    stepData.conceptDraft = el.value.trim();
-  } else {
-    const field = fields[stepData.step];
-    if (field) stepData.draft[field] = el.value.trim();
-  }
-}
-
-async function commitStep() {
-  const word = getWord(stepData.wordId);
-  if (!word) { closeM('m-complete'); return; }
-  const l = getLang(word.langId);
-  const fields = l ? l.fields : [];
-  word.fields = {...stepData.draft};
-  word.concept = stepData.conceptDraft || null;
-  const newStatus = fields.some(f => word.fields[f]) ? 'complete' : 'pending';
-  word.status = newStatus;
-  const { error } = await sb.from('words').update({ fields:word.fields, status:newStatus, concept:word.concept }).eq('id', word.id);
-  if (error) { toast('Error saving: ' + error.message); return; }
-  closeM('m-complete');
-  toast('Word saved');
-}
-
-function stepNext() {
-  saveCurrentInput();
-  if (stepData.step >= totalSteps()-1) { commitStep(); }
-  else { stepData.step++; renderStep(); }
-}
-function stepBack() { saveCurrentInput(); if(stepData.step>0){ stepData.step--; renderStep(); } }
-function stepSkip() {
-  saveCurrentInput();
-  if (stepData.step < totalSteps()-1) { stepData.step++; renderStep(); }
-  else { commitStep(); }
-}
-
-// ── Detail ──
-function openDetail(id) {
-  const word = getWord(id);
-  if (!word) return;
-  detailWordId = id;
-  const l = getLang(word.langId);
-  document.getElementById('dw-word').textContent = word.word;
-  document.getElementById('dw-lang').textContent = l ? l.flag+' '+l.name : '';
-
-  // Concept badge
-  document.getElementById('dw-concept').innerHTML = word.concept
-    ? `<div class="concept-badge"><i class="ti ti-link" style="font-size:11px"></i>${word.concept}</div>` : '';
-
-  // Fields
-  const fields = l ? l.fields : [];
-  document.getElementById('dw-fields').innerHTML = fields.map(f => {
-    const v = (word.fields||{})[f]; if (!v) return '';
-    return `<div class="detail-field"><div class="detail-field-label">${f}</div><div class="detail-field-value">${v}</div></div>`;
-  }).join('');
-
-  // Related words via concept
-  let relatedHtml = '';
-  if (word.concept) {
-    const related = words.filter(w => w.concept===word.concept && w.id!==id);
-    if (related.length) {
-      const same = related.filter(w => w.langId===word.langId);
-      const other = related.filter(w => w.langId!==word.langId);
-      let chips = '';
-      if (same.length) chips += `<div style="margin-bottom:6px;font-size:11px;color:var(--ink-muted)">Synonyms</div>` +
-        same.map(w => relatedChip(w)).join('');
-      if (other.length) {
-        if (same.length) chips += `<div style="margin:10px 0 6px;font-size:11px;color:var(--ink-muted)">In other languages</div>`;
-        chips += other.map(w => relatedChip(w)).join('');
-      }
-      relatedHtml = `<div class="detail-divider"></div>
-        <div class="related-section-title"><i class="ti ti-link" style="font-size:13px"></i> Related words</div>
-        <div>${chips}</div>`;
-    }
-  }
-  document.getElementById('dw-related').innerHTML = relatedHtml;
-  document.getElementById('m-detail').classList.add('open');
-}
-
-function relatedChip(w) {
-  const l = getLang(w.langId);
-  const trans = (w.fields||{})['Translation'];
-  return `<button class="related-word-chip" onclick="switchDetail(${w.id})">
-    <span style="font-size:15px">${l?l.flag:''}</span>
-    <span class="rw-word">${w.word}</span>
-    ${trans?`<span style="font-size:12px;color:var(--ink-muted)">${trans}</span>`:''}
-  </button>`;
-}
-
-function switchDetail(id) {
-  detailWordId = id;
-  openDetail(id);
-}
-
-function editWord() { closeM('m-detail'); openComplete(detailWordId); }
-async function deleteFromDetail() {
-  if (!confirm('Delete this word?')) return;
-  await sb.from('words').delete().eq('id', detailWordId);
-  words = words.filter(w => String(w.id) !== String(detailWordId));
-  closeM('m-detail');
-}
-
-// ── Languages ──
-let modalFields = [];
-let dragSrcIdx = null;
-let dragGhost = null;
-
 const LANG_FLAGS = {
   afrikaans:'🇿🇦',arabic:'🇸🇦',cantonese:'🇭🇰',czech:'🇨🇿',danish:'🇩🇰',
   dutch:'🇳🇱',finnish:'🇫🇮',french:'🇫🇷',german:'🇩🇪',greek:'🇬🇷',
@@ -949,165 +457,611 @@ const LANG_FLAGS = {
   japanese:'🇯🇵',korean:'🇰🇷',mandarin:'🇨🇳',norwegian:'🇳🇴',farsi:'🇮🇷',
   persian:'🇮🇷',polish:'🇵🇱',portuguese:'🇵🇹',romanian:'🇷🇴',russian:'🇷🇺',
   spanish:'🇪🇸',swahili:'🇰🇪',swedish:'🇸🇪',thai:'🇹🇭',turkish:'🇹🇷',
-  ukrainian:'🇺🇦',vietnamese:'🇻🇳',welsh:'🏴󠁧󠁢󠁷󠁬󠁳󠁿',irish:'🇮🇪',catalan:'🏳️',
-  latin:'🏛️',esperanto:'🌍',
+  ukrainian:'🇺🇦',vietnamese:'🇻🇳',welsh:'🏴󠁧󠁢󠁷󠁬󠁳󠁿',irish:'🇮🇪',latin:'🏛️',esperanto:'🌍',
 };
+function flagForLang(name){ return LANG_FLAGS[name.toLowerCase().trim()]||'🌐'; }
 
-function flagForLang(name) {
-  return LANG_FLAGS[name.toLowerCase().trim()] || '🌐';
+// ── State ──
+let languages=[], words=[], links=[];
+let activeLang=null, currentView='capture';
+let stepData={wordId:null,step:0,draft:{}};
+let detailWordId=null;
+let modalFields=[];
+let foSrcIdx=null;
+
+// ── Helpers ──
+function sid(id){ return String(id); }
+function gword(id){ return words.find(w=>sid(w.id)===sid(id)); }
+function glang(id){ return languages.find(l=>l.id===id); }
+
+// ── Toast ──
+function toast(msg,dur=2800){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),dur);
 }
 
-function openAddLang() {
-  modalFields = ['Translation','Example sentence','Notes'];
-  document.getElementById('nl-name').value = '';
-  document.getElementById('nl-custom-field').value = '';
-  renderModalPresets();
-  renderModalFieldOrder();
-  document.getElementById('m-addlang').classList.add('open');
-  setTimeout(() => document.getElementById('nl-name').focus(), 80);
+// ── Auth ──
+async function signIn(){
+  const email=document.getElementById('login-email').value.trim();
+  const pw=document.getElementById('login-password').value;
+  const btn=document.getElementById('signin-btn');
+  const err=document.getElementById('login-error');
+  err.style.display='none'; btn.disabled=true; btn.textContent='Signing in…';
+  const {error}=await sb.auth.signInWithPassword({email,password:pw});
+  btn.disabled=false; btn.textContent='Sign in';
+  if(error){err.textContent=error.message; err.style.display='block';}
+}
+async function signUp(){
+  const email=document.getElementById('login-email').value.trim();
+  const pw=document.getElementById('login-password').value;
+  const err=document.getElementById('login-error');
+  err.style.display='none';
+  if(!email||!pw){err.textContent='Please enter email and password.';err.style.display='block';return;}
+  const {error}=await sb.auth.signUp({email,password:pw});
+  if(error){err.textContent=error.message;err.style.display='block';}
+  else toast('Account created — check your email to confirm, then sign in.',5000);
+}
+async function signOut(){
+  await sb.auth.signOut();
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
 }
 
-function renderModalPresets() {
-  document.getElementById('nl-presets').innerHTML = PRESET_FIELDS.map(f => {
-    const on = modalFields.includes(f);
-    return `<span class="pchip ${on?'on':''}" onclick="toggleModalPreset('${f}',this)">${f}</span>`;
+// ── Boot ──
+sb.auth.onAuthStateChange(async(event,session)=>{
+  document.getElementById('loading-screen').style.display='none';
+  if(session){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    await loadAll();
+    await seedDefaults();
+    render();
+  } else {
+    document.getElementById('app').style.display='none';
+    document.getElementById('login-screen').style.display='flex';
+  }
+});
+
+async function loadAll(){
+  const [rl,rw,rk]=await Promise.all([
+    sb.from('languages').select('*').order('created_at'),
+    sb.from('words').select('*').order('created_at'),
+    sb.from('links').select('*'),
+  ]);
+  languages=rl.data||[];
+  words=(rw.data||[]).map(w=>({...w,langId:w.lang_id}));
+  links=rk.data||[];
+}
+
+async function seedDefaults(){
+  if(languages.length>0) return;
+  const defs=[
+    {id:'russian_default',name:'Russian',flag:'🇷🇺',fields:['Translation','Romanisation','Example sentence','Notes']},
+    {id:'thai_default',name:'Thai',flag:'🇹🇭',fields:['Translation','Romanisation','Example sentence','Category']},
+  ];
+  for(const l of defs){
+    const {data}=await sb.from('languages').upsert(l).select().single();
+    if(data) languages.push(data);
+  }
+}
+
+// ── Nav ──
+function go(view){
+  currentView=view;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn[data-view],.mob-btn[data-view]').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  document.querySelectorAll('[data-view="'+view+'"]').forEach(b=>b.classList.add('active'));
+  const titles={capture:'Quick add',queue:'Completion',lexicon:'My vocabulary',settings:'Settings'};
+  const t=titles[view]||view;
+  document.getElementById('topbar-title').textContent=t;
+  document.getElementById('mobile-title').textContent=t;
+  render();
+}
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
+
+// ── Badges ──
+function updateBadges(){
+  const n=words.filter(w=>w.status==='pending').length;
+  ['nb1','mb1'].forEach(id=>{const el=document.getElementById(id);el.textContent=n;el.style.display=n?'':'none';});
+}
+
+// ── Render ──
+function renderLangPills(){
+  const html=languages.map(l=>{
+    const n=words.filter(w=>w.langId===l.id).length;
+    return `<button class="lang-btn ${activeLang===l.id?'active':''}" onclick="toggleLang('${l.id}')">
+      <span style="font-size:16px">${l.flag}</span><span style="color:#1a1a18">${l.name}</span>
+      <span class="lang-count">${n}</span></button>`;
+  }).join('');
+  document.getElementById('lang-pills').innerHTML=html;
+  document.getElementById('drawer-lang-pills').innerHTML=html;
+}
+function toggleLang(id){activeLang=activeLang===id?null:id;render();}
+
+function renderCapture(){
+  const sel=document.getElementById('clang');
+  const cur=sel.value;
+  sel.innerHTML=languages.map(l=>`<option value="${l.id}">${l.flag} ${l.name}</option>`).join('');
+  if(cur&&languages.find(l=>l.id===cur)) sel.value=cur;
+  const pending=words.filter(w=>w.status==='pending');
+  document.getElementById('rlabel').textContent=pending.length?`Pending completion (${pending.length})`:'Recently added';
+  const c=document.getElementById('recent-list');
+  if(!pending.length){c.innerHTML=`<div class="empty-state"><i class="ti ti-leaf"></i>Add your first word above.</div>`;return;}
+  c.innerHTML=pending.slice().reverse().map(w=>{
+    const l=glang(w.langId);
+    return `<div class="word-row" onclick="openComplete(${w.id})">
+      <span style="font-size:18px">${l?l.flag:''}</span>
+      <span class="word-row-text">${w.word}</span>
+      <span class="badge badge-pend">Pending</span>
+      <button class="icon-btn" type="button" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
+    </div>`;
   }).join('');
 }
 
-function toggleModalPreset(f, el) {
-  if (modalFields.includes(f)) {
-    modalFields = modalFields.filter(x => x !== f);
-    el.classList.remove('on');
-  } else {
-    modalFields.push(f);
-    el.classList.add('on');
-  }
-  renderModalFieldOrder();
+function renderQueue(){
+  const pending=words.filter(w=>w.status==='pending');
+  const c=document.getElementById('queue-list');
+  if(!pending.length){c.innerHTML=`<div class="empty-state"><i class="ti ti-circle-check"></i>You're all caught up.</div>`;return;}
+  c.innerHTML=`<p style="font-size:13.5px;color:var(--ink-muted);margin-bottom:18px;line-height:1.7">${pending.length} word${pending.length>1?'s':''} waiting. Click to fill in fields one by one.</p>`+
+    pending.map(w=>{
+      const l=glang(w.langId);
+      return `<div class="word-row" onclick="openComplete(${w.id})">
+        <span style="font-size:18px">${l?l.flag:''}</span>
+        <span class="word-row-text">${w.word}</span>
+        <span style="font-size:12px;color:var(--ink-muted);margin-right:4px">${l?l.name:''}</span>
+        <span class="badge badge-pend">Incomplete</span>
+        <button class="icon-btn" type="button" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
+      </div>`;
+    }).join('');
 }
 
-function addModalField() {
-  const inp = document.getElementById('nl-custom-field');
-  const f = inp.value.trim();
-  if (!f) return;
-  if (modalFields.map(x=>x.toLowerCase()).includes(f.toLowerCase())) { inp.value=''; return; }
+function renderLexicon(){
+  document.getElementById('lex-filters').innerHTML=[{id:null,name:'All',flag:''},...languages].map(l=>
+    `<button class="filter-chip ${activeLang===l.id?'active':''}" onclick="toggleLang(${l.id?`'${l.id}'`:'null'})">${l.flag} ${l.name}</button>`
+  ).join('');
+  let ws=words.filter(w=>w.status==='complete');
+  if(activeLang) ws=ws.filter(w=>w.langId===activeLang);
+  const g=document.getElementById('vocab-grid');
+  if(!ws.length){g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-books"></i>No completed words yet.</div>`;return;}
+  g.innerHTML=ws.map(w=>{
+    const l=glang(w.langId);const f=w.fields||{};
+    const hasLinks=getLinkedWords(w.id).length>0;
+    return `<div class="vc" onclick="openDetail(${w.id})">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:15px">${l?l.flag:''}</span>
+        <span class="vc-word">${w.word}</span>
+        ${hasLinks?`<i class="ti ti-link" style="font-size:12px;color:var(--ink-muted);margin-left:auto" title="Has links"></i>`:''}
+      </div>
+      ${f['Translation']?`<div class="vc-trans">${f['Translation']}</div>`:''}
+      ${f['Romanisation']?`<div class="vc-meta">${f['Romanisation']}</div>`:''}
+      ${f['Example sentence']?`<div class="vc-meta">"${f['Example sentence'].substring(0,55)}${f['Example sentence'].length>55?'…':''}"</div>`:''}
+      ${f['Category']?`<span class="vc-tag">${f['Category']}</span>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderSettings(){
+  document.getElementById('set-langs').innerHTML=languages.map(l=>`
+    <div class="lang-cfg">
+      <div class="lang-cfg-top">
+        <span style="font-size:24px">${l.flag}</span>
+        <span class="lang-cfg-name">${l.name}</span>
+        <button class="icon-btn" type="button" onclick="removeLang('${l.id}')"><i class="ti ti-trash"></i></button>
+      </div>
+      <div class="ftags-label">Card fields (completion order)</div>
+      <div class="ftags">${l.fields.map(f=>`<span class="ftag">${f}<button type="button" onclick="removeField('${l.id}','${f}')">×</button></span>`).join('')}</div>
+      <div class="add-field-row">
+        <input class="add-field-input" id="nf-${l.id}" placeholder="Add a field…" onkeydown="if(event.key==='Enter')addField('${l.id}')"/>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="addField('${l.id}')"><i class="ti ti-plus"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+function render(){
+  renderLangPills(); updateBadges();
+  if(currentView==='capture') renderCapture();
+  if(currentView==='queue') renderQueue();
+  if(currentView==='lexicon') renderLexicon();
+  if(currentView==='settings') renderSettings();
+}
+
+// ── Quick add ──
+async function addWord(){
+  const input=document.getElementById('cinput');
+  const langId=document.getElementById('clang').value;
+  const word=input.value.trim();
+  if(!word||!langId){toast('Please select a language and enter a word');return;}
+  input.value=''; input.focus();
+  const {data,error}=await sb.from('words').insert({word,lang_id:langId,status:'pending',fields:{}}).select().single();
+  if(error){toast('Error: '+error.message);return;}
+  words.push({...data,langId:data.lang_id});
+  render();
+}
+async function delWord(id){
+  if(!confirm('Delete this word?')) return;
+  await sb.from('words').delete().eq('id',id);
+  words=words.filter(w=>sid(w.id)!==sid(id));
+  render();
+}
+
+// ── Full card ──
+function openFullCard(){
+  const sel=document.getElementById('fc-lang');
+  sel.innerHTML=languages.map(l=>`<option value="${l.id}">${l.flag} ${l.name}</option>`).join('');
+  document.getElementById('fc-word').value='';
+  renderFullCardFields();
+  document.getElementById('m-fullcard').classList.add('open');
+  setTimeout(()=>document.getElementById('fc-word').focus(),80);
+}
+function renderFullCardFields(){
+  const langId=document.getElementById('fc-lang').value;
+  const l=glang(langId);
+  const fields=l?l.fields:[];
+  document.getElementById('fc-fields').innerHTML=fields.map(f=>{
+    const isLong=f==='Example sentence'||f==='Notes';
+    return `<div class="form-row"><label class="form-label">${f}</label>
+      ${isLong
+        ?`<textarea class="form-input" id="fcf-${f.replace(/\s/g,'_')}" rows="2" placeholder="${f}…"></textarea>`
+        :`<input class="form-input" id="fcf-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…"/>`}
+    </div>`;
+  }).join('');
+}
+async function saveFullCard(){
+  const langId=document.getElementById('fc-lang').value;
+  const word=document.getElementById('fc-word').value.trim();
+  if(!word||!langId){toast('Please enter a word');return;}
+  const l=glang(langId);
+  const fields={};
+  if(l) l.fields.forEach(f=>{
+    const el=document.getElementById('fcf-'+f.replace(/\s/g,'_'));
+    if(el) fields[f]=el.value.trim();
+  });
+  const status=Object.values(fields).some(v=>v)?'complete':'pending';
+  const {data,error}=await sb.from('words').insert({word,lang_id:langId,status,fields}).select().single();
+  if(error){toast('Error: '+error.message);return;}
+  words.push({...data,langId:data.lang_id});
+  // auto-link by translation
+  if(fields['Translation']) await autoLinkByTranslation(data);
+  closeM('m-fullcard');
+  toast('Card saved');
+}
+
+// ── Step-by-step completion ──
+function openComplete(id){
+  const word=gword(id);
+  if(!word) return;
+  const l=glang(word.langId);
+  stepData={wordId:id,step:0,draft:{...(word.fields||{})}};
+  document.getElementById('cw-word').textContent=word.word;
+  document.getElementById('cw-lang').textContent=l?l.flag+' '+l.name:'';
+  renderStep();
+  document.getElementById('m-complete').classList.add('open');
+}
+function getFields(wordId){
+  const word=gword(wordId);
+  const l=glang(word.langId);
+  return l?l.fields:[];
+}
+function renderStep(){
+  const fields=getFields(stepData.wordId);
+  const total=fields.length;
+  const step=stepData.step;
+  document.getElementById('cprog').style.width=total?Math.round(step/total*100)+'%':'0%';
+  document.getElementById('cprog-text').textContent=`${step+1} / ${total}`;
+  const field=fields[step]||'';
+  document.getElementById('cfield-name').textContent=field;
+  const val=stepData.draft[field]||'';
+  const isLong=field==='Example sentence'||field==='Notes';
+  document.getElementById('cfield-input').innerHTML=isLong
+    ?`<textarea class="step-input" id="sinp" rows="3" placeholder="${field}…">${val}</textarea>`
+    :`<input class="step-input" id="sinp" type="text" placeholder="${field}…" value="${val}"/>`;
+  document.getElementById('cfield-hint').textContent=FIELD_HINTS[field]||'';
+  document.getElementById('sinp').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey) stepNext();};
+  const isLast=step>=total-1;
+  document.getElementById('c-next').innerHTML=isLast?'<i class="ti ti-check"></i> Save word':'Next <i class="ti ti-arrow-right"></i>';
+  document.getElementById('c-back').style.display=step>0?'':'none';
+  setTimeout(()=>document.getElementById('sinp')?.focus(),80);
+}
+function saveCurrentInput(){
+  const fields=getFields(stepData.wordId);
+  const el=document.getElementById('sinp');
+  if(!el) return;
+  const field=fields[stepData.step];
+  if(field) stepData.draft[field]=el.value.trim();
+}
+async function commitStep(){
+  const word=gword(stepData.wordId);
+  if(!word){closeM('m-complete');return;}
+  const fields=getFields(stepData.wordId);
+  word.fields={...stepData.draft};
+  const newStatus=fields.some(f=>word.fields[f])?'complete':'pending';
+  word.status=newStatus;
+  const {error}=await sb.from('words').update({fields:word.fields,status:newStatus}).eq('id',word.id);
+  if(error){toast('Error saving: '+error.message);return;}
+  if(word.fields['Translation']) await autoLinkByTranslation(word);
+  closeM('m-complete');
+  toast('Word saved');
+}
+function stepNext(){
+  saveCurrentInput();
+  const fields=getFields(stepData.wordId);
+  if(stepData.step>=fields.length-1){commitStep();}
+  else{stepData.step++;renderStep();}
+}
+function stepBack(){saveCurrentInput();if(stepData.step>0){stepData.step--;renderStep();}}
+function stepSkip(){
+  saveCurrentInput();
+  const fields=getFields(stepData.wordId);
+  if(stepData.step<fields.length-1){stepData.step++;renderStep();}
+  else{commitStep();}
+}
+
+// ── Auto-link by translation ──
+async function autoLinkByTranslation(savedWord){
+  const trans=(savedWord.fields&&savedWord.fields['Translation']||'').toLowerCase().trim();
+  if(!trans) return;
+  const matches=words.filter(w=>
+    sid(w.id)!==sid(savedWord.id)&&
+    w.status==='complete'&&
+    (w.fields&&w.fields['Translation']||'').toLowerCase().trim()===trans
+  );
+  for(const m of matches){
+    await createLink(savedWord.id,m.id,false);
+  }
+}
+
+// ── Links ──
+function getLinkedWords(wordId){
+  const id=sid(wordId);
+  return links
+    .filter(l=>sid(l.word_id_a)===id||sid(l.word_id_b)===id)
+    .map(l=>sid(l.word_id_a)===id?gword(l.word_id_b):gword(l.word_id_a))
+    .filter(Boolean);
+}
+async function createLink(aId,bId,showToast=true){
+  const a=sid(aId),b=sid(bId);
+  const already=links.find(l=>(sid(l.word_id_a)===a&&sid(l.word_id_b)===b)||(sid(l.word_id_a)===b&&sid(l.word_id_b)===a));
+  if(already) return;
+  const {data,error}=await sb.from('links').insert({word_id_a:aId,word_id_b:bId}).select().single();
+  if(error&&!error.message.includes('unique')){if(showToast)toast('Error: '+error.message);return;}
+  if(data) links.push(data);
+  if(showToast) toast('Words linked');
+}
+async function removeLink(aId,bId){
+  const a=sid(aId),b=sid(bId);
+  await sb.from('links').delete().or(`and(word_id_a.eq.${a},word_id_b.eq.${b}),and(word_id_a.eq.${b},word_id_b.eq.${a})`);
+  links=links.filter(l=>!((sid(l.word_id_a)===a&&sid(l.word_id_b)===b)||(sid(l.word_id_a)===b&&sid(l.word_id_b)===a)));
+  openDetail(detailWordId);
+}
+
+// ── Detail ──
+function openDetail(id){
+  const word=gword(id);
+  if(!word) return;
+  detailWordId=id;
+  const l=glang(word.langId);
+  document.getElementById('dw-word').textContent=word.word;
+  document.getElementById('dw-lang').textContent=l?l.flag+' '+l.name:'';
+  // Fields
+  const fields=l?l.fields:[];
+  document.getElementById('dw-fields').innerHTML=fields.map(f=>{
+    const v=(word.fields||{})[f];if(!v) return '';
+    return `<div class="detail-field"><div class="detail-field-label">${f}</div><div class="detail-field-value">${v}</div></div>`;
+  }).join('');
+  // Related
+  const linked=getLinkedWords(id);
+  // Also find auto-matches by translation not yet in links
+  const trans=(word.fields&&word.fields['Translation']||'').toLowerCase().trim();
+  const autoMatches=trans?words.filter(w=>
+    sid(w.id)!==sid(id)&&
+    w.status==='complete'&&
+    (w.fields&&w.fields['Translation']||'').toLowerCase().trim()===trans&&
+    !linked.find(lw=>sid(lw.id)===sid(w.id))
+  ):[];
+  const allRelated=[...linked,...autoMatches];
+  if(!allRelated.length){document.getElementById('dw-related').innerHTML='';return;}
+  const same=allRelated.filter(w=>w.langId===word.langId);
+  const other=allRelated.filter(w=>w.langId!==word.langId);
+  let html=`<div class="detail-divider"></div><div class="related-title"><i class="ti ti-link" style="font-size:12px"></i> Related words</div>`;
+  if(same.length){
+    html+=`<div class="related-sublabel">Synonyms</div>`;
+    html+=same.map(w=>relChip(w,id)).join('');
+  }
+  if(other.length){
+    html+=`<div class="related-sublabel" style="margin-top:${same.length?10:0}px">In other languages</div>`;
+    html+=other.map(w=>relChip(w,id)).join('');
+  }
+  document.getElementById('dw-related').innerHTML=html;
+  document.getElementById('m-detail').classList.add('open');
+}
+function relChip(w,sourceId){
+  const l=glang(w.langId);
+  const trans=(w.fields||{})['Translation'];
+  const isManual=links.find(lk=>{
+    const a=sid(lk.word_id_a),b=sid(lk.word_id_b);
+    return (a===sid(w.id)&&b===sid(sourceId))||(a===sid(sourceId)&&b===sid(w.id));
+  });
+  return `<button class="related-chip" onclick="switchDetail(${w.id})">
+    <span style="font-size:15px">${l?l.flag:''}</span>
+    <span class="rc-word">${w.word}</span>
+    ${trans?`<span style="font-size:12px;color:var(--ink-muted)">${trans}</span>`:''}
+    ${isManual?`<i class="ti ti-link" style="font-size:11px;color:var(--ink-muted)" title="Manually linked"></i>`:''}
+  </button>
+  <button class="icon-btn" style="font-size:13px;padding:3px" title="Remove link" onclick="removeLink(${sourceId},${w.id})"><i class="ti ti-x"></i></button>`;
+}
+function switchDetail(id){detailWordId=id;openDetail(id);}
+function editWord(){closeM('m-detail');openComplete(detailWordId);}
+async function deleteFromDetail(){
+  if(!confirm('Delete this word?')) return;
+  await sb.from('words').delete().eq('id',detailWordId);
+  words=words.filter(w=>sid(w.id)!==sid(detailWordId));
+  links=links.filter(l=>sid(l.word_id_a)!==sid(detailWordId)&&sid(l.word_id_b)!==sid(detailWordId));
+  closeM('m-detail');
+}
+
+// ── Link modal ──
+function openLinkModal(){
+  document.getElementById('link-source-word').textContent=gword(detailWordId)?.word||'';
+  document.getElementById('link-search').value='';
+  document.getElementById('link-results').classList.remove('open');
+  renderExistingLinks();
+  document.getElementById('m-link').classList.add('open');
+  setTimeout(()=>document.getElementById('link-search').focus(),80);
+}
+function renderExistingLinks(){
+  const linked=getLinkedWords(detailWordId);
+  const el=document.getElementById('link-existing');
+  if(!linked.length){el.innerHTML='';return;}
+  el.innerHTML=`<div style="font-size:11px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Current links</div>`+
+    linked.map(w=>{
+      const l=glang(w.langId);
+      return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:15px">${l?l.flag:''}</span>
+        <span style="font-size:13.5px;font-weight:500;flex:1;color:var(--ink)">${w.word}</span>
+        <span style="font-size:12px;color:var(--ink-muted)">${(w.fields||{})['Translation']||''}</span>
+        <button class="icon-btn" style="font-size:14px" type="button" onclick="removeLink(${detailWordId},${w.id});renderExistingLinks()"><i class="ti ti-x"></i></button>
+      </div>`;
+    }).join('');
+}
+function searchLinkWords(){
+  const q=document.getElementById('link-search').value.trim().toLowerCase();
+  const res=document.getElementById('link-results');
+  if(!q){res.classList.remove('open');return;}
+  const linked=getLinkedWords(detailWordId).map(w=>sid(w.id));
+  const matches=words.filter(w=>
+    sid(w.id)!==sid(detailWordId)&&
+    !linked.includes(sid(w.id))&&
+    (w.word.toLowerCase().includes(q)||(w.fields&&w.fields['Translation']||'').toLowerCase().includes(q))
+  ).slice(0,8);
+  if(!matches.length){res.classList.remove('open');return;}
+  res.innerHTML=matches.map(w=>{
+    const l=glang(w.langId);
+    const trans=(w.fields||{})['Translation'];
+    return `<div class="link-result-item" onmousedown="pickLink(${w.id})">
+      <span style="font-size:15px">${l?l.flag:''}</span>
+      <span style="font-weight:500;color:var(--ink)">${w.word}</span>
+      ${trans?`<span style="font-size:12px;color:var(--ink-muted)">${trans}</span>`:''}
+    </div>`;
+  }).join('');
+  res.classList.add('open');
+}
+function hideLinkResults(){setTimeout(()=>document.getElementById('link-results').classList.remove('open'),150);}
+async function pickLink(targetId){
+  document.getElementById('link-results').classList.remove('open');
+  document.getElementById('link-search').value='';
+  await createLink(detailWordId,targetId,true);
+  renderExistingLinks();
+}
+
+// ── Add language modal ──
+function openAddLang(){
+  modalFields=['Translation','Example sentence','Notes'];
+  document.getElementById('nl-name').value='';
+  document.getElementById('nl-custom-field').value='';
+  renderModalPresets();
+  renderModalFieldOrder();
+  document.getElementById('m-addlang').classList.add('open');
+  setTimeout(()=>document.getElementById('nl-name').focus(),80);
+}
+function renderModalPresets(){
+  document.getElementById('nl-presets').innerHTML=PRESET_FIELDS.map(f=>{
+    const on=modalFields.includes(f);
+    return `<span class="pchip ${on?'on':''}" onclick="toggleModalPreset('${f}',this)">${f}</span>`;
+  }).join('');
+}
+function toggleModalPreset(f,el){
+  if(modalFields.includes(f)){modalFields=modalFields.filter(x=>x!==f);el.classList.remove('on');}
+  else{modalFields.push(f);el.classList.add('on');}
+  renderModalFieldOrder();
+}
+function addModalField(){
+  const inp=document.getElementById('nl-custom-field');
+  const f=inp.value.trim();
+  if(!f) return;
+  if(modalFields.map(x=>x.toLowerCase()).includes(f.toLowerCase())){inp.value='';return;}
   modalFields.push(f);
-  inp.value = '';
+  inp.value='';
   renderModalPresets();
   renderModalFieldOrder();
 }
-
-function renderModalFieldOrder() {
-  const list = document.getElementById('nl-field-order');
-  if (!modalFields.length) {
-    list.innerHTML = `<p style="font-size:12px;color:var(--ink-muted);padding:6px 0">No fields selected yet.</p>`;
-    return;
-  }
-  list.innerHTML = `<ul class="field-order-list" id="fo-list">` +
-    modalFields.map((f, i) => `
-      <li class="field-order-item" draggable="true" data-idx="${i}"
-        ondragstart="foDragStart(event,${i})"
-        ondragover="foDragOver(event,${i})"
-        ondrop="foDrop(event,${i})"
-        ondragend="foDragEnd()">
-        <i class="ti ti-grip-vertical field-order-handle"></i>
-        <span class="field-order-name">${f}</span>
-        <button class="field-order-remove" onclick="foRemove(${i})" title="Remove">×</button>
-      </li>`).join('') + `</ul>`;
+function renderModalFieldOrder(){
+  const ul=document.getElementById('nl-field-order');
+  if(!modalFields.length){ul.innerHTML='<li style="font-size:12px;color:var(--ink-muted);padding:6px 0;list-style:none">No fields selected yet.</li>';return;}
+  ul.innerHTML=modalFields.map((f,i)=>`
+    <li class="fo-item" draggable="true" data-idx="${i}"
+      ondragstart="foDragStart(event,${i})" ondragover="foDragOver(event,${i})"
+      ondrop="foDrop(event,${i})" ondragend="foDragEnd()">
+      <i class="ti ti-grip-vertical fo-handle"></i>
+      <span class="fo-name">${f}</span>
+      <button class="fo-remove" type="button" onclick="foRemove(${i})">×</button>
+    </li>`).join('');
 }
-
-function foDragStart(e, idx) {
-  dragSrcIdx = idx;
-  e.dataTransfer.effectAllowed = 'move';
-  // hide original after brief delay so browser can snapshot it
-  requestAnimationFrame(() => {
-    const items = document.querySelectorAll('.field-order-item');
-    if (items[idx]) items[idx].classList.add('dragging');
+function foDragStart(e,idx){
+  foSrcIdx=idx;
+  e.dataTransfer.effectAllowed='move';
+  requestAnimationFrame(()=>{
+    document.querySelectorAll('.fo-item')[idx]?.classList.add('fo-dragging');
   });
 }
-
-function foDragOver(e, idx) {
+function foDragOver(e,idx){
   e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  if (idx === dragSrcIdx) return;
-  document.querySelectorAll('.field-order-item').forEach((el, i) => {
-    el.classList.remove('drag-above','drag-below');
-    if (i === idx) {
-      el.classList.add(idx < dragSrcIdx ? 'drag-above' : 'drag-below');
-    }
+  document.querySelectorAll('.fo-item').forEach((el,i)=>{
+    el.classList.toggle('fo-over',i===idx&&idx!==foSrcIdx);
   });
 }
-
-function foDrop(e, idx) {
+function foDrop(e,idx){
   e.preventDefault();
-  if (dragSrcIdx === null || dragSrcIdx === idx) return;
-  const moved = modalFields.splice(dragSrcIdx, 1)[0];
-  modalFields.splice(idx, 0, moved);
-  renderModalPresets();
-  renderModalFieldOrder();
-  dragSrcIdx = null;
-}
-
-function foDragEnd() {
-  dragSrcIdx = null;
-  document.querySelectorAll('.field-order-item').forEach(el => {
-    el.classList.remove('dragging','drag-above','drag-below');
-  });
-}
-
-function foRemove(idx) {
-  modalFields.splice(idx, 1);
+  if(foSrcIdx===null||foSrcIdx===idx) return;
+  const moved=modalFields.splice(foSrcIdx,1)[0];
+  modalFields.splice(idx,0,moved);
+  foSrcIdx=null;
   renderModalPresets();
   renderModalFieldOrder();
 }
-
-async function saveLang() {
-  const name = document.getElementById('nl-name').value.trim();
-  if (!name) { toast('Please enter a language name'); return; }
-  if (!modalFields.length) { toast('Please add at least one field'); return; }
-  const flag = flagForLang(name);
-  const id = name.toLowerCase().replace(/\s+/g,'_') + '_' + Date.now();
-  const { data, error } = await sb.from('languages')
-    .insert({ id, name, flag, fields: [...modalFields] })
-    .select().single();
-  if (error) { toast('Error saving language: ' + error.message); return; }
+function foDragEnd(){
+  foSrcIdx=null;
+  document.querySelectorAll('.fo-item').forEach(el=>el.classList.remove('fo-dragging','fo-over'));
+}
+function foRemove(idx){
+  modalFields.splice(idx,1);
+  renderModalPresets();
+  renderModalFieldOrder();
+}
+async function saveLang(){
+  const name=document.getElementById('nl-name').value.trim();
+  if(!name){toast('Please enter a language name');return;}
+  if(!modalFields.length){toast('Please add at least one field');return;}
+  const flag=flagForLang(name);
+  const id=name.toLowerCase().replace(/\s+/g,'_')+'_'+Date.now();
+  const {data,error}=await sb.from('languages').insert({id,name,flag,fields:[...modalFields]}).select().single();
+  if(error){toast('Error: '+error.message);return;}
   languages.push(data);
   closeM('m-addlang');
-  toast(`${flag} ${name} added`);
-}
-
-async function seedDefaultLanguages() {
-  if (languages.length > 0) return;
-  const defaults = [
-    { id:'russian_default', name:'Russian', flag:'🇷🇺', fields:['Translation','Romanisation','Example sentence','Notes'] },
-    { id:'thai_default',    name:'Thai',    flag:'🇹🇭', fields:['Translation','Romanisation','Example sentence','Category'] },
-  ];
-  for (const l of defaults) {
-    const existing = languages.find(x => x.id === l.id);
-    if (existing) continue;
-    const { data } = await sb.from('languages').upsert(l).select().single();
-    if (data) languages.push(data);
-  }
+  toast(flag+' '+name+' added');
   render();
 }
-async function removeLang(id) {
-  if (!confirm('Remove this language? Your words will be kept.')) return;
-  await sb.from('languages').delete().eq('id', id);
-  languages = languages.filter(l => l.id!==id);
-  if (activeLang===id) activeLang=null;
+async function removeLang(id){
+  if(!confirm('Remove this language? Words will be kept.')) return;
+  await sb.from('languages').delete().eq('id',id);
+  languages=languages.filter(l=>l.id!==id);
+  if(activeLang===id) activeLang=null;
   render();
 }
-async function addField(langId) {
-  const inp = document.getElementById('nf-'+langId);
-  const f = inp.value.trim(); if (!f) return;
-  const l = getLang(langId);
-  if (l && !l.fields.includes(f)) { l.fields.push(f); await sb.from('languages').update({fields:l.fields}).eq('id',langId); render(); }
+async function addField(langId){
+  const inp=document.getElementById('nf-'+langId);
+  const f=inp.value.trim();if(!f) return;
+  const l=glang(langId);
+  if(l&&!l.fields.includes(f)){l.fields.push(f);await sb.from('languages').update({fields:l.fields}).eq('id',langId);render();}
   inp.value='';
 }
-async function removeField(langId, field) {
-  const l = getLang(langId);
-  if (l) { l.fields=l.fields.filter(x=>x!==field); await sb.from('languages').update({fields:l.fields}).eq('id',langId); render(); }
+async function removeField(langId,field){
+  const l=glang(langId);
+  if(l){l.fields=l.fields.filter(x=>x!==field);await sb.from('languages').update({fields:l.fields}).eq('id',langId);render();}
 }
-function closeM(id) { document.getElementById(id).classList.remove('open'); render(); }
+function closeM(id){document.getElementById(id).classList.remove('open');render();}
 </script>
 </body>
 </html>
