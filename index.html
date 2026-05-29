@@ -243,7 +243,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v21</div>
+      <div class="logo-sub">Personal vocabulary builder · v22</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -287,6 +287,13 @@ textarea.form-input{resize:none;line-height:1.5;}
       <div class="view" id="view-queue"><div id="queue-list"></div></div>
 
       <div class="view" id="view-lexicon">
+        <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center">
+          <div style="position:relative;flex:1">
+            <i class="ti ti-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-muted);font-size:16px;pointer-events:none"></i>
+            <input id="lex-search" style="width:100%;padding:10px 14px 10px 36px;border:1.5px solid var(--border2);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);outline:none;transition:border-color .15s"
+              placeholder="Search words, translations…" oninput="render()" autocomplete="off" spellcheck="false"/>
+          </div>
+        </div>
         <div class="lex-filters" id="lex-filters"></div>
         <div id="tag-filters" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
         <div class="vocab-grid" id="vocab-grid"></div>
@@ -316,7 +323,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v21</div>
+    <div class="logo-sub">Personal vocabulary builder · v22</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -568,8 +575,12 @@ function allTags(){
 
 // ── Tag input helpers ──
 function showTagSugg(inputId, suggId){
-  const val=document.getElementById(inputId).value.trim().toLowerCase();
+  const inp=document.getElementById(inputId);
   const sugg=document.getElementById(suggId);
+  if(!inp||!sugg) return;
+  // for step modal, delegate to step-specific handler
+  if(inputId==='sinp'){ showTagSuggStep(); return; }
+  const val=inp.value.trim().toLowerCase();
   const existing=inputId.startsWith('fc')?fcTags:editTags;
   const matches=allTags().filter(t=>t.toLowerCase().includes(val)&&!existing.includes(t));
   if(!matches.length||!val){sugg.classList.remove('open');return;}
@@ -764,32 +775,42 @@ function renderLexicon(){
   document.getElementById('lex-filters').innerHTML=[{id:null,name:'All',flag:''},...languages].map(l=>
     `<button class="filter-chip ${activeLang===l.id?'active':''}" onclick="toggleLang(${l.id?`'${l.id}'`:'null'})">${l.flag} ${l.name}</button>`
   ).join('');
-  // tag filters
   const tags=allTags();
   const tf=document.getElementById('tag-filters');
-  if(tags.length){
-    tf.innerHTML=tags.map(t=>
-      `<span class="tag-pill clickable ${activeTagFilter===t?'active':''}" onclick="toggleTagFilter('${t}')">${t}</span>`
-    ).join('');
-  } else {
-    tf.innerHTML='';
-  }
+  tf.innerHTML=tags.length?tags.map(t=>
+    `<span class="tag-pill clickable ${activeTagFilter===t?'active':''}" onclick="toggleTagFilter('${t}')">${t}</span>`
+  ).join(''):'';
+
+  const searchEl=document.getElementById('lex-search');
+  const q=searchEl?searchEl.value.trim().toLowerCase():'';
+
   let ws=words.filter(w=>w.status==='complete');
   if(activeLang) ws=ws.filter(w=>w.langId===activeLang);
   if(activeTagFilter) ws=ws.filter(w=>(w.tags||[]).includes(activeTagFilter));
+  if(q) ws=ws.filter(w=>
+    w.word.toLowerCase().includes(q)||
+    Object.values(w.fields||{}).some(v=>v&&v.toLowerCase().includes(q))||
+    (w.tags||[]).some(t=>t.toLowerCase().includes(q))
+  );
+
   const g=document.getElementById('vocab-grid');
-  if(!ws.length){g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-books"></i>No completed words yet.</div>`;return;}
+  if(!ws.length){
+    g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-books"></i>${q||activeTagFilter||activeLang?'No matching words.':'No completed words yet.'}</div>`;
+    return;
+  }
   g.innerHTML=ws.map(w=>{
     const l=glang(w.langId);const f=w.fields||{};
     const hasLinks=getLinkedWords(w.id).length>0;
     const tagHtml=(w.tags||[]).map(t=>`<span class="tag-pill" style="font-size:10.5px;padding:2px 8px">${t}</span>`).join('');
+    const transRaw=f['Translation']||'';
+    const transDisplay=transRaw.includes(',')?transRaw.split(',').map((p,i)=>`${i+1}. ${p.trim()}`).join('  '):transRaw;
     return `<div class="vc" onclick="openDetail(${w.id})">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
         <span style="font-size:15px">${l?l.flag:''}</span>
         <span class="vc-word">${w.word}</span>
         ${hasLinks?`<i class="ti ti-link" style="font-size:12px;color:var(--ink-muted);margin-left:auto"></i>`:''}
       </div>
-      ${f['Translation']?`<div class="vc-trans">${f['Translation'].split(',')[0].trim()}${f['Translation'].includes(',')?'…':''}</div>`:''}
+      ${transDisplay?`<div class="vc-trans">${transDisplay}</div>`:''}
       ${f['Romanisation']?`<div class="vc-meta">${f['Romanisation']}</div>`:''}
       ${f['Example sentence']?`<div class="vc-meta">"${f['Example sentence'].substring(0,55)}${f['Example sentence'].length>55?'…':''}"</div>`:''}
       ${tagHtml?`<div class="tags-row" style="margin-top:8px">${tagHtml}</div>`:''}
@@ -891,11 +912,12 @@ async function saveFullCard(){
 }
 
 // ── Step-by-step completion ──
+// Steps: 0..fields.length-1 = field steps, fields.length = tags step
 function openComplete(id){
   const word=gword(id);
   if(!word) return;
   const l=glang(word.langId);
-  stepData={wordId:id,step:0,draft:{...(word.fields||{})}};
+  stepData={wordId:id,step:0,draft:{...(word.fields||{})},tags:[...(word.tags||[])]};
   document.getElementById('cw-word').textContent=word.word;
   document.getElementById('cw-lang').textContent=l?l.flag+' '+l.name:'';
   renderStep();
@@ -903,44 +925,143 @@ function openComplete(id){
 }
 function getFields(wordId){
   const word=gword(wordId);
-  const l=glang(word.langId);
+  const l=glang(word?.langId);
   return l?l.fields:[];
 }
+function totalSteps(wordId){ return getFields(wordId).length+1; } // +1 for tags
+
+function getExSuggestions(wordId){
+  const word=gword(wordId);
+  if(!word) return [];
+  const linked=[...getLinkedWords(wordId),...getAutoMatches(word,getLinkedWords(wordId))];
+  return linked.filter(w=>(w.fields&&w.fields['Example sentence']))
+    .map(w=>({lang:glang(w.langId),ex:w.fields['Example sentence']}));
+}
+
 function renderStep(){
   const fields=getFields(stepData.wordId);
-  const total=fields.length;
+  const total=totalSteps(stepData.wordId);
   const step=stepData.step;
-  document.getElementById('cprog').style.width=total?Math.round(step/total*100)+'%':'0%';
+  const isTagStep=step===fields.length;
+
+  document.getElementById('cprog').style.width=Math.round(step/total*100)+'%';
   document.getElementById('cprog-text').textContent=`${step+1} / ${total}`;
-  const field=fields[step]||'';
-  document.getElementById('cfield-name').textContent=field;
-  const val=stepData.draft[field]||'';
-  const isLong=field==='Example sentence'||field==='Notes';
-  document.getElementById('cfield-input').innerHTML=isLong
-    ?`<textarea class="step-input" id="sinp" rows="3" placeholder="${field}…">${val}</textarea>`
-    :`<input class="step-input" id="sinp" type="text" placeholder="${field}…" value="${val}"/>`;
-  document.getElementById('cfield-hint').textContent=FIELD_HINTS[field]||'';
-  document.getElementById('sinp').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey) stepNext();};
+
+  if(isTagStep){
+    document.getElementById('cfield-name').textContent='Tags';
+    document.getElementById('cfield-hint').textContent='Add tags to group words by theme or grammar class. Press Enter or comma after each tag.';
+    // render tag input
+    const existingHtml=(stepData.tags||[]).map(t=>
+      `<span class="tag-pill">${t}<button class="tag-x" type="button" onclick="removeStepTag('${t}')">×</button></span>`
+    ).join('');
+    document.getElementById('cfield-input').innerHTML=`
+      <div class="tags-row" id="step-tags-row" style="margin-bottom:8px">${existingHtml}</div>
+      <div class="tag-input-wrap">
+        <input class="step-input" id="sinp" placeholder="Add a tag…" autocomplete="off" style="width:100%"
+          oninput="showTagSugg('sinp','sinp-sugg')"
+          onblur="hideTagSugg('sinp-sugg')"
+          onkeydown="stepTagKeydown(event)"/>
+        <div class="tag-sugg" id="sinp-sugg"></div>
+      </div>`;
+  } else {
+    const field=fields[step]||'';
+    document.getElementById('cfield-name').textContent=field;
+    const val=stepData.draft[field]||'';
+    const isLong=field==='Example sentence'||field==='Notes';
+    // example sentence suggestion
+    let suggHtml='';
+    if(field==='Example sentence'&&!val){
+      const suggs=getExSuggestions(stepData.wordId);
+      if(suggs.length){
+        suggHtml=suggs.map(({lang:sl,ex})=>`
+          <div style="margin-top:8px;padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px">
+            <div style="font-size:10px;color:var(--ink-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">${sl?sl.flag+' '+sl.name:''}</div>
+            <div style="font-size:13px;font-style:italic;color:var(--ink-soft);margin-bottom:6px">"${ex}"</div>
+            <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:4px 10px"
+              onclick="document.getElementById('sinp').value=this.closest('div').parentElement.querySelector('div:nth-child(2)').textContent.replace(/^\"|\"$/g,'').trim();this.closest('div').style.display='none'">Use as starting point</button>
+          </div>`).join('');
+      }
+    }
+    document.getElementById('cfield-input').innerHTML=(isLong
+      ?`<textarea class="step-input" id="sinp" rows="3" placeholder="${field}…">${val}</textarea>`
+      :`<input class="step-input" id="sinp" type="text" placeholder="${field}…" value="${val}"/>`)
+      +suggHtml;
+    document.getElementById('cfield-hint').textContent=FIELD_HINTS[field]||'';
+    document.getElementById('sinp').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey) stepNext();};
+  }
+
   const isLast=step>=total-1;
   document.getElementById('c-next').innerHTML=isLast?'<i class="ti ti-check"></i> Save word':'Next <i class="ti ti-arrow-right"></i>';
   document.getElementById('c-back').style.display=step>0?'':'none';
   setTimeout(()=>document.getElementById('sinp')?.focus(),80);
 }
+
+function removeStepTag(t){
+  stepData.tags=(stepData.tags||[]).filter(x=>x!==t);
+  renderStep();
+}
+function stepTagKeydown(e){
+  if(e.key==='Enter'||e.key===','){
+    e.preventDefault();
+    const val=document.getElementById('sinp').value.trim().replace(/,$/,'');
+    if(val&&!(stepData.tags||[]).includes(val)){
+      stepData.tags=[...(stepData.tags||[]),val];
+    }
+    document.getElementById('sinp').value='';
+    document.getElementById('sinp-sugg')?.classList.remove('open');
+    // re-render tags row only
+    const row=document.getElementById('step-tags-row');
+    if(row) row.innerHTML=(stepData.tags||[]).map(t=>
+      `<span class="tag-pill">${t}<button class="tag-x" type="button" onclick="removeStepTag('${t}')">×</button></span>`
+    ).join('');
+  }
+}
+
+// override showTagSugg for step modal which uses stepData.tags
+function showTagSuggStep(){
+  const val=document.getElementById('sinp').value.trim().toLowerCase();
+  const sugg=document.getElementById('sinp-sugg');
+  if(!sugg) return;
+  const existing=stepData.tags||[];
+  const matches=allTags().filter(t=>t.toLowerCase().includes(val)&&!existing.includes(t));
+  if(!matches.length||!val){sugg.classList.remove('open');return;}
+  sugg.innerHTML=matches.slice(0,6).map(t=>
+    `<div class="tag-sugg-item" onmousedown="pickStepTag('${t}')">${t}</div>`
+  ).join('');
+  sugg.classList.add('open');
+}
+function pickStepTag(t){
+  if(!(stepData.tags||[]).includes(t)){
+    stepData.tags=[...(stepData.tags||[]),t];
+    const row=document.getElementById('step-tags-row');
+    if(row) row.innerHTML=(stepData.tags||[]).map(t=>
+      `<span class="tag-pill">${t}<button class="tag-x" type="button" onclick="removeStepTag('${t}')">×</button></span>`
+    ).join('');
+  }
+  document.getElementById('sinp').value='';
+  document.getElementById('sinp-sugg')?.classList.remove('open');
+}
+
 function saveCurrentInput(){
   const fields=getFields(stepData.wordId);
   const el=document.getElementById('sinp');
   if(!el) return;
-  const field=fields[stepData.step];
-  if(field) stepData.draft[field]=el.value.trim();
+  const isTagStep=stepData.step===fields.length;
+  if(!isTagStep){
+    const field=fields[stepData.step];
+    if(field) stepData.draft[field]=el.value.trim();
+  }
+  // tags are saved live via stepTagKeydown/removeStepTag
 }
 async function commitStep(){
   const word=gword(stepData.wordId);
   if(!word){closeM('m-complete');return;}
   const fields=getFields(stepData.wordId);
   word.fields={...stepData.draft};
+  word.tags=stepData.tags||[];
   const newStatus=fields.some(f=>word.fields[f])?'complete':'pending';
   word.status=newStatus;
-  const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus},{id:word.id});
+  const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus,tags:word.tags},{id:word.id});
   if(error){toast('Error saving: '+error.message);return;}
   if(word.fields['Translation']) await autoLinkByTranslation(word);
   closeM('m-complete');
@@ -948,15 +1069,13 @@ async function commitStep(){
 }
 function stepNext(){
   saveCurrentInput();
-  const fields=getFields(stepData.wordId);
-  if(stepData.step>=fields.length-1){commitStep();}
+  if(stepData.step>=totalSteps(stepData.wordId)-1){commitStep();}
   else{stepData.step++;renderStep();}
 }
 function stepBack(){saveCurrentInput();if(stepData.step>0){stepData.step--;renderStep();}}
 function stepSkip(){
   saveCurrentInput();
-  const fields=getFields(stepData.wordId);
-  if(stepData.step<fields.length-1){stepData.step++;renderStep();}
+  if(stepData.step<totalSteps(stepData.wordId)-1){stepData.step++;renderStep();}
   else{commitStep();}
 }
 
