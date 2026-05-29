@@ -244,7 +244,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v23</div>
+      <div class="logo-sub">Personal vocabulary builder · v24</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -330,7 +330,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v23</div>
+    <div class="logo-sub">Personal vocabulary builder · v24</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -393,6 +393,7 @@ textarea.form-input{resize:none;line-height:1.5;}
       <input class="form-input" id="fc-word" placeholder="e.g. привет" autocomplete="off" spellcheck="false"/>
     </div>
     <div id="fc-fields"></div>
+    <div id="fc-ex-suggestions"></div>
     <div class="form-row">
       <label class="form-label">Tags <span style="font-weight:400;color:var(--ink-muted)">— e.g. adjective, food, travel</span></label>
       <div class="tags-row" id="fc-tags-row" style="margin-bottom:8px"></div>
@@ -675,28 +676,41 @@ async function signOut(){
 // ── Boot ──
 let appInitialized = false;
 
-sb.auth.onAuthStateChange(async(event,session)=>{
-  if(session) authToken = session.access_token;
+async function bootApp(session){
+  authToken = session.access_token;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('loading-screen').style.display='flex';
+  document.getElementById('app').style.display='none';
+  await loadAll();
   document.getElementById('loading-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  appInitialized = true;
+  render();
+}
 
-  if(session && !appInitialized){
-    appInitialized = true;
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('loading-screen').style.display='flex';
-    document.getElementById('app').style.display='none';
-    await loadAll();
-    document.getElementById('loading-screen').style.display='none';
-    document.getElementById('app').style.display='block';
-    render();
-  } else if(session && appInitialized){
-    // token refreshed — just update the token, no reload needed
+sb.auth.onAuthStateChange(async(event,session)=>{
+  if(session){
+    authToken = session.access_token;
+    if(!appInitialized) await bootApp(session);
   } else {
     appInitialized = false;
     authToken = SUPABASE_KEY;
+    document.getElementById('loading-screen').style.display='none';
     document.getElementById('app').style.display='none';
     document.getElementById('login-screen').style.display='flex';
   }
 });
+
+// On page load, check for existing session immediately
+(async()=>{
+  const {data:{session}} = await sb.auth.getSession();
+  if(session){
+    await bootApp(session);
+  } else {
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('login-screen').style.display='flex';
+  }
+})();
 
 async function loadAll(){
   try {
@@ -804,6 +818,25 @@ function renderQueue(){
     }).join('');
 }
 
+function wordCard(w){
+  const l=glang(w.langId);const f=w.fields||{};
+  const hasLinks=getLinkedWords(w.id).length>0;
+  const tagHtml=(w.tags||[]).map(t=>`<span class="tag-pill" style="font-size:10.5px;padding:2px 8px">${t}</span>`).join('');
+  const transRaw=f['Translation']||'';
+  const transDisplay=transRaw.includes(',')?transRaw.split(',').map((p,i)=>`${i+1}. ${p.trim()}`).join('  '):transRaw;
+  return `<div class="vc" onclick="openDetail(${w.id})">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <span style="font-size:15px">${l?l.flag:''}</span>
+      <span class="vc-word">${w.word}</span>
+      ${hasLinks?`<i class="ti ti-link" style="font-size:12px;color:var(--ink-muted);margin-left:auto"></i>`:''}
+    </div>
+    ${transDisplay?`<div class="vc-trans">${transDisplay}</div>`:''}
+    ${f['Romanisation']?`<div class="vc-meta">${f['Romanisation']}</div>`:''}
+    ${f['Example sentence']?`<div class="vc-meta">"${f['Example sentence'].substring(0,55)}${f['Example sentence'].length>55?'…':''}"</div>`:''}
+    ${tagHtml?`<div class="tags-row" style="margin-top:8px">${tagHtml}</div>`:''}
+  </div>`;
+}
+
 function renderLexicon(){
   document.getElementById('lex-filters').innerHTML=[{id:null,name:'All',flag:''},...languages].map(l=>
     `<button class="filter-chip ${activeLang===l.id?'active':''}" onclick="toggleLang(${l.id?`'${l.id}'`:'null'})">${l.flag} ${l.name}</button>`
@@ -826,29 +859,38 @@ function renderLexicon(){
     (w.tags||[]).some(t=>t.toLowerCase().includes(q))
   );
 
-  const g=document.getElementById('vocab-grid');
+  // Sort: by language order, then alphabetically
+  ws.sort((a,b)=>{
+    const li=languages.findIndex(l=>l.id===a.langId)-languages.findIndex(l=>l.id===b.langId);
+    if(li!==0) return li;
+    return a.word.localeCompare(b.word);
+  });
+
   if(!ws.length){
     g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-books"></i>${q||activeTagFilter||activeLang?'No matching words.':'No completed words yet.'}</div>`;
     return;
   }
-  g.innerHTML=ws.map(w=>{
-    const l=glang(w.langId);const f=w.fields||{};
-    const hasLinks=getLinkedWords(w.id).length>0;
-    const tagHtml=(w.tags||[]).map(t=>`<span class="tag-pill" style="font-size:10.5px;padding:2px 8px">${t}</span>`).join('');
-    const transRaw=f['Translation']||'';
-    const transDisplay=transRaw.includes(',')?transRaw.split(',').map((p,i)=>`${i+1}. ${p.trim()}`).join('  '):transRaw;
-    return `<div class="vc" onclick="openDetail(${w.id})">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-        <span style="font-size:15px">${l?l.flag:''}</span>
-        <span class="vc-word">${w.word}</span>
-        ${hasLinks?`<i class="ti ti-link" style="font-size:12px;color:var(--ink-muted);margin-left:auto"></i>`:''}
-      </div>
-      ${transDisplay?`<div class="vc-trans">${transDisplay}</div>`:''}
-      ${f['Romanisation']?`<div class="vc-meta">${f['Romanisation']}</div>`:''}
-      ${f['Example sentence']?`<div class="vc-meta">"${f['Example sentence'].substring(0,55)}${f['Example sentence'].length>55?'…':''}"</div>`:''}
-      ${tagHtml?`<div class="tags-row" style="margin-top:8px">${tagHtml}</div>`:''}
-    </div>`;
-  }).join('');
+
+  // Group by language when not filtered to one language
+  let html='';
+  if(!activeLang){
+    const byLang={};
+    ws.forEach(w=>{
+      if(!byLang[w.langId]) byLang[w.langId]=[];
+      byLang[w.langId].push(w);
+    });
+    languages.filter(l=>byLang[l.id]).forEach(l=>{
+      html+=`<div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;margin-top:8px;margin-bottom:4px">
+        <span style="font-size:20px">${l.flag}</span>
+        <span style="font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--ink)">${l.name}</span>
+        <span style="font-size:12px;color:var(--ink-muted)">${byLang[l.id].length} word${byLang[l.id].length>1?'s':''}</span>
+      </div>`;
+      html+=byLang[l.id].map(w=>wordCard(w)).join('');
+    });
+  } else {
+    html=ws.map(w=>wordCard(w)).join('');
+  }
+  g.innerHTML=html;
 }
 function toggleTagFilter(t){activeTagFilter=activeTagFilter===t?null:t;render();}
 
@@ -917,13 +959,47 @@ function renderFullCardFields(){
   const fields=l?l.fields:[];
   document.getElementById('fc-fields').innerHTML=fields.map(f=>{
     const isLong=f==='Example sentence'||f==='Notes';
+    const extraAttrs=f==='Translation'?'oninput="updateFcExSuggestions()"':'';
     return `<div class="form-row"><label class="form-label">${f}</label>
       ${isLong
         ?`<textarea class="form-input" id="fcf-${f.replace(/\s/g,'_')}" rows="2" placeholder="${f}…"></textarea>`
-        :`<input class="form-input" id="fcf-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…"/>`}
+        :`<input class="form-input" id="fcf-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…" ${extraAttrs}/>`}
     </div>`;
   }).join('');
+  document.getElementById('fc-ex-suggestions').innerHTML='';
 }
+function updateFcExSuggestions(){
+  const transEl=document.getElementById('fcf-Translation');
+  const container=document.getElementById('fc-ex-suggestions');
+  if(!transEl||!container) return;
+  const trans=transEl.value.trim();
+  if(!trans){container.innerHTML='';return;}
+  const parts=trans.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const matches=words.filter(w=>
+    w.status==='complete'&&
+    parts.some(p=>{
+      const wt=(w.fields&&w.fields['Translation']||'');
+      return wt.split(',').map(s=>s.trim().toLowerCase()).includes(p);
+    })&&
+    w.fields&&w.fields['Example sentence']
+  );
+  if(!matches.length){container.innerHTML='';return;}
+  const exField=document.getElementById('fcf-Example_sentence');
+  if(!exField){container.innerHTML='';return;}
+  container.innerHTML=`<div style="margin-bottom:14px">
+    <div style="font-size:11px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Example sentences from linked words</div>
+    ${matches.map(w=>{
+      const l=glang(w.langId);
+      return `<div style="padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px">
+        <div style="font-size:10px;color:var(--ink-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">${l?l.flag+' '+l.name:''}</div>
+        <div style="font-size:13px;font-style:italic;color:var(--ink-soft);margin-bottom:6px">"${w.fields['Example sentence']}"</div>
+        <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:4px 10px"
+          onclick="document.getElementById('fcf-Example_sentence').value='${w.fields['Example sentence'].replace(/'/g,"\\'")}';this.closest('div').parentElement.style.display='none'">Use as starting point</button>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
 async function saveFullCard(){
   const langId=document.getElementById('fc-lang').value;
   const word=document.getElementById('fc-word').value.trim();
