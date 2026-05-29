@@ -225,7 +225,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v19</div>
+      <div class="logo-sub">Personal vocabulary builder · v20</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -297,7 +297,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v19</div>
+    <div class="logo-sub">Personal vocabulary builder · v20</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -475,10 +475,12 @@ const LANG_FLAGS = {
 };
 function flagForLang(name){ return LANG_FLAGS[name.toLowerCase().trim()]||'🌐'; }
 
-// ── DB helpers (raw fetch, bypasses Supabase JS session management) ──
+// ── DB helpers ──
 const DB = SUPABASE_URL + '/rest/v1';
+let authToken = SUPABASE_KEY; // fallback to anon, replaced after login
+
 function dbHeaders(extra={}){
-  return {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json',...extra};
+  return {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+authToken,'Content-Type':'application/json',...extra};
 }
 async function dbInsert(table,body){
   const r=await fetch(`${DB}/${table}`,{method:'POST',headers:dbHeaders({'Prefer':'return=representation'}),body:JSON.stringify(body)});
@@ -551,6 +553,7 @@ async function signOut(){
 sb.auth.onAuthStateChange(async(event,session)=>{
   document.getElementById('loading-screen').style.display='none';
   if(session){
+    authToken = session.access_token;
     document.getElementById('login-screen').style.display='none';
     document.getElementById('loading-screen').style.display='flex';
     document.getElementById('app').style.display='none';
@@ -559,6 +562,7 @@ sb.auth.onAuthStateChange(async(event,session)=>{
     document.getElementById('app').style.display='block';
     render();
   } else {
+    authToken = SUPABASE_KEY;
     document.getElementById('app').style.display='none';
     document.getElementById('login-screen').style.display='flex';
   }
@@ -568,7 +572,7 @@ async function loadAll(){
   try {
     const headers = {
       'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Authorization': 'Bearer ' + authToken,
       'Content-Type': 'application/json'
     };
     const base = SUPABASE_URL + '/rest/v1';
