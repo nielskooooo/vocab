@@ -183,6 +183,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 .loading-screen{display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg2);font-size:13px;color:var(--ink-muted);}
 .spinner{width:24px;height:24px;border:2.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin-right:12px;}
 @keyframes spin{to{transform:rotate(360deg);}}
+.spin-once{animation:spin .6s linear;}
 /* Mobile */
 .mobile-header{display:none;height:56px;background:var(--bg);border-bottom:1px solid var(--border);padding:0 18px;align-items:center;justify-content:space-between;flex-shrink:0;}
 .mobile-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--ink);}
@@ -243,7 +244,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v22</div>
+      <div class="logo-sub">Personal vocabulary builder · v23</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -262,10 +263,16 @@ textarea.form-input{resize:none;line-height:1.5;}
   </aside>
 
   <div class="main">
-    <div class="topbar"><span class="topbar-title" id="topbar-title">Quick add</span></div>
+    <div class="topbar">
+      <span class="topbar-title" id="topbar-title">Quick add</span>
+      <button class="icon-btn" onclick="refreshData()" title="Sync latest data" style="font-size:20px"><i class="ti ti-refresh" id="refresh-icon"></i></button>
+    </div>
     <div class="mobile-header">
       <span class="mobile-title" id="mobile-title">Quick add</span>
-      <button class="menu-btn" onclick="openDrawer()"><i class="ti ti-menu-2"></i></button>
+      <div style="display:flex;gap:2px;align-items:center">
+        <button class="icon-btn" onclick="refreshData()" title="Sync" style="font-size:20px"><i class="ti ti-refresh" id="refresh-icon-mob"></i></button>
+        <button class="menu-btn" onclick="openDrawer()"><i class="ti ti-menu-2"></i></button>
+      </div>
     </div>
     <div class="content">
 
@@ -323,7 +330,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v22</div>
+    <div class="logo-sub">Personal vocabulary builder · v23</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -535,7 +542,14 @@ async function dbInsert(table,body){
   const r=await fetch(`${DB}/${table}`,{method:'POST',headers:dbHeaders({'Prefer':'return=representation'}),body:JSON.stringify(body)});
   const data=await r.json();
   if(!r.ok) return {data:null,error:{message:data.message||data.details||JSON.stringify(data)}};
-  return {data:Array.isArray(data)?data[0]:data,error:null};
+  const row=Array.isArray(data)?data[0]:data;
+  // normalize word rows
+  if(table==='words'&&row){
+    row.langId=row.lang_id;
+    row.tags=Array.isArray(row.tags)?row.tags:[];
+    row.fields=row.fields||{};
+  }
+  return {data:row,error:null};
 }
 async function dbUpdate(table,body,match){
   const q=Object.entries(match).map(([k,v])=>`${k}=eq.${v}`).join('&');
@@ -659,10 +673,14 @@ async function signOut(){
 }
 
 // ── Boot ──
+let appInitialized = false;
+
 sb.auth.onAuthStateChange(async(event,session)=>{
+  if(session) authToken = session.access_token;
   document.getElementById('loading-screen').style.display='none';
-  if(session){
-    authToken = session.access_token;
+
+  if(session && !appInitialized){
+    appInitialized = true;
     document.getElementById('login-screen').style.display='none';
     document.getElementById('loading-screen').style.display='flex';
     document.getElementById('app').style.display='none';
@@ -670,7 +688,10 @@ sb.auth.onAuthStateChange(async(event,session)=>{
     document.getElementById('loading-screen').style.display='none';
     document.getElementById('app').style.display='block';
     render();
+  } else if(session && appInitialized){
+    // token refreshed — just update the token, no reload needed
   } else {
+    appInitialized = false;
     authToken = SUPABASE_KEY;
     document.getElementById('app').style.display='none';
     document.getElementById('login-screen').style.display='flex';
@@ -691,7 +712,12 @@ async function loadAll(){
       fetch(base+'/links?select=*', {headers}).then(r=>r.json()),
     ]);
     languages = Array.isArray(rl) ? rl : [];
-    words = (Array.isArray(rw) ? rw : []).map(w=>({...w,langId:w.lang_id}));
+    words = (Array.isArray(rw) ? rw : []).map(w=>({
+      ...w,
+      langId: w.lang_id,
+      tags: Array.isArray(w.tags) ? w.tags : [],
+      fields: w.fields || {}
+    }));
     links = Array.isArray(rk) ? rk : [];
   } catch(e) {
     toast('Could not load data: '+e.message);
@@ -699,7 +725,14 @@ async function loadAll(){
   }
 }
 
-// ── Nav ──
+async function refreshData(){
+  const icons=['refresh-icon','refresh-icon-mob'];
+  icons.forEach(id=>document.getElementById(id)?.classList.add('spin-once'));
+  await loadAll();
+  render();
+  icons.forEach(id=>document.getElementById(id)?.classList.remove('spin-once'));
+  toast('Synced');
+}
 function go(view){
   currentView=view;
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -1067,9 +1100,22 @@ async function commitStep(){
   closeM('m-complete');
   toast('Word saved');
 }
-function stepNext(){
+async function stepNext(){
   saveCurrentInput();
-  if(stepData.step>=totalSteps(stepData.wordId)-1){commitStep();}
+  const fields=getFields(stepData.wordId);
+  const total=totalSteps(stepData.wordId);
+  // If we just finished the Translation step, auto-link immediately
+  // so example sentence suggestions are ready on the next step
+  const justFinishedField=fields[stepData.step];
+  if(justFinishedField==='Translation'&&stepData.draft['Translation']){
+    const word=gword(stepData.wordId);
+    if(word){
+      // temporarily update word fields in memory so autoLink can read it
+      word.fields={...word.fields,...stepData.draft};
+      await autoLinkByTranslation(word);
+    }
+  }
+  if(stepData.step>=total-1){commitStep();}
   else{stepData.step++;renderStep();}
 }
 function stepBack(){saveCurrentInput();if(stepData.step>0){stepData.step--;renderStep();}}
