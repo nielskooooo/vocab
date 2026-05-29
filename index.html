@@ -244,7 +244,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v24</div>
+      <div class="logo-sub">Personal vocabulary builder · v25</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -330,7 +330,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v24</div>
+    <div class="logo-sub">Personal vocabulary builder · v25</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -393,7 +393,11 @@ textarea.form-input{resize:none;line-height:1.5;}
       <input class="form-input" id="fc-word" placeholder="e.g. привет" autocomplete="off" spellcheck="false"/>
     </div>
     <div id="fc-fields"></div>
-    <div id="fc-ex-suggestions"></div>
+    <div id="fc-ex-suggestions" style="margin-bottom:4px">
+      <div id="fc-ex-placeholder" style="display:none;padding:10px 14px;background:var(--bg2);border:1px dashed var(--border2);border-radius:8px;font-size:12.5px;color:var(--ink-muted);text-align:center">
+        <i class="ti ti-bulb" style="font-size:14px;vertical-align:-2px"></i> Fill in a translation to see example sentences from linked words
+      </div>
+    </div>
     <div class="form-row">
       <label class="form-label">Tags <span style="font-weight:400;color:var(--ink-muted)">— e.g. adjective, food, travel</span></label>
       <div class="tags-row" id="fc-tags-row" style="margin-bottom:8px"></div>
@@ -677,7 +681,9 @@ async function signOut(){
 let appInitialized = false;
 
 async function bootApp(session){
-  authToken = session.access_token;
+  // Always get a fresh token rather than using the session token directly
+  const { data: { session: freshSession } } = await sb.auth.getSession();
+  authToken = (freshSession || session).access_token;
   document.getElementById('login-screen').style.display='none';
   document.getElementById('loading-screen').style.display='flex';
   document.getElementById('app').style.display='none';
@@ -691,7 +697,10 @@ async function bootApp(session){
 sb.auth.onAuthStateChange(async(event,session)=>{
   if(session){
     authToken = session.access_token;
-    if(!appInitialized) await bootApp(session);
+    if(!appInitialized){
+      await bootApp(session);
+    }
+    // TOKEN_REFRESHED — just keep token updated
   } else {
     appInitialized = false;
     authToken = SUPABASE_KEY;
@@ -700,17 +709,6 @@ sb.auth.onAuthStateChange(async(event,session)=>{
     document.getElementById('login-screen').style.display='flex';
   }
 });
-
-// On page load, check for existing session immediately
-(async()=>{
-  const {data:{session}} = await sb.auth.getSession();
-  if(session){
-    await bootApp(session);
-  } else {
-    document.getElementById('loading-screen').style.display='none';
-    document.getElementById('login-screen').style.display='flex';
-  }
-})();
 
 async function loadAll(){
   try {
@@ -966,14 +964,26 @@ function renderFullCardFields(){
         :`<input class="form-input" id="fcf-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…" ${extraAttrs}/>`}
     </div>`;
   }).join('');
-  document.getElementById('fc-ex-suggestions').innerHTML='';
+  // show placeholder only if there's an Example sentence field
+  const hasExField=fields.includes('Example sentence');
+  const ph=document.getElementById('fc-ex-placeholder');
+  if(ph) ph.style.display=hasExField?'block':'none';
+  const sugg=document.getElementById('fc-ex-suggestions');
+  // clear any previous suggestions except placeholder
+  Array.from(sugg.children).forEach(c=>{ if(c.id!=='fc-ex-placeholder') c.remove(); });
 }
 function updateFcExSuggestions(){
   const transEl=document.getElementById('fcf-Translation');
   const container=document.getElementById('fc-ex-suggestions');
+  const placeholder=document.getElementById('fc-ex-placeholder');
   if(!transEl||!container) return;
+  // remove old suggestion cards (keep placeholder)
+  Array.from(container.children).forEach(c=>{ if(c.id!=='fc-ex-placeholder') c.remove(); });
   const trans=transEl.value.trim();
-  if(!trans){container.innerHTML='';return;}
+  if(!trans){
+    if(placeholder) placeholder.style.display='block';
+    return;
+  }
   const parts=trans.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
   const matches=words.filter(w=>
     w.status==='complete'&&
@@ -983,21 +993,26 @@ function updateFcExSuggestions(){
     })&&
     w.fields&&w.fields['Example sentence']
   );
-  if(!matches.length){container.innerHTML='';return;}
   const exField=document.getElementById('fcf-Example_sentence');
-  if(!exField){container.innerHTML='';return;}
-  container.innerHTML=`<div style="margin-bottom:14px">
-    <div style="font-size:11px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Example sentences from linked words</div>
-    ${matches.map(w=>{
+  if(!matches.length||!exField){
+    if(placeholder) placeholder.style.display='block';
+    return;
+  }
+  if(placeholder) placeholder.style.display='none';
+  const wrap=document.createElement('div');
+  wrap.style.cssText='margin-bottom:14px';
+  wrap.innerHTML=`<div style="font-size:11px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Example sentences from linked words</div>`+
+    matches.map(w=>{
       const l=glang(w.langId);
+      const escaped=w.fields['Example sentence'].replace(/\\/g,'\\\\').replace(/'/g,"\\'");
       return `<div style="padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px">
         <div style="font-size:10px;color:var(--ink-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">${l?l.flag+' '+l.name:''}</div>
         <div style="font-size:13px;font-style:italic;color:var(--ink-soft);margin-bottom:6px">"${w.fields['Example sentence']}"</div>
         <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:4px 10px"
-          onclick="document.getElementById('fcf-Example_sentence').value='${w.fields['Example sentence'].replace(/'/g,"\\'")}';this.closest('div').parentElement.style.display='none'">Use as starting point</button>
+          onclick="document.getElementById('fcf-Example_sentence').value='${escaped}';this.closest('div').style.opacity='.4'">Use as starting point</button>
       </div>`;
-    }).join('')}
-  </div>`;
+    }).join('');
+  container.appendChild(wrap);
 }
 
 async function saveFullCard(){
