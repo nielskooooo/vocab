@@ -244,7 +244,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v25</div>
+      <div class="logo-sub">Personal vocabulary builder · v26</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -330,7 +330,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v25</div>
+    <div class="logo-sub">Personal vocabulary builder · v26</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -680,34 +680,43 @@ async function signOut(){
 // ── Boot ──
 let appInitialized = false;
 
-async function bootApp(session){
-  // Always get a fresh token rather than using the session token directly
-  const { data: { session: freshSession } } = await sb.auth.getSession();
-  authToken = (freshSession || session).access_token;
+async function showApp(token){
+  if(appInitialized) return;
+  appInitialized = true;
+  authToken = token;
   document.getElementById('login-screen').style.display='none';
   document.getElementById('loading-screen').style.display='flex';
   document.getElementById('app').style.display='none';
   await loadAll();
   document.getElementById('loading-screen').style.display='none';
   document.getElementById('app').style.display='block';
-  appInitialized = true;
   render();
 }
 
-sb.auth.onAuthStateChange(async(event,session)=>{
+function showLogin(){
+  appInitialized = false;
+  authToken = SUPABASE_KEY;
+  document.getElementById('loading-screen').style.display='none';
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+}
+
+sb.auth.onAuthStateChange((event, session)=>{
   if(session){
     authToken = session.access_token;
-    if(!appInitialized){
-      await bootApp(session);
-    }
-    // TOKEN_REFRESHED — just keep token updated
-  } else {
-    appInitialized = false;
-    authToken = SUPABASE_KEY;
-    document.getElementById('loading-screen').style.display='none';
-    document.getElementById('app').style.display='none';
-    document.getElementById('login-screen').style.display='flex';
+    if(!appInitialized) showApp(session.access_token);
+  } else if(event === 'SIGNED_OUT'){
+    showLogin();
   }
+});
+
+// Explicit check on load — needed for mobile Safari where onAuthStateChange
+// may not fire reliably when restoring a persisted session
+window.addEventListener('load', async()=>{
+  if(appInitialized) return;
+  const { data:{ session } } = await sb.auth.getSession();
+  if(session){ showApp(session.access_token); }
+  else { showLogin(); }
 });
 
 async function loadAll(){
