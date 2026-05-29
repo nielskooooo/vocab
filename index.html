@@ -7,6 +7,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="Vocab"/>
 <title>Paul E. Glott — Vocab</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#e8620a"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
@@ -203,6 +206,21 @@ textarea.form-input{resize:none;line-height:1.5;}
   .capture-row{flex-wrap:wrap;}
   .capture-row .word-input{order:-1;width:100%;}
 }
+/* Tags */
+.tag-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11.5px;background:#f0edf8;color:#5b4a8a;border:1px solid rgba(91,74,138,.2);font-family:'DM Sans',sans-serif;}
+.tag-pill.clickable{cursor:pointer;transition:all .15s;}
+.tag-pill.clickable:hover{background:#e4dff5;}
+.tag-pill.active{background:#5b4a8a;color:#fff;border-color:#5b4a8a;}
+.tag-pill .tag-x{background:none;border:none;cursor:pointer;color:inherit;font-size:14px;padding:0;line-height:1;opacity:.7;margin-left:1px;}
+.tag-pill .tag-x:hover{opacity:1;}
+.tags-row{display:flex;flex-wrap:wrap;gap:5px;min-height:10px;}
+.tag-input-wrap{position:relative;}
+.tag-input{width:100%;padding:8px 12px;border:1.5px solid var(--border2);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg2);outline:none;transition:border-color .15s;}
+.tag-input:focus{border-color:#5b4a8a;background:var(--bg);}
+.tag-sugg{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;box-shadow:0 6px 24px rgba(0,0,0,.1);z-index:400;margin-top:3px;overflow:hidden;display:none;}
+.tag-sugg.open{display:block;}
+.tag-sugg-item{padding:9px 14px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;}
+.tag-sugg-item:hover{background:#f0edf8;color:#5b4a8a;}
 </style>
 </head>
 <body>
@@ -225,7 +243,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v20</div>
+      <div class="logo-sub">Personal vocabulary builder · v21</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -270,6 +288,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 
       <div class="view" id="view-lexicon">
         <div class="lex-filters" id="lex-filters"></div>
+        <div id="tag-filters" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
         <div class="vocab-grid" id="vocab-grid"></div>
       </div>
 
@@ -297,7 +316,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v20</div>
+    <div class="logo-sub">Personal vocabulary builder · v21</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -360,6 +379,17 @@ textarea.form-input{resize:none;line-height:1.5;}
       <input class="form-input" id="fc-word" placeholder="e.g. привет" autocomplete="off" spellcheck="false"/>
     </div>
     <div id="fc-fields"></div>
+    <div class="form-row">
+      <label class="form-label">Tags <span style="font-weight:400;color:var(--ink-muted)">— e.g. adjective, food, travel</span></label>
+      <div class="tags-row" id="fc-tags-row" style="margin-bottom:8px"></div>
+      <div class="tag-input-wrap">
+        <input class="tag-input" id="fc-tag-input" placeholder="Add a tag…" autocomplete="off"
+          oninput="showTagSugg('fc-tag-input','fc-tag-sugg')"
+          onblur="hideTagSugg('fc-tag-sugg')"
+          onkeydown="tagKeydown(event,'fc-tag-input','fc-tag-sugg','fc')"/>
+        <div class="tag-sugg" id="fc-tag-sugg"></div>
+      </div>
+    </div>
     <div class="mactions">
       <button class="btn btn-ghost btn-sm" type="button" onclick="closeM('m-fullcard')">Cancel</button>
       <button class="btn btn-primary btn-sm" type="button" onclick="saveFullCard()"><i class="ti ti-check"></i> Save card</button>
@@ -402,6 +432,7 @@ textarea.form-input{resize:none;line-height:1.5;}
       <button class="icon-btn" type="button" onclick="closeM('m-detail')"><i class="ti ti-x"></i></button>
     </div>
     <div class="detail-lang" id="dw-lang"></div>
+    <div id="dw-tags" style="margin-bottom:14px"></div>
     <div id="dw-fields"></div>
     <div id="dw-related"></div>
     <div class="mactions">
@@ -440,6 +471,17 @@ textarea.form-input{resize:none;line-height:1.5;}
     </div>
     <div style="font-size:12px;color:var(--ink-muted);margin-bottom:20px" id="edit-lang"></div>
     <div id="edit-fields"></div>
+    <div class="form-row">
+      <label class="form-label">Tags</label>
+      <div class="tags-row" id="edit-tags-row" style="margin-bottom:8px"></div>
+      <div class="tag-input-wrap">
+        <input class="tag-input" id="edit-tag-input" placeholder="Add a tag…" autocomplete="off"
+          oninput="showTagSugg('edit-tag-input','edit-tag-sugg')"
+          onblur="hideTagSugg('edit-tag-sugg')"
+          onkeydown="tagKeydown(event,'edit-tag-input','edit-tag-sugg','edit')"/>
+        <div class="tag-sugg" id="edit-tag-sugg"></div>
+      </div>
+    </div>
     <div class="mactions">
       <button class="btn btn-ghost btn-sm" type="button" onclick="closeM('m-edit')">Cancel</button>
       <button class="btn btn-primary btn-sm" type="button" onclick="saveEdit()"><i class="ti ti-check"></i> Save changes</button>
@@ -509,11 +551,67 @@ let stepData={wordId:null,step:0,draft:{}};
 let detailWordId=null;
 let modalFields=[];
 let foSrcIdx=null;
+let activeTagFilter=null;
+// per-modal tag state
+let fcTags=[], editTags=[];
 
 // ── Helpers ──
 function sid(id){ return String(id); }
 function gword(id){ return words.find(w=>sid(w.id)===sid(id)); }
 function glang(id){ return languages.find(l=>l.id===id); }
+
+function allTags(){
+  const set=new Set();
+  words.forEach(w=>(w.tags||[]).forEach(t=>set.add(t)));
+  return [...set].sort();
+}
+
+// ── Tag input helpers ──
+function showTagSugg(inputId, suggId){
+  const val=document.getElementById(inputId).value.trim().toLowerCase();
+  const sugg=document.getElementById(suggId);
+  const existing=inputId.startsWith('fc')?fcTags:editTags;
+  const matches=allTags().filter(t=>t.toLowerCase().includes(val)&&!existing.includes(t));
+  if(!matches.length||!val){sugg.classList.remove('open');return;}
+  sugg.innerHTML=matches.slice(0,6).map(t=>
+    `<div class="tag-sugg-item" onmousedown="pickTag('${t}','${inputId}','${suggId}')">${t}</div>`
+  ).join('');
+  sugg.classList.add('open');
+}
+function hideTagSugg(suggId){setTimeout(()=>document.getElementById(suggId)?.classList.remove('open'),150);}
+function pickTag(t,inputId,suggId){
+  document.getElementById(inputId).value='';
+  document.getElementById(suggId).classList.remove('open');
+  const prefix=inputId.startsWith('fc')?'fc':'edit';
+  addTagToModal(t,prefix);
+}
+function tagKeydown(e,inputId,suggId,prefix){
+  if(e.key==='Enter'||e.key===','){
+    e.preventDefault();
+    const val=document.getElementById(inputId).value.trim().replace(/,$/,'');
+    if(val){addTagToModal(val,prefix);}
+    document.getElementById(inputId).value='';
+    document.getElementById(suggId).classList.remove('open');
+  }
+}
+function addTagToModal(t,prefix){
+  const arr=prefix==='fc'?fcTags:editTags;
+  if(!t||arr.includes(t)) return;
+  arr.push(t);
+  renderModalTags(prefix);
+}
+function removeTagFromModal(t,prefix){
+  if(prefix==='fc') fcTags=fcTags.filter(x=>x!==t);
+  else editTags=editTags.filter(x=>x!==t);
+  renderModalTags(prefix);
+}
+function renderModalTags(prefix){
+  const arr=prefix==='fc'?fcTags:editTags;
+  const rowId=prefix+'-tags-row';
+  document.getElementById(rowId).innerHTML=arr.map(t=>
+    `<span class="tag-pill">${t}<button class="tag-x" type="button" onclick="removeTagFromModal('${t}','${prefix}')">×</button></span>`
+  ).join('');
+}
 
 // ── Toast ──
 function toast(msg,dur=2800){
@@ -666,26 +764,39 @@ function renderLexicon(){
   document.getElementById('lex-filters').innerHTML=[{id:null,name:'All',flag:''},...languages].map(l=>
     `<button class="filter-chip ${activeLang===l.id?'active':''}" onclick="toggleLang(${l.id?`'${l.id}'`:'null'})">${l.flag} ${l.name}</button>`
   ).join('');
+  // tag filters
+  const tags=allTags();
+  const tf=document.getElementById('tag-filters');
+  if(tags.length){
+    tf.innerHTML=tags.map(t=>
+      `<span class="tag-pill clickable ${activeTagFilter===t?'active':''}" onclick="toggleTagFilter('${t}')">${t}</span>`
+    ).join('');
+  } else {
+    tf.innerHTML='';
+  }
   let ws=words.filter(w=>w.status==='complete');
   if(activeLang) ws=ws.filter(w=>w.langId===activeLang);
+  if(activeTagFilter) ws=ws.filter(w=>(w.tags||[]).includes(activeTagFilter));
   const g=document.getElementById('vocab-grid');
   if(!ws.length){g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-books"></i>No completed words yet.</div>`;return;}
   g.innerHTML=ws.map(w=>{
     const l=glang(w.langId);const f=w.fields||{};
     const hasLinks=getLinkedWords(w.id).length>0;
+    const tagHtml=(w.tags||[]).map(t=>`<span class="tag-pill" style="font-size:10.5px;padding:2px 8px">${t}</span>`).join('');
     return `<div class="vc" onclick="openDetail(${w.id})">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
         <span style="font-size:15px">${l?l.flag:''}</span>
         <span class="vc-word">${w.word}</span>
-        ${hasLinks?`<i class="ti ti-link" style="font-size:12px;color:var(--ink-muted);margin-left:auto" title="Has links"></i>`:''}
+        ${hasLinks?`<i class="ti ti-link" style="font-size:12px;color:var(--ink-muted);margin-left:auto"></i>`:''}
       </div>
-      ${f['Translation']?`<div class="vc-trans">${f['Translation']}</div>`:''}
+      ${f['Translation']?`<div class="vc-trans">${f['Translation'].split(',')[0].trim()}${f['Translation'].includes(',')?'…':''}</div>`:''}
       ${f['Romanisation']?`<div class="vc-meta">${f['Romanisation']}</div>`:''}
       ${f['Example sentence']?`<div class="vc-meta">"${f['Example sentence'].substring(0,55)}${f['Example sentence'].length>55?'…':''}"</div>`:''}
-      ${f['Category']?`<span class="vc-tag">${f['Category']}</span>`:''}
+      ${tagHtml?`<div class="tags-row" style="margin-top:8px">${tagHtml}</div>`:''}
     </div>`;
   }).join('');
 }
+function toggleTagFilter(t){activeTagFilter=activeTagFilter===t?null:t;render();}
 
 function renderSettings(){
   document.getElementById('set-langs').innerHTML=languages.map(l=>`
@@ -739,6 +850,9 @@ function openFullCard(){
   const sel=document.getElementById('fc-lang');
   sel.innerHTML=languages.map(l=>`<option value="${l.id}">${l.flag} ${l.name}</option>`).join('');
   document.getElementById('fc-word').value='';
+  document.getElementById('fc-tag-input').value='';
+  fcTags=[];
+  renderModalTags('fc');
   renderFullCardFields();
   document.getElementById('m-fullcard').classList.add('open');
   setTimeout(()=>document.getElementById('fc-word').focus(),80);
@@ -767,7 +881,7 @@ async function saveFullCard(){
     if(el) fields[f]=el.value.trim();
   });
   const status=Object.values(fields).some(v=>v)?'complete':'pending';
-  const {data,error}=await dbInsert('words',{word,lang_id:langId,status,fields});
+  const {data,error}=await dbInsert('words',{word,lang_id:langId,status,fields,tags:fcTags});
   if(error){toast('Error: '+error.message);return;}
   words.push({...data,langId:data.lang_id});
   // auto-link by translation
@@ -901,6 +1015,11 @@ function openDetail(id){
   const l=glang(word.langId);
   document.getElementById('dw-word').textContent=word.word;
   document.getElementById('dw-lang').textContent=l?l.flag+' '+l.name:'';
+  // Tags
+  const tags=word.tags||[];
+  document.getElementById('dw-tags').innerHTML=tags.length
+    ?`<div class="tags-row">${tags.map(t=>`<span class="tag-pill">${t}</span>`).join('')}</div>`
+    :'';
   // Fields
   const fields=l?l.fields:[];
   document.getElementById('dw-fields').innerHTML=fields.map(f=>{
@@ -970,9 +1089,13 @@ function editWord(){
   const fields=l?l.fields:[];
   document.getElementById('edit-title').textContent=word.word;
   document.getElementById('edit-lang').textContent=l?l.flag+' '+l.name:'';
-  // Check if any linked word has an example sentence to suggest
+  // Populate tags
+  editTags=[...(word.tags||[])];
+  document.getElementById('edit-tag-input').value='';
+  renderModalTags('edit');
+  // Example sentence suggestions from linked words
   const linked=[...getLinkedWords(detailWordId),...getAutoMatches(word,getLinkedWords(detailWordId))];
-  const exampleSuggestions=linked
+  const exSuggestions=linked
     .filter(w=>(w.fields&&w.fields['Example sentence']))
     .map(w=>({lang:glang(w.langId),ex:w.fields['Example sentence']}));
   document.getElementById('edit-fields').innerHTML=fields.map(f=>{
@@ -980,14 +1103,13 @@ function editWord(){
     const isLong=f==='Example sentence'||f==='Notes';
     const hint=FIELD_HINTS[f]?`<div style="font-size:11px;color:var(--ink-muted);margin-top:4px">${FIELD_HINTS[f]}</div>`:'';
     const transhint=f==='Translation'?`<div style="font-size:11px;color:var(--ink-muted);margin-top:4px">Separate multiple translations with commas, e.g. "to do, to make"</div>`:'';
-    // Example sentence suggestion
     let sugg='';
-    if(f==='Example sentence'&&exampleSuggestions.length){
-      sugg=exampleSuggestions.map(({lang:sl,ex})=>`
-        <div style="margin-top:6px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--ink-soft)">
-          <div style="font-size:10px;color:var(--ink-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">${sl?sl.flag+' '+sl.name:''} — suggested</div>
-          <div style="font-style:italic;margin-bottom:5px">"${ex}"</div>
-          <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:4px 10px" onclick="useExampleSuggestion('${ex.replace(/'/g,"\\'")}')">Use as starting point</button>
+    if(f==='Example sentence'&&exSuggestions.length&&!v){
+      sugg=exSuggestions.map(({lang:sl,ex})=>`
+        <div style="margin-top:7px;padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px">
+          <div style="font-size:10px;color:var(--ink-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">${sl?sl.flag+' '+sl.name:''}</div>
+          <div style="font-size:13px;font-style:italic;color:var(--ink-soft);margin-bottom:6px">"${ex}"</div>
+          <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:4px 10px" onclick="useExSugg(this,'${ex.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">Use as starting point</button>
         </div>`).join('');
     }
     return `<div class="form-row">
@@ -1001,9 +1123,10 @@ function editWord(){
   document.getElementById('m-edit').classList.add('open');
 }
 
-function useExampleSuggestion(text){
+function useExSugg(btn,text){
   const el=document.getElementById('ef-Example_sentence');
   if(el){el.value=text;el.focus();}
+  btn.closest('div[style]').style.display='none';
 }
 
 async function saveEdit(){
@@ -1015,9 +1138,10 @@ async function saveEdit(){
     const el=document.getElementById('ef-'+f.replace(/\s/g,'_'));
     if(el) word.fields[f]=el.value.trim();
   });
+  word.tags=editTags;
   const newStatus=fields.some(f=>word.fields[f])?'complete':'pending';
   word.status=newStatus;
-  const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus},{id:word.id});
+  const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus,tags:editTags},{id:word.id});
   if(error){toast('Error: '+error.message);return;}
   if(word.fields['Translation']) await autoLinkByTranslation(word);
   closeM('m-edit');
