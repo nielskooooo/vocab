@@ -244,7 +244,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v30</div>
+      <div class="logo-sub">Personal vocabulary builder · v31</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -330,7 +330,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v30</div>
+    <div class="logo-sub">Personal vocabulary builder · v31</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -1056,6 +1056,8 @@ async function saveFullCard(){
   const word=document.getElementById('fc-word').value.trim();
   if(!word||!langId){toast('Please enter a word');return;}
   localStorage.setItem('lastLangId',langId);
+  const btn=document.querySelector('#m-fullcard .btn-primary');
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin .7s linear infinite"></i> Saving…';}
   const l=glang(langId);
   const fields={};
   if(l) l.fields.forEach(f=>{
@@ -1064,6 +1066,7 @@ async function saveFullCard(){
   });
   const status=Object.values(fields).some(v=>v)?'complete':'pending';
   const {data,error}=await dbInsert('words',{word,lang_id:langId,status,fields,tags:fcTags});
+  if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save card';}
   if(error){toast('Error: '+error.message);return;}
   words.push(data);
   if(fields['Translation']) await autoLinkByTranslation(data);
@@ -1218,17 +1221,26 @@ function saveCurrentInput(){
 async function createStubsForOtherLanguages(savedWord){
   if(!savedWord||!savedWord.fields||!savedWord.fields['Translation']) return;
   const translation=savedWord.fields['Translation'];
-  // find which languages already have a linked word
-  const linkedIds=new Set([
-    ...getLinkedWords(savedWord.id).map(w=>w.langId),
-    savedWord.langId
-  ]);
-  // also consider auto-matches
-  const autoMatched=getAutoMatches(savedWord,[]);
-  autoMatched.forEach(w=>linkedIds.add(w.langId));
-  // create stubs for languages not yet covered
-  const missing=languages.filter(l=>!linkedIds.has(l.id));
+  const sourceLangId=savedWord.langId||savedWord.lang_id;
+
+  // Find languages that already have a word with this translation
+  const translationParts=translation.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const coveredLangIds=new Set([sourceLangId]);
+
+  // Check linked words
+  getLinkedWords(savedWord.id).forEach(w=>coveredLangIds.add(w.langId));
+
+  // Check all words with matching translation
+  words.forEach(w=>{
+    if(sid(w.id)===sid(savedWord.id)) return;
+    const wt=(w.fields&&w.fields['Translation']||'');
+    const wtParts=wt.split(',').map(s=>s.trim().toLowerCase());
+    if(translationParts.some(p=>wtParts.includes(p))) coveredLangIds.add(w.langId);
+  });
+
+  const missing=languages.filter(l=>!coveredLangIds.has(l.id));
   if(!missing.length) return;
+
   let count=0;
   for(const l of missing){
     const {data,error}=await dbInsert('words',{
@@ -1240,14 +1252,13 @@ async function createStubsForOtherLanguages(savedWord){
     });
     if(!error&&data){
       words.push(data);
-      // link the stub to the saved word
       await createLink(savedWord.id,data.id,false);
       count++;
     }
   }
   if(count>0){
-    toast(`Added to Completion queue in ${count} other language${count>1?'s':''}`);
     render();
+    toast(`Added to Completion queue in ${count} other language${count>1?'s':''}`,3500);
   }
 }
 
