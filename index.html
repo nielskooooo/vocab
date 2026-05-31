@@ -244,7 +244,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v31</div>
+      <div class="logo-sub">Personal vocabulary builder · v32</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -330,7 +330,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v31</div>
+    <div class="logo-sub">Personal vocabulary builder · v32</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -737,7 +737,9 @@ async function loadAll(){
       ...w,
       langId: w.lang_id,
       tags: Array.isArray(w.tags) ? w.tags : [],
-      fields: w.fields || {}
+      fields: w.fields || {},
+      is_stub: !!w.is_stub,
+      source_word_id: w.source_word_id||null
     }));
     links = Array.isArray(rk) ? rk : [];
   } catch(e) {
@@ -788,6 +790,16 @@ function renderLangPills(){
 }
 function toggleLang(id){activeLang=activeLang===id?null:id;render();}
 
+function stubLabel(w){
+  const sourceWord=w.source_word_id?gword(w.source_word_id):null;
+  const trans=(w.fields&&w.fields['Translation'])||'';
+  const sourceLang=sourceWord?glang(sourceWord.langId):null;
+  if(sourceWord&&sourceLang){
+    return `How do you say <em>"${trans}"</em> in ${glang(w.langId)?.name||''}? <span style="font-size:11px;color:var(--ink-muted)">(from ${sourceLang.flag} ${sourceWord.word})</span>`;
+  }
+  return `How do you say <em>"${trans}"</em> in ${glang(w.langId)?.name||''}?`;
+}
+
 function renderCapture(){
   const sel=document.getElementById('clang');
   const cur=sel.value;
@@ -799,10 +811,11 @@ function renderCapture(){
   if(!pending.length){c.innerHTML=`<div class="empty-state"><i class="ti ti-leaf"></i>Add your first word above.</div>`;return;}
   c.innerHTML=pending.slice().reverse().map(w=>{
     const l=glang(w.langId);
+    const isStub=w.is_stub;
     return `<div class="word-row" onclick="openComplete(${w.id})">
       <span style="font-size:18px">${l?l.flag:''}</span>
-      <span class="word-row-text">${w.word}</span>
-      <span class="badge badge-pend">Pending</span>
+      <span class="word-row-text">${isStub?stubLabel(w):w.word}</span>
+      <span class="badge badge-pend">${isStub?'Suggested':'Pending'}</span>
       <button class="icon-btn" type="button" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
     </div>`;
   }).join('');
@@ -812,8 +825,15 @@ function renderQueue(){
   const pending=words.filter(w=>w.status==='pending');
   const c=document.getElementById('queue-list');
   if(!pending.length){c.innerHTML=`<div class="empty-state"><i class="ti ti-circle-check"></i>You're all caught up.</div>`;return;}
-  c.innerHTML=`<p style="font-size:13.5px;color:var(--ink-muted);margin-bottom:18px;line-height:1.7">${pending.length} word${pending.length>1?'s':''} waiting. Click to fill in fields one by one.</p>`+
-    pending.map(w=>{
+
+  const stubs=pending.filter(w=>w.is_stub);
+  const own=pending.filter(w=>!w.is_stub);
+
+  let html=`<p style="font-size:13.5px;color:var(--ink-muted);margin-bottom:18px;line-height:1.7">${pending.length} word${pending.length>1?'s':''} waiting. Click any to fill in its fields.</p>`;
+
+  if(own.length){
+    html+=`<div style="font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Your words</div>`;
+    html+=own.map(w=>{
       const l=glang(w.langId);
       return `<div class="word-row" onclick="openComplete(${w.id})">
         <span style="font-size:18px">${l?l.flag:''}</span>
@@ -823,6 +843,22 @@ function renderQueue(){
         <button class="icon-btn" type="button" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
       </div>`;
     }).join('');
+  }
+
+  if(stubs.length){
+    if(own.length) html+=`<div style="height:12px"></div>`;
+    html+=`<div style="font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Suggested from other languages</div>`;
+    html+=stubs.map(w=>{
+      const l=glang(w.langId);
+      return `<div class="word-row" onclick="openComplete(${w.id})">
+        <span style="font-size:18px">${l?l.flag:''}</span>
+        <span class="word-row-text" style="font-style:italic">${stubLabel(w)}</span>
+        <button class="icon-btn" type="button" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
+      </div>`;
+    }).join('');
+  }
+
+  c.innerHTML=html;
 }
 
 function wordCard(w){
@@ -1081,8 +1117,10 @@ function openComplete(id){
   const word=gword(id);
   if(!word) return;
   const l=glang(word.langId);
-  stepData={wordId:id,step:0,draft:{...(word.fields||{})},tags:[...(word.tags||[])]};
-  document.getElementById('cw-word').textContent=word.word;
+  stepData={wordId:id,step:0,draft:{...(word.fields||{})},tags:[...(word.tags||[])],isStub:!!word.is_stub};
+  document.getElementById('cw-word').textContent=word.is_stub
+    ? (word.fields&&word.fields['Translation']?`"${word.fields['Translation']}" in ${l?l.name:''}`:'New word')
+    : word.word;
   document.getElementById('cw-lang').textContent=l?l.flag+' '+l.name:'';
   renderStep();
   document.getElementById('m-complete').classList.add('open');
@@ -1092,7 +1130,11 @@ function getFields(wordId){
   const l=glang(word?.langId);
   return l?l.fields:[];
 }
-function totalSteps(wordId){ return getFields(wordId).length+1; } // +1 for tags
+function totalSteps(wordId){
+  const word=gword(wordId);
+  // stubs get an extra first step to enter the word itself
+  return getFields(wordId).length + 1 + (word?.is_stub?1:0);
+}
 
 function getExSuggestions(wordId){
   const word=gword(wordId);
@@ -1103,18 +1145,28 @@ function getExSuggestions(wordId){
 }
 
 function renderStep(){
+  const word=gword(stepData.wordId);
   const fields=getFields(stepData.wordId);
   const total=totalSteps(stepData.wordId);
   const step=stepData.step;
-  const isTagStep=step===fields.length;
+  const isStub=word?.is_stub;
+  const isWordStep=isStub&&step===0;
+  const fieldStep=isStub?step-1:step; // offset for stubs
+  const isTagStep=step===fields.length+(isStub?1:0);
 
   document.getElementById('cprog').style.width=Math.round(step/total*100)+'%';
   document.getElementById('cprog-text').textContent=`${step+1} / ${total}`;
 
-  if(isTagStep){
+  if(isWordStep){
+    const trans=(word.fields&&word.fields['Translation'])||'';
+    const sourceWord=word.source_word_id?gword(word.source_word_id):null;
+    const sourceLang=sourceWord?glang(sourceWord.langId):null;
+    document.getElementById('cfield-name').textContent='Word';
+    document.getElementById('cfield-input').innerHTML=`<input class="step-input" id="sinp" type="text" placeholder="How do you say this in ${glang(word.langId)?.name||'this language'}?" value="${stepData.wordText||''}"/>`;
+    document.getElementById('cfield-hint').innerHTML=`What is <strong>"${trans}"</strong> in ${glang(word.langId)?.name||'this language'}?${sourceLang?` <span style="color:var(--ink-muted)">(from ${sourceLang.flag} <em>${sourceWord.word}</em>)</span>`:''}`;
+  } else if(isTagStep){
     document.getElementById('cfield-name').textContent='Tags';
-    document.getElementById('cfield-hint').textContent='Add tags to group words by theme or grammar class. Press Enter or comma after each tag.';
-    // render tag input
+    document.getElementById('cfield-hint').textContent='Group this word by theme or grammar class.';
     const existingHtml=(stepData.tags||[]).map(t=>
       `<span class="tag-pill">${t}<button class="tag-x" type="button" onclick="removeStepTag('${t}')">×</button></span>`
     ).join('');
@@ -1128,11 +1180,10 @@ function renderStep(){
         <div class="tag-sugg" id="sinp-sugg"></div>
       </div>`;
   } else {
-    const field=fields[step]||'';
+    const field=fields[fieldStep]||'';
     document.getElementById('cfield-name').textContent=field;
     const val=stepData.draft[field]||'';
     const isLong=field==='Example sentence'||field==='Notes';
-    // example sentence suggestion
     let suggHtml='';
     if(field==='Example sentence'&&!val){
       const suggs=getExSuggestions(stepData.wordId);
@@ -1142,7 +1193,7 @@ function renderStep(){
             <div style="font-size:10px;color:var(--ink-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">${sl?sl.flag+' '+sl.name:''}</div>
             <div style="font-size:13px;font-style:italic;color:var(--ink-soft);margin-bottom:6px">"${ex}"</div>
             <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:4px 10px"
-              onclick="document.getElementById('sinp').value=this.closest('div').parentElement.querySelector('div:nth-child(2)').textContent.replace(/^\"|\"$/g,'').trim();this.closest('div').style.display='none'">Use as starting point</button>
+              onclick="document.getElementById('sinp').value=\`${ex.replace(/`/g,"'")}\`;this.closest('div').style.display='none'">Use as starting point</button>
           </div>`).join('');
       }
     }
@@ -1157,7 +1208,7 @@ function renderStep(){
   const isLast=step>=total-1;
   document.getElementById('c-next').innerHTML=isLast?'<i class="ti ti-check"></i> Save word':'Next <i class="ti ti-arrow-right"></i>';
   document.getElementById('c-back').style.display=step>0?'':'none';
-  setTimeout(()=>document.getElementById('sinp')?.focus(),80);
+  if(!isTagStep) setTimeout(()=>document.getElementById('sinp')?.focus(),80);
 }
 
 function removeStepTag(t){
@@ -1222,15 +1273,11 @@ async function createStubsForOtherLanguages(savedWord){
   if(!savedWord||!savedWord.fields||!savedWord.fields['Translation']) return;
   const translation=savedWord.fields['Translation'];
   const sourceLangId=savedWord.langId||savedWord.lang_id;
-
-  // Find languages that already have a word with this translation
   const translationParts=translation.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+
+  // Build set of covered languages — run AFTER autoLink so links are populated
   const coveredLangIds=new Set([sourceLangId]);
-
-  // Check linked words
   getLinkedWords(savedWord.id).forEach(w=>coveredLangIds.add(w.langId));
-
-  // Check all words with matching translation
   words.forEach(w=>{
     if(sid(w.id)===sid(savedWord.id)) return;
     const wt=(w.fields&&w.fields['Translation']||'');
@@ -1244,11 +1291,13 @@ async function createStubsForOtherLanguages(savedWord){
   let count=0;
   for(const l of missing){
     const {data,error}=await dbInsert('words',{
-      word:translation,
+      word:'',
       lang_id:l.id,
       status:'pending',
       fields:{Translation:translation},
-      tags:[]
+      tags:[],
+      is_stub:true,
+      source_word_id:savedWord.id
     });
     if(!error&&data){
       words.push(data);
@@ -1262,15 +1311,42 @@ async function createStubsForOtherLanguages(savedWord){
   }
 }
 
+function saveCurrentInput(){
+  const word=gword(stepData.wordId);
+  const fields=getFields(stepData.wordId);
+  const el=document.getElementById('sinp');
+  if(!el) return;
+  const isStub=word?.is_stub;
+  const isWordStep=isStub&&stepData.step===0;
+  const fieldStep=isStub?stepData.step-1:stepData.step;
+  const isTagStep=stepData.step===fields.length+(isStub?1:0);
+  if(isWordStep){
+    stepData.wordText=el.value.trim();
+  } else if(!isTagStep){
+    const field=fields[fieldStep];
+    if(field) stepData.draft[field]=el.value.trim();
+  }
+}
+
 async function commitStep(){
   const word=gword(stepData.wordId);
   if(!word){closeM('m-complete');return;}
   const fields=getFields(stepData.wordId);
   word.fields={...stepData.draft};
   word.tags=stepData.tags||[];
-  const newStatus=fields.some(f=>word.fields[f])?'complete':'pending';
+  if(word.is_stub&&stepData.wordText){
+    word.word=stepData.wordText;
+    word.is_stub=false;
+  }
+  const newStatus=(fields.some(f=>word.fields[f])||word.word)?'complete':'pending';
   word.status=newStatus;
-  const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus,tags:word.tags},{id:word.id});
+  const {error}=await dbUpdate('words',{
+    word:word.word||'',
+    fields:word.fields,
+    status:newStatus,
+    tags:word.tags,
+    is_stub:!!word.is_stub
+  },{id:word.id});
   if(error){toast('Error saving: '+error.message);return;}
   if(word.fields['Translation']) await autoLinkByTranslation(word);
   closeM('m-complete');
@@ -1279,15 +1355,15 @@ async function commitStep(){
 }
 async function stepNext(){
   saveCurrentInput();
+  const word=gword(stepData.wordId);
   const fields=getFields(stepData.wordId);
   const total=totalSteps(stepData.wordId);
-  // If we just finished the Translation step, auto-link immediately
-  // so example sentence suggestions are ready on the next step
-  const justFinishedField=fields[stepData.step];
+  const isStub=word?.is_stub;
+  const fieldStep=isStub?stepData.step-1:stepData.step;
+  // Auto-link after translation step
+  const justFinishedField=fields[fieldStep];
   if(justFinishedField==='Translation'&&stepData.draft['Translation']){
-    const word=gword(stepData.wordId);
     if(word){
-      // temporarily update word fields in memory so autoLink can read it
       word.fields={...word.fields,...stepData.draft};
       await autoLinkByTranslation(word);
     }
