@@ -207,7 +207,32 @@ textarea.form-input{resize:none;line-height:1.5;}
   .capture-row{flex-wrap:wrap;}
   .capture-row .word-input{order:-1;width:100%;}
 }
-/* Tags */
+/* Cross-language table */
+.vocab-table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;}
+.vocab-table th{background:var(--bg2);color:var(--ink);font-weight:500;padding:10px 14px;border-bottom:2px solid var(--border2);white-space:nowrap;position:sticky;top:0;z-index:10;}
+.vocab-table th.dragging{opacity:.4;}
+.vocab-table th.drag-over{border-left:2px solid var(--accent);}
+.vocab-table td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top;min-width:120px;max-width:180px;}
+.vocab-table tr:hover td{background:var(--accent-light);}
+.vocab-table td.has-word{cursor:pointer;color:var(--ink);font-weight:500;}
+.vocab-table td.no-word{color:var(--ink-muted);font-style:italic;font-size:12px;}
+.vocab-table td.cat-cell{color:var(--ink-soft);font-size:12px;}
+.table-word-sub{font-size:11px;color:var(--ink-muted);font-weight:400;margin-top:2px;}
+/* Category pill */
+.cat-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11.5px;background:#e8f4fd;color:#2a5d8a;border:1px solid rgba(42,93,138,.2);font-family:'DM Sans',sans-serif;}
+.cat-pill-sm{font-size:10.5px;padding:2px 8px;}
+/* Category select */
+.cat-select{width:100%;padding:9px 12px;border:1.5px solid var(--border2);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);outline:none;}
+.cat-select:focus{border-color:#2a5d8a;background:var(--bg);}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.stat-num{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--accent);letter-spacing:-.02em;line-height:1;}
+.stat-label{font-size:12px;color:var(--ink-muted);margin-top:4px;}
+/* Toggle */
+.toggle-on{background:var(--accent)!important;}
+.toggle-off{background:#ccc!important;}
+.toggle-on span{left:21px!important;}
+.toggle-off span{left:3px!important;}
 .tag-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11.5px;background:#f0edf8;color:#5b4a8a;border:1px solid rgba(91,74,138,.2);font-family:'DM Sans',sans-serif;}
 .tag-pill.clickable{cursor:pointer;transition:all .15s;}
 .tag-pill.clickable:hover{background:#e4dff5;}
@@ -244,12 +269,13 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v32</div>
+      <div class="logo-sub">Personal vocabulary builder · v33</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
       <button class="nav-btn" data-view="queue" onclick="go('queue')"><i class="ti ti-inbox"></i> Completion <span class="nav-badge" id="nb1"></span></button>
       <button class="nav-btn" data-view="lexicon" onclick="go('lexicon')"><i class="ti ti-books"></i> My vocabulary</button>
+      <button class="nav-btn" data-view="table" onclick="go('table')"><i class="ti ti-table"></i> Cross-language</button>
     </nav>
     <div class="lang-section">
       <div class="lang-section-title">Languages</div>
@@ -306,7 +332,45 @@ textarea.form-input{resize:none;line-height:1.5;}
         <div class="vocab-grid" id="vocab-grid"></div>
       </div>
 
-      <div class="view" id="view-settings">
+      <div class="view" id="view-table">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <select class="lang-sel" id="table-cat-filter" onchange="renderTable()" style="font-size:13px;padding:7px 10px">
+              <option value="">All categories</option>
+            </select>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="openManageCategories()"><i class="ti ti-tag"></i> Manage categories</button>
+        </div>
+        <div style="overflow-x:auto">
+          <div id="table-wrap"></div>
+        </div>
+      </div>
+        <!-- Stats -->
+        <div class="set-section-title">My progress</div>
+        <div id="set-stats" style="margin-bottom:28px"></div>
+
+        <!-- Preferences -->
+        <div class="set-section-title">Preferences</div>
+        <div style="margin-bottom:28px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:12px">
+            <div>
+              <div style="font-size:14px;font-weight:500;color:var(--ink)">Expand words across languages</div>
+              <div style="font-size:12px;color:var(--ink-muted);margin-top:3px">When you complete a word, automatically suggest adding it in your other languages</div>
+            </div>
+            <button id="expand-toggle" onclick="toggleExpandSetting()" style="width:44px;height:26px;border-radius:100px;border:none;cursor:pointer;transition:background .2s;position:relative;flex-shrink:0;margin-left:16px">
+              <span style="position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Export -->
+        <div class="set-section-title">Export</div>
+        <div style="margin-bottom:28px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="exportCSV()"><i class="ti ti-file-text"></i> Export to CSV</button>
+          <button class="btn btn-ghost" onclick="exportAnki()"><i class="ti ti-cards"></i> Export for Anki</button>
+        </div>
+
+        <!-- Language config -->
         <div class="set-section-title">Language configuration</div>
         <p class="set-hint">Fields shown in this order during completion.</p>
         <div id="set-langs"></div>
@@ -322,6 +386,7 @@ textarea.form-input{resize:none;line-height:1.5;}
     <button class="mob-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i><span>Quick add</span></button>
     <button class="mob-btn" data-view="queue" onclick="go('queue')"><i class="ti ti-inbox"></i><span>Completion</span><span class="mob-badge" id="mb1"></span></button>
     <button class="mob-btn" data-view="lexicon" onclick="go('lexicon')"><i class="ti ti-books"></i><span>Vocabulary</span></button>
+    <button class="mob-btn" data-view="table" onclick="go('table')"><i class="ti ti-table"></i><span>Table</span></button>
     <button class="mob-btn" data-view="settings" onclick="go('settings')"><i class="ti ti-settings"></i><span>Settings</span></button>
   </div>
 </nav>
@@ -330,12 +395,13 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v32</div>
+    <div class="logo-sub">Personal vocabulary builder · v33</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
     <button class="nav-btn" onclick="go('queue');closeDrawer()"><i class="ti ti-inbox"></i> Completion</button>
     <button class="nav-btn" onclick="go('lexicon');closeDrawer()"><i class="ti ti-books"></i> My vocabulary</button>
+    <button class="nav-btn" onclick="go('table');closeDrawer()"><i class="ti ti-table"></i> Cross-language</button>
     <button class="nav-btn" onclick="go('settings');closeDrawer()"><i class="ti ti-settings"></i> Settings</button>
   </div>
   <div class="lang-section">
@@ -391,6 +457,12 @@ textarea.form-input{resize:none;line-height:1.5;}
     <div class="form-row">
       <label class="form-label">Word / phrase</label>
       <input class="form-input" id="fc-word" placeholder="e.g. привет" autocomplete="off" spellcheck="false"/>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Category <span style="font-weight:400;color:var(--ink-muted)">— broad theme</span></label>
+      <select class="cat-select" id="fc-category">
+        <option value="">None</option>
+      </select>
     </div>
     <div id="fc-fields"></div>
     <div id="fc-ex-suggestions" style="margin-bottom:4px">
@@ -489,7 +561,13 @@ textarea.form-input{resize:none;line-height:1.5;}
       <h3 style="margin:0" id="edit-title"></h3>
       <button class="icon-btn" type="button" onclick="closeM('m-edit')"><i class="ti ti-x"></i></button>
     </div>
-    <div style="font-size:12px;color:var(--ink-muted);margin-bottom:20px" id="edit-lang"></div>
+    <div style="font-size:12px;color:var(--ink-muted);margin-bottom:16px" id="edit-lang"></div>
+    <div class="form-row">
+      <label class="form-label">Category</label>
+      <select class="cat-select" id="edit-category" style="margin-bottom:0">
+        <option value="">None</option>
+      </select>
+    </div>
     <div id="edit-fields"></div>
     <div class="form-row">
       <label class="form-label">Tags</label>
@@ -508,6 +586,24 @@ textarea.form-input{resize:none;line-height:1.5;}
     </div>
   </div>
 </div>
+
+<!-- Manage categories modal -->
+<div class="overlay" id="m-categories">
+  <div class="mbox" style="max-width:400px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 style="margin:0">Categories</h3>
+      <button class="icon-btn" type="button" onclick="closeM('m-categories')"><i class="ti ti-x"></i></button>
+    </div>
+    <p style="font-size:13px;color:var(--ink-muted);margin-bottom:16px;line-height:1.6">Broad themes like Food, Travel or Sports. Each word belongs to one category.</p>
+    <div id="cat-list" style="margin-bottom:16px"></div>
+    <div style="display:flex;gap:8px">
+      <input class="form-input" id="new-cat-input" placeholder="New category…" style="font-size:13px;padding:8px 12px" onkeydown="if(event.key==='Enter')addCategory()"/>
+      <button class="btn btn-primary btn-sm" type="button" onclick="addCategory()"><i class="ti ti-plus"></i></button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a18;color:#fff;font-size:13px;padding:10px 18px;border-radius:100px;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;white-space:nowrap;font-family:'DM Sans',sans-serif;"></div>
 
 <script>
 const SUPABASE_URL = 'https://gpessepxegxwwlhjsqmz.supabase.co';
@@ -553,6 +649,9 @@ async function dbInsert(table,body){
     row.langId=row.lang_id;
     row.tags=Array.isArray(row.tags)?row.tags:[];
     row.fields=row.fields||{};
+    row.is_stub=!!row.is_stub;
+    row.source_word_id=row.source_word_id||null;
+    row.category=row.category||null;
   }
   return {data:row,error:null};
 }
@@ -578,8 +677,14 @@ let detailWordId=null;
 let modalFields=[];
 let foSrcIdx=null;
 let activeTagFilter=null;
-// per-modal tag state
+let activeCatFilter=null;
 let fcTags=[], editTags=[];
+let expandEnabled=localStorage.getItem('expandEnabled')==='true';
+let categories=JSON.parse(localStorage.getItem('vocab_categories')||'["Food","Travel","Sports","Work","Nature","Culture","Daily life","Other"]');
+let tableColOrder=null; // set after languages load
+
+function saveCategories(){ localStorage.setItem('vocab_categories',JSON.stringify(categories)); }
+function allCategories(){ return categories; }
 
 // ── Helpers ──
 function sid(id){ return String(id); }
@@ -592,7 +697,201 @@ function allTags(){
   return [...set].sort();
 }
 
-// ── Tag input helpers ──
+// ── Category management ──
+function openManageCategories(){
+  renderCatList();
+  document.getElementById('new-cat-input').value='';
+  document.getElementById('m-categories').classList.add('open');
+}
+function renderCatList(){
+  document.getElementById('cat-list').innerHTML=categories.length
+    ?categories.map((c,i)=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
+        <span style="flex:1;font-size:14px;color:var(--ink)">${c}</span>
+        <span style="font-size:11px;color:var(--ink-muted)">${words.filter(w=>w.category===c).length} words</span>
+        <button class="icon-btn" style="font-size:14px" type="button" onclick="deleteCategory(${i})"><i class="ti ti-trash"></i></button>
+      </div>`).join('')
+    :`<p style="font-size:13px;color:var(--ink-muted)">No categories yet.</p>`;
+}
+function addCategory(){
+  const inp=document.getElementById('new-cat-input');
+  const val=inp.value.trim();
+  if(!val||categories.includes(val)) return;
+  categories.push(val);
+  saveCategories();
+  inp.value='';
+  renderCatList();
+}
+function deleteCategory(idx){
+  if(!confirm(`Remove category "${categories[idx]}"? Words keep their category label.`)) return;
+  categories.splice(idx,1);
+  saveCategories();
+  renderCatList();
+}
+
+// ── Export ──
+function exportCSV(){
+  const allFields=[...new Set(languages.flatMap(l=>l.fields))];
+  const headers=['Word','Language','Status','Category','Tags',...allFields];
+  const rows=words.filter(w=>!w.is_stub).map(w=>{
+    const l=glang(w.langId);
+    return [
+      `"${(w.word||'').replace(/"/g,'""')}"`,
+      `"${l?l.name:''}"`,
+      w.status,
+      `"${w.category||''}"`,
+      `"${(w.tags||[]).join(', ')}"`,
+      ...allFields.map(f=>`"${((w.fields||{})[f]||'').replace(/"/g,'""')}"`)
+    ].join(',');
+  });
+  const csv=[headers.join(','),...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`vocabulary_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  toast('CSV exported');
+}
+
+function exportAnki(){
+  // Anki TSV: front TAB back (word + romanisation \n\n translation + example)
+  const rows=words.filter(w=>w.status==='complete'&&!w.is_stub).map(w=>{
+    const f=w.fields||{};
+    const l=glang(w.langId);
+    const front=`${w.word}${f['Romanisation']?`<br><small>${f['Romanisation']}</small>`:''}`;
+    const back=[
+      f['Translation']?`<b>${f['Translation']}</b>`:'',
+      f['Example sentence']?`<i>${f['Example sentence']}</i>`:'',
+      f['Notes']?`<small>${f['Notes']}</small>`:''
+    ].filter(Boolean).join('<br>');
+    const tags=(w.tags||[]).join(' ');
+    return `${front}\t${back}\t${tags}`;
+  });
+  const tsv=rows.join('\n');
+  const blob=new Blob([tsv],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`vocabulary_anki_${new Date().toISOString().split('T')[0]}.txt`;
+  a.click();
+  toast('Anki file exported — import as TSV with 3 fields');
+}
+
+// ── Cross-language table ──
+let tableDragSrcIdx=null;
+
+function getTableColOrder(){
+  const stored=localStorage.getItem('tableColOrder');
+  if(stored){
+    try{
+      const arr=JSON.parse(stored);
+      // ensure all current language ids are represented
+      const all=languages.map(l=>l.id);
+      const filtered=arr.filter(id=>all.includes(id));
+      const missing=all.filter(id=>!filtered.includes(id));
+      return [...filtered,...missing];
+    }catch(e){}
+  }
+  return languages.map(l=>l.id);
+}
+
+function saveTableColOrder(order){ localStorage.setItem('tableColOrder',JSON.stringify(order)); }
+
+function renderTable(){
+  const wrap=document.getElementById('table-wrap');
+  const catFilter=document.getElementById('table-cat-filter')?.value||'';
+
+  // Update category filter options
+  const sel=document.getElementById('table-cat-filter');
+  if(sel){
+    const cur=sel.value;
+    sel.innerHTML='<option value="">All categories</option>'+
+      categories.map(c=>`<option value="${c}" ${cur===c?'selected':''}>${c}</option>`).join('');
+  }
+
+  if(!languages.length){wrap.innerHTML=`<div class="empty-state"><i class="ti ti-table"></i>Add some languages first.</div>`;return;}
+
+  const colOrder=getTableColOrder();
+  const orderedLangs=colOrder.map(id=>glang(id)).filter(Boolean);
+
+  // Build groups of words: each group = a word + all its linked equivalents
+  const visited=new Set();
+  const rows=[];
+
+  words.filter(w=>!w.is_stub).forEach(w=>{
+    if(visited.has(sid(w.id))) return;
+    if(catFilter&&w.category!==catFilter) return;
+    // get all linked words
+    const linked=getLinkedWords(w.id).filter(lw=>!lw.is_stub);
+    const group=[w,...linked];
+    group.forEach(gw=>visited.add(sid(gw.id)));
+    // build row: one cell per language
+    const row={};
+    group.forEach(gw=>{row[gw.langId]=gw;});
+    // category from any word in group
+    const cat=group.find(gw=>gw.category)?.category||'';
+    rows.push({row,cat});
+  });
+
+  // Also add unlinked words not yet visited
+  words.filter(w=>!w.is_stub&&!visited.has(sid(w.id))).forEach(w=>{
+    if(catFilter&&w.category!==catFilter) return;
+    const row={};row[w.langId]=w;
+    rows.push({row,cat:w.category||''});
+  });
+
+  if(!rows.length){wrap.innerHTML=`<div class="empty-state"><i class="ti ti-table"></i>No words found.</div>`;return;}
+
+  const thDrag=(langId,idx)=>
+    `ondragstart="tblDragStart(event,${idx})"
+     ondragover="tblDragOver(event,${idx})"
+     ondrop="tblDrop(event,${idx})"
+     ondragend="tblDragEnd()"
+     draggable="true"`;
+
+  const html=`<table class="vocab-table">
+    <thead><tr>
+      <th style="min-width:100px">Category</th>
+      ${orderedLangs.map((l,i)=>`<th ${thDrag(l.id,i)} style="cursor:grab" title="Drag to reorder">${l.flag} ${l.name}</th>`).join('')}
+    </tr></thead>
+    <tbody>
+      ${rows.map(({row,cat})=>`<tr>
+        <td class="cat-cell">${cat?`<span class="cat-pill cat-pill-sm">${cat}</span>`:''}</td>
+        ${orderedLangs.map(l=>{
+          const w=row[l.id];
+          if(w) return `<td class="has-word" onclick="openDetail(${w.id})">
+            ${w.word||'<em style="color:var(--ink-muted);font-size:11px">no word yet</em>'}
+            ${(w.fields&&w.fields['Translation'])?`<div class="table-word-sub">${w.fields['Translation'].split(',')[0].trim()}</div>`:''}
+          </td>`;
+          return `<td class="no-word">—</td>`;
+        }).join('')}
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+  wrap.innerHTML=html;
+}
+
+function tblDragStart(e,idx){
+  tableDragSrcIdx=idx;
+  requestAnimationFrame(()=>e.currentTarget.classList.add('dragging'));
+}
+function tblDragOver(e,idx){
+  e.preventDefault();
+  document.querySelectorAll('.vocab-table th').forEach((th,i)=>th.classList.toggle('drag-over',i===idx+1&&idx!==tableDragSrcIdx));
+}
+function tblDrop(e,idx){
+  e.preventDefault();
+  if(tableDragSrcIdx===null||tableDragSrcIdx===idx) return;
+  const order=getTableColOrder();
+  const moved=order.splice(tableDragSrcIdx,1)[0];
+  order.splice(idx,0,moved);
+  saveTableColOrder(order);
+  tableDragSrcIdx=null;
+  renderTable();
+}
+function tblDragEnd(){
+  tableDragSrcIdx=null;
+  document.querySelectorAll('.vocab-table th').forEach(th=>th.classList.remove('dragging','drag-over'));
+}
 function showTagSugg(inputId, suggId){
   const inp=document.getElementById(inputId);
   const sugg=document.getElementById(suggId);
@@ -646,8 +945,11 @@ function renderModalTags(prefix){
 // ── Toast ──
 function toast(msg,dur=2800){
   const el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),dur);
+  if(!el) return;
+  el.textContent=msg;
+  el.style.opacity='1';
+  el.style.transform='translateX(-50%) translateY(0)';
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(-50%) translateY(20px)';},dur);
 }
 
 // ── Auth ──
@@ -739,7 +1041,8 @@ async function loadAll(){
       tags: Array.isArray(w.tags) ? w.tags : [],
       fields: w.fields || {},
       is_stub: !!w.is_stub,
-      source_word_id: w.source_word_id||null
+      source_word_id: w.source_word_id||null,
+      category: w.category||null
     }));
     links = Array.isArray(rk) ? rk : [];
   } catch(e) {
@@ -762,10 +1065,11 @@ function go(view){
   document.querySelectorAll('.nav-btn[data-view],.mob-btn[data-view]').forEach(b=>b.classList.remove('active'));
   document.getElementById('view-'+view).classList.add('active');
   document.querySelectorAll('[data-view="'+view+'"]').forEach(b=>b.classList.add('active'));
-  const titles={capture:'Quick add',queue:'Completion',lexicon:'My vocabulary',settings:'Settings'};
+  const titles={capture:'Quick add',queue:'Completion',lexicon:'My vocabulary',table:'Cross-language',settings:'Settings'};
   const t=titles[view]||view;
   document.getElementById('topbar-title').textContent=t;
   document.getElementById('mobile-title').textContent=t;
+  if(view==='table') renderTable();
   render();
 }
 function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
@@ -867,16 +1171,20 @@ function wordCard(w){
   const tagHtml=(w.tags||[]).map(t=>`<span class="tag-pill" style="font-size:10.5px;padding:2px 8px">${t}</span>`).join('');
   const transRaw=f['Translation']||'';
   const transDisplay=transRaw.includes(',')?transRaw.split(',').map((p,i)=>`${i+1}. ${p.trim()}`).join('  '):transRaw;
+  const hasMeta=w.category||(w.tags||[]).length;
   return `<div class="vc" onclick="openDetail(${w.id})">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
       <span style="font-size:15px">${l?l.flag:''}</span>
-      <span class="vc-word">${w.word}</span>
+      <span class="vc-word">${w.word||''}</span>
       ${hasLinks?`<i class="ti ti-link" style="font-size:12px;color:var(--ink-muted);margin-left:auto"></i>`:''}
     </div>
     ${transDisplay?`<div class="vc-trans">${transDisplay}</div>`:''}
     ${f['Romanisation']?`<div class="vc-meta">${f['Romanisation']}</div>`:''}
     ${f['Example sentence']?`<div class="vc-meta">"${f['Example sentence'].substring(0,55)}${f['Example sentence'].length>55?'…':''}"</div>`:''}
-    ${tagHtml?`<div class="tags-row" style="margin-top:8px">${tagHtml}</div>`:''}
+    ${hasMeta?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">
+      ${w.category?`<span class="cat-pill cat-pill-sm">${w.category}</span>`:''}
+      ${tagHtml}
+    </div>`:''}
   </div>`;
 }
 
@@ -884,29 +1192,34 @@ function renderLexicon(){
   document.getElementById('lex-filters').innerHTML=[{id:null,name:'All',flag:''},...languages].map(l=>
     `<button class="filter-chip ${activeLang===l.id?'active':''}" onclick="toggleLang(${l.id?`'${l.id}'`:'null'})">${l.flag} ${l.name}</button>`
   ).join('');
+
+  // Category filter chips
   const tags=allTags();
+  const usedCats=[...new Set(words.filter(w=>w.category).map(w=>w.category))].sort();
   const tf=document.getElementById('tag-filters');
-  tf.innerHTML=tags.length?tags.map(t=>
-    `<span class="tag-pill clickable ${activeTagFilter===t?'active':''}" onclick="toggleTagFilter('${t}')">${t}</span>`
-  ).join(''):'';
+  tf.innerHTML=[
+    ...usedCats.map(c=>`<span class="cat-pill" style="cursor:pointer;opacity:${activeCatFilter===c?1:.6}" onclick="toggleCatFilter('${c}')">${c}</span>`),
+    ...tags.map(t=>`<span class="tag-pill clickable ${activeTagFilter===t?'active':''}" onclick="toggleTagFilter('${t}')">${t}</span>`)
+  ].join('');
 
   const searchEl=document.getElementById('lex-search');
   const q=searchEl?searchEl.value.trim().toLowerCase():'';
 
-  let ws=words.filter(w=>w.status==='complete');
+  let ws=words.filter(w=>w.status==='complete'&&!w.is_stub);
   if(activeLang) ws=ws.filter(w=>w.langId===activeLang);
   if(activeTagFilter) ws=ws.filter(w=>(w.tags||[]).includes(activeTagFilter));
+  if(activeCatFilter) ws=ws.filter(w=>w.category===activeCatFilter);
   if(q) ws=ws.filter(w=>
-    w.word.toLowerCase().includes(q)||
+    (w.word||'').toLowerCase().includes(q)||
     Object.values(w.fields||{}).some(v=>v&&v.toLowerCase().includes(q))||
-    (w.tags||[]).some(t=>t.toLowerCase().includes(q))
+    (w.tags||[]).some(t=>t.toLowerCase().includes(q))||
+    (w.category||'').toLowerCase().includes(q)
   );
 
-  // Sort: by language order, then alphabetically
   ws.sort((a,b)=>{
     const li=languages.findIndex(l=>l.id===a.langId)-languages.findIndex(l=>l.id===b.langId);
     if(li!==0) return li;
-    return a.word.localeCompare(b.word);
+    return (a.word||'').localeCompare(b.word||'');
   });
 
   const g=document.getElementById('vocab-grid');
@@ -937,8 +1250,43 @@ function renderLexicon(){
   g.innerHTML=html;
 }
 function toggleTagFilter(t){activeTagFilter=activeTagFilter===t?null:t;render();}
+function toggleCatFilter(c){activeCatFilter=activeCatFilter===c?null:c;render();}
+
+function toggleExpandSetting(){
+  expandEnabled=!expandEnabled;
+  localStorage.setItem('expandEnabled',expandEnabled);
+  renderSettings();
+}
+
+function renderStats(){
+  const completed=words.filter(w=>w.status==='complete'&&!w.is_stub);
+  const pending=words.filter(w=>w.status==='pending'&&!w.is_stub);
+  const totalLinks=links.length;
+  const langBreakdown=languages.map(l=>{
+    const n=words.filter(w=>w.langId===l.id&&w.status==='complete'&&!w.is_stub).length;
+    return `<div class="stat-card"><div class="stat-num">${n}</div><div class="stat-label">${l.flag} ${l.name}</div></div>`;
+  }).join('');
+  document.getElementById('set-stats').innerHTML=`
+    <div class="stats-grid" style="margin-bottom:12px">
+      <div class="stat-card"><div class="stat-num">${completed.length}</div><div class="stat-label">Words learned</div></div>
+      <div class="stat-card"><div class="stat-num">${pending.length}</div><div class="stat-label">Pending</div></div>
+      <div class="stat-card"><div class="stat-num">${totalLinks}</div><div class="stat-label">Cross-language links</div></div>
+      <div class="stat-card"><div class="stat-num">${languages.length}</div><div class="stat-label">Languages</div></div>
+    </div>
+    <div class="stats-grid">${langBreakdown}</div>`;
+}
 
 function renderSettings(){
+  renderStats();
+  // Toggle
+  const btn=document.getElementById('expand-toggle');
+  if(btn){
+    btn.className=expandEnabled?'toggle-on':'toggle-off';
+    btn.style.cssText=`width:44px;height:26px;border-radius:100px;border:none;cursor:pointer;transition:background .2s;position:relative;flex-shrink:0;margin-left:16px;background:${expandEnabled?'var(--accent)':'#ccc'}`;
+    const span=btn.querySelector('span');
+    if(span) span.style.left=expandEnabled?'21px':'3px';
+  }
+  // Language configs with field reorder
   document.getElementById('set-langs').innerHTML=languages.map(l=>`
     <div class="lang-cfg">
       <div class="lang-cfg-top">
@@ -946,8 +1294,19 @@ function renderSettings(){
         <span class="lang-cfg-name">${l.name}</span>
         <button class="icon-btn" type="button" onclick="removeLang('${l.id}')"><i class="ti ti-trash"></i></button>
       </div>
-      <div class="ftags-label">Card fields (completion order)</div>
-      <div class="ftags">${l.fields.map(f=>`<span class="ftag">${f}<button type="button" onclick="removeField('${l.id}','${f}')">×</button></span>`).join('')}</div>
+      <div class="ftags-label">Card fields (drag to reorder)</div>
+      <ul class="fo-list" id="set-fo-${l.id}" style="margin-bottom:10px">
+        ${l.fields.map((f,i)=>`
+          <li class="fo-item" draggable="true"
+            ondragstart="setFoDragStart(event,'${l.id}',${i})"
+            ondragover="setFoDragOver(event,${i})"
+            ondrop="setFoDrop(event,'${l.id}',${i})"
+            ondragend="setFoDragEnd('${l.id}')">
+            <i class="ti ti-grip-vertical fo-handle"></i>
+            <span class="fo-name">${f}</span>
+            <button class="fo-remove" type="button" onclick="removeField('${l.id}','${f}')">×</button>
+          </li>`).join('')}
+      </ul>
       <div class="add-field-row">
         <input class="add-field-input" id="nf-${l.id}" placeholder="Add a field…" onkeydown="if(event.key==='Enter')addField('${l.id}')"/>
         <button class="btn btn-ghost btn-sm" type="button" onclick="addField('${l.id}')"><i class="ti ti-plus"></i></button>
@@ -955,11 +1314,32 @@ function renderSettings(){
     </div>`).join('');
 }
 
+// Settings field drag-reorder
+let setFoSrcIdx=null, setFoLangId=null;
+function setFoDragStart(e,langId,idx){setFoSrcIdx=idx;setFoLangId=langId;requestAnimationFrame(()=>e.currentTarget.classList.add('fo-dragging'));}
+function setFoDragOver(e,idx){e.preventDefault();document.querySelectorAll(`#set-fo-${setFoLangId} .fo-item`).forEach((el,i)=>{el.classList.toggle('fo-over',i===idx&&idx!==setFoSrcIdx);});}
+async function setFoDrop(e,langId,idx){
+  e.preventDefault();
+  if(setFoSrcIdx===null||setFoSrcIdx===idx) return;
+  const l=glang(langId);
+  if(!l) return;
+  const moved=l.fields.splice(setFoSrcIdx,1)[0];
+  l.fields.splice(idx,0,moved);
+  await dbUpdate('languages',{fields:l.fields},{id:langId});
+  setFoSrcIdx=null;
+  renderSettings();
+}
+function setFoDragEnd(langId){
+  setFoSrcIdx=null;
+  document.querySelectorAll(`#set-fo-${langId} .fo-item`).forEach(el=>el.classList.remove('fo-dragging','fo-over'));
+}
+
 function render(){
   renderLangPills(); updateBadges();
   if(currentView==='capture') renderCapture();
   if(currentView==='queue') renderQueue();
   if(currentView==='lexicon') renderLexicon();
+  if(currentView==='table') renderTable();
   if(currentView==='settings') renderSettings();
 }
 
@@ -989,15 +1369,15 @@ async function delWord(id){
 function openFullCard(){
   const sel=document.getElementById('fc-lang');
   sel.innerHTML=languages.map(l=>`<option value="${l.id}">${l.flag} ${l.name}</option>`).join('');
-  // restore last used language
   const lastLang=localStorage.getItem('lastLangId');
-  if(lastLang && languages.find(l=>l.id===lastLang)) sel.value=lastLang;
+  if(lastLang&&languages.find(l=>l.id===lastLang)) sel.value=lastLang;
   document.getElementById('fc-word').value='';
   document.getElementById('fc-tag-input').value='';
   fcTags=[];
   renderModalTags('fc');
   const ts=document.getElementById('fc-tag-suggestions');
   if(ts) ts.innerHTML='';
+  populateCatSelect('fc-category',null);
   renderFullCardFields();
   document.getElementById('m-fullcard').classList.add('open');
   setTimeout(()=>document.getElementById('fc-word').focus(),80);
@@ -1101,7 +1481,8 @@ async function saveFullCard(){
     if(el) fields[f]=el.value.trim();
   });
   const status=Object.values(fields).some(v=>v)?'complete':'pending';
-  const {data,error}=await dbInsert('words',{word,lang_id:langId,status,fields,tags:fcTags});
+  const category=document.getElementById('fc-category')?.value||null;
+  const {data,error}=await dbInsert('words',{word,lang_id:langId,status,fields,tags:fcTags,category:category||null});
   if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save card';}
   if(error){toast('Error: '+error.message);return;}
   words.push(data);
@@ -1117,7 +1498,7 @@ function openComplete(id){
   const word=gword(id);
   if(!word) return;
   const l=glang(word.langId);
-  stepData={wordId:id,step:0,draft:{...(word.fields||{})},tags:[...(word.tags||[])],isStub:!!word.is_stub};
+  stepData={wordId:id,step:0,draft:{...(word.fields||{})},tags:[...(word.tags||[])],isStub:!!word.is_stub,wordText:'',category:word.category||null};
   document.getElementById('cw-word').textContent=word.is_stub
     ? (word.fields&&word.fields['Translation']?`"${word.fields['Translation']}" in ${l?l.name:''}`:'New word')
     : word.word;
@@ -1130,10 +1511,10 @@ function getFields(wordId){
   const l=glang(word?.langId);
   return l?l.fields:[];
 }
+// Steps: [word entry if stub] + fields + category + tags
 function totalSteps(wordId){
   const word=gword(wordId);
-  // stubs get an extra first step to enter the word itself
-  return getFields(wordId).length + 1 + (word?.is_stub?1:0);
+  return getFields(wordId).length + 2 + (word?.is_stub?1:0); // +2 for category+tags
 }
 
 function getExSuggestions(wordId){
@@ -1151,8 +1532,10 @@ function renderStep(){
   const step=stepData.step;
   const isStub=word?.is_stub;
   const isWordStep=isStub&&step===0;
-  const fieldStep=isStub?step-1:step; // offset for stubs
-  const isTagStep=step===fields.length+(isStub?1:0);
+  const offset=isStub?1:0;
+  const fieldStep=step-offset;
+  const isCatStep=step===fields.length+offset;
+  const isTagStep=step===fields.length+offset+1;
 
   document.getElementById('cprog').style.width=Math.round(step/total*100)+'%';
   document.getElementById('cprog-text').textContent=`${step+1} / ${total}`;
@@ -1164,6 +1547,13 @@ function renderStep(){
     document.getElementById('cfield-name').textContent='Word';
     document.getElementById('cfield-input').innerHTML=`<input class="step-input" id="sinp" type="text" placeholder="How do you say this in ${glang(word.langId)?.name||'this language'}?" value="${stepData.wordText||''}"/>`;
     document.getElementById('cfield-hint').innerHTML=`What is <strong>"${trans}"</strong> in ${glang(word.langId)?.name||'this language'}?${sourceLang?` <span style="color:var(--ink-muted)">(from ${sourceLang.flag} <em>${sourceWord.word}</em>)</span>`:''}`;
+  } else if(isCatStep){
+    document.getElementById('cfield-name').textContent='Category';
+    document.getElementById('cfield-hint').textContent='Assign a broad theme to help organise your vocabulary.';
+    document.getElementById('cfield-input').innerHTML=`<select class="cat-select" id="sinp">
+      <option value="">None</option>
+      ${categories.map(c=>`<option value="${c}" ${stepData.category===c?'selected':''}>${c}</option>`).join('')}
+    </select>`;
   } else if(isTagStep){
     document.getElementById('cfield-name').textContent='Tags';
     document.getElementById('cfield-hint').textContent='Group this word by theme or grammar class.';
@@ -1270,6 +1660,7 @@ function saveCurrentInput(){
 }
 // ── Suggest word in other languages ──
 async function createStubsForOtherLanguages(savedWord){
+  if(!expandEnabled) return;
   if(!savedWord||!savedWord.fields||!savedWord.fields['Translation']) return;
   const translation=savedWord.fields['Translation'];
   const sourceLangId=savedWord.langId||savedWord.lang_id;
@@ -1285,6 +1676,9 @@ async function createStubsForOtherLanguages(savedWord){
     if(translationParts.some(p=>wtParts.includes(p))) coveredLangIds.add(w.langId);
   });
 
+  const sourceTags=savedWord.tags||[];
+  const sourceCategory=savedWord.category||null;
+
   const missing=languages.filter(l=>!coveredLangIds.has(l.id));
   if(!missing.length) return;
 
@@ -1295,7 +1689,8 @@ async function createStubsForOtherLanguages(savedWord){
       lang_id:l.id,
       status:'pending',
       fields:{Translation:translation},
-      tags:[],
+      tags:sourceTags,
+      category:sourceCategory,
       is_stub:true,
       source_word_id:savedWord.id
     });
@@ -1318,10 +1713,14 @@ function saveCurrentInput(){
   if(!el) return;
   const isStub=word?.is_stub;
   const isWordStep=isStub&&stepData.step===0;
-  const fieldStep=isStub?stepData.step-1:stepData.step;
-  const isTagStep=stepData.step===fields.length+(isStub?1:0);
+  const offset2=isStub?1:0;
+  const fieldStep=stepData.step-offset2;
+  const isCatStep=stepData.step===fields.length+offset2;
+  const isTagStep=stepData.step===fields.length+offset2+1;
   if(isWordStep){
     stepData.wordText=el.value.trim();
+  } else if(isCatStep){
+    stepData.category=el.value||null;
   } else if(!isTagStep){
     const field=fields[fieldStep];
     if(field) stepData.draft[field]=el.value.trim();
@@ -1334,6 +1733,7 @@ async function commitStep(){
   const fields=getFields(stepData.wordId);
   word.fields={...stepData.draft};
   word.tags=stepData.tags||[];
+  if(stepData.category!==undefined) word.category=stepData.category||null;
   if(word.is_stub&&stepData.wordText){
     word.word=stepData.wordText;
     word.is_stub=false;
@@ -1345,6 +1745,7 @@ async function commitStep(){
     fields:word.fields,
     status:newStatus,
     tags:word.tags,
+    category:word.category||null,
     is_stub:!!word.is_stub
   },{id:word.id});
   if(error){toast('Error saving: '+error.message);return;}
@@ -1435,8 +1836,11 @@ function openDetail(id){
   document.getElementById('dw-lang').textContent=l?l.flag+' '+l.name:'';
   // Tags
   const tags=word.tags||[];
-  document.getElementById('dw-tags').innerHTML=tags.length
-    ?`<div class="tags-row">${tags.map(t=>`<span class="tag-pill">${t}</span>`).join('')}</div>`
+  document.getElementById('dw-tags').innerHTML=(word.category||tags.length)
+    ?`<div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center">
+        ${word.category?`<span class="cat-pill">${word.category}</span>`:''}
+        ${tags.map(t=>`<span class="tag-pill">${t}</span>`).join('')}
+      </div>`
     :'';
   // Fields
   const fields=l?l.fields:[];
@@ -1505,8 +1909,9 @@ function editWord(){
   if(!word) return;
   const l=glang(word.langId);
   const fields=l?l.fields:[];
-  document.getElementById('edit-title').textContent=word.word;
+  document.getElementById('edit-title').textContent=word.word||'New word';
   document.getElementById('edit-lang').textContent=l?l.flag+' '+l.name:'';
+  populateCatSelect('edit-category',word.category);
   // Populate tags
   editTags=[...(word.tags||[])];
   document.getElementById('edit-tag-input').value='';
@@ -1557,9 +1962,10 @@ async function saveEdit(){
     if(el) word.fields[f]=el.value.trim();
   });
   word.tags=editTags;
+  word.category=document.getElementById('edit-category')?.value||null;
   const newStatus=fields.some(f=>word.fields[f])?'complete':'pending';
   word.status=newStatus;
-  const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus,tags:editTags},{id:word.id});
+  const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus,tags:editTags,category:word.category||null},{id:word.id});
   if(error){toast('Error: '+error.message);return;}
   if(word.fields['Translation']) await autoLinkByTranslation(word);
   if(newStatus==='complete') await createStubsForOtherLanguages(word);
