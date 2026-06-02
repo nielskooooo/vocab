@@ -270,7 +270,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v37</div>
+      <div class="logo-sub">Personal vocabulary builder · v38</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -388,7 +388,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v37</div>
+    <div class="logo-sub">Personal vocabulary builder · v38</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -485,7 +485,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 
 <!-- Completion modal -->
 <div class="overlay" id="m-complete" onclick="closeM('m-complete')">
-  <div class="mbox cbox">
+  <div class="mbox cbox" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
       <div>
         <div class="cbox-word" id="cw-word"></div>
@@ -550,7 +550,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 
 <!-- Edit word modal -->
 <div class="overlay" id="m-edit" onclick="closeM('m-edit')">
-  <div class="mbox" style="max-width:480px" onclick="event.stopPropagation()" onclick="event.stopPropagation()">
+  <div class="mbox" style="max-width:480px" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <h3 style="margin:0" id="edit-title"></h3>
       <button class="icon-btn" type="button" onclick="closeM('m-edit')"><i class="ti ti-x"></i></button>
@@ -1376,7 +1376,9 @@ function addCategoryFromSettings(){
   renderSettings();
 }
 function deleteCategoryFromSettings(idx){
-  if(!confirm(`Remove category "${categories[idx]}"?`)) return;
+  if(!confirm(`Remove category "${categories[idx]}"? Words in this category will be reclassified as uncategorised.`)) return;
+  // Don't touch words — they keep their category string but it won't appear in the list
+  // Words will fall into 'Other' in the table
   categories.splice(idx,1);
   saveCategories();
   renderSettings();
@@ -1738,6 +1740,16 @@ function saveCurrentInput(){
   }
 }
 
+async function syncCategoryToLinked(word){
+  if(!word.category) return;
+  const linked=getLinkedWords(word.id);
+  for(const lw of linked){
+    if(lw.category===word.category) continue;
+    lw.category=word.category;
+    await dbUpdate('words',{category:word.category},{id:lw.id});
+  }
+}
+
 async function commitStep(){
   const word=gword(stepData.wordId);
   if(!word){closeM('m-complete');return;}
@@ -1761,6 +1773,7 @@ async function commitStep(){
   },{id:word.id});
   if(error){toast('Error saving: '+error.message);return;}
   if(word.fields['Translation']) await autoLinkByTranslation(word);
+  if(word.category!==undefined) await syncCategoryToLinked(word);
   closeM('m-complete');
   toast('Word saved');
 }
@@ -1979,6 +1992,7 @@ async function saveEdit(){
   const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus,tags:editTags,category:word.category||null},{id:word.id});
   if(error){toast('Error: '+error.message);return;}
   if(word.fields['Translation']) await autoLinkByTranslation(word);
+  if(word.category!==undefined) await syncCategoryToLinked(word);
   // Reload words to ensure all views have fresh data
   await reloadWords();
   closeM('m-edit');
