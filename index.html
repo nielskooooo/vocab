@@ -270,7 +270,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v36</div>
+      <div class="logo-sub">Personal vocabulary builder · v37</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -354,20 +354,6 @@ textarea.form-input{resize:none;line-height:1.5;}
       </div>
 
       <div class="view" id="view-settings">
-        <!-- Preferences -->
-        <div class="set-section-title">Preferences</div>
-        <div style="margin-bottom:28px">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:12px">
-            <div>
-              <div style="font-size:14px;font-weight:500;color:var(--ink)">Expand words across languages</div>
-              <div style="font-size:12px;color:var(--ink-muted);margin-top:3px">When you complete a word, automatically suggest adding it in your other languages</div>
-            </div>
-            <button id="expand-toggle" onclick="toggleExpandSetting()" style="width:44px;height:26px;border-radius:100px;border:none;cursor:pointer;transition:background .2s;position:relative;flex-shrink:0;margin-left:16px">
-              <span style="position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)"></span>
-            </button>
-          </div>
-        </div>
-
         <!-- Categories -->
         <div class="set-section-title">Categories</div>
         <p class="set-hint">Broad themes shown in the cross-language table. The order here determines the table row order.</p>
@@ -402,7 +388,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v36</div>
+    <div class="logo-sub">Personal vocabulary builder · v37</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -687,7 +673,6 @@ let foSrcIdx=null;
 let activeTagFilter=null;
 let activeCatFilter=null;
 let fcTags=[], editTags=[];
-let expandEnabled=localStorage.getItem('expandEnabled')==='true';
 let categories=JSON.parse(localStorage.getItem('vocab_categories')||'["Food","Travel","Sports","Work","Nature","Culture","Daily life","Other"]');
 let tableColOrder=null; // set after languages load
 
@@ -822,7 +807,7 @@ function renderTable(){
   const visited=new Set();
   const rows=[];
 
-  words.filter(w=>!w.is_stub&&w.status==='complete').forEach(w=>{
+  words.filter(w=>!w.is_stub&&(w.status==='complete'||w.status==='pending')).forEach(w=>{
     if(visited.has(sid(w.id))) return;
     const linked=getLinkedWords(w.id).filter(lw=>!lw.is_stub);
     const group=[w,...linked];
@@ -830,13 +815,14 @@ function renderTable(){
     const row={};
     group.forEach(gw=>{row[gw.langId]=gw;});
     const cat=group.find(gw=>gw.category)?.category||'';
+    // normalise null/undefined to empty string
     // Get English translation (any translation really — first available)
     const trans=(group[0]?.fields?.Translation||'').split(',')[0].trim();
     rows.push({row,cat,trans});
   });
 
   // Add pending words too (unvisited)
-  words.filter(w=>!w.is_stub&&!visited.has(sid(w.id))).forEach(w=>{
+  words.filter(w=>!w.is_stub&&!visited.has(sid(w.id))&&(w.status==='complete'||w.status==='pending')).forEach(w=>{
     const row={};row[w.langId]=w;
     const trans=(w.fields?.Translation||'').split(',')[0].trim();
     rows.push({row,cat:w.category||'',trans});
@@ -857,14 +843,15 @@ function renderTable(){
   </tr></thead>`;
 
   // Group rows by category using categories order, then uncategorised
-  const catOrder=[...categories,''];
+  const catOrder=[...categories,'__other__'];
+  const catLabel=c=>c==='__other__'?'Other':c;
   let tbody='<tbody>';
 
   catOrder.forEach(cat=>{
-    const catRows=rows.filter(r=>r.cat===cat);
+    const catRows=rows.filter(r=>(cat==='__other__'?(r.cat===''||r.cat===null||r.cat===undefined):r.cat===cat));
     if(!catRows.length) return;
     if(cat){
-      tbody+=`<tr><td colspan="${orderedLangs.length+1}" style="padding:14px 14px 6px;font-family:'DM Serif Display',serif;font-size:1rem;color:var(--ink);border-bottom:2px solid var(--border2);background:var(--bg2)">${cat}</td></tr>`;
+      tbody+=`<tr><td colspan="${orderedLangs.length+1}" style="padding:14px 14px 6px;font-family:'DM Serif Display',serif;font-size:1rem;color:var(--ink);border-bottom:2px solid var(--border2);background:var(--bg2)">${catLabel(cat)}</td></tr>`;
     }
     catRows.forEach(({row,trans})=>{
       tbody+=`<tr>
@@ -1320,12 +1307,6 @@ function renderLexicon(){
 function toggleTagFilter(t){activeTagFilter=activeTagFilter===t?null:t;render();}
 function toggleCatFilter(c){activeCatFilter=activeCatFilter===c?null:c;render();}
 
-function toggleExpandSetting(){
-  expandEnabled=!expandEnabled;
-  localStorage.setItem('expandEnabled',expandEnabled);
-  renderSettings();
-}
-
 function renderStats(){
   const completed=words.filter(w=>w.status==='complete'&&!w.is_stub);
   const pending=words.filter(w=>w.status==='pending'&&!w.is_stub);
@@ -1347,12 +1328,6 @@ function renderStats(){
 }
 
 function renderSettings(){
-  const btn=document.getElementById('expand-toggle');
-  if(btn){
-    btn.style.background=expandEnabled?'var(--accent)':'#ccc';
-    const span=btn.querySelector('span');
-    if(span) span.style.left=expandEnabled?'21px':'3px';
-  }
   const catListEl=document.getElementById('settings-cat-list');
   if(catListEl){
     catListEl.innerHTML=categories.length
@@ -1581,7 +1556,6 @@ async function saveFullCard(){
   if(error){toast('Error: '+error.message);return;}
   words.push(data);
   if(fields['Translation']) await autoLinkByTranslation(data);
-  if(status==='complete') await createStubsForOtherLanguages(data);
   closeM('m-fullcard');
   toast('Card saved');
 }
@@ -1741,64 +1715,7 @@ function pickStepTag(t){
   document.getElementById('sinp-sugg')?.classList.remove('open');
 }
 
-function saveCurrentInput(){
-  const fields=getFields(stepData.wordId);
-  const el=document.getElementById('sinp');
-  if(!el) return;
-  const isTagStep=stepData.step===fields.length;
-  if(!isTagStep){
-    const field=fields[stepData.step];
-    if(field) stepData.draft[field]=el.value.trim();
-  }
-  // tags are saved live via stepTagKeydown/removeStepTag
-}
 // ── Suggest word in other languages ──
-async function createStubsForOtherLanguages(savedWord){
-  if(!expandEnabled) return;
-  if(!savedWord||!savedWord.fields||!savedWord.fields['Translation']) return;
-  const translation=savedWord.fields['Translation'];
-  const sourceLangId=savedWord.langId||savedWord.lang_id;
-  const translationParts=translation.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
-
-  // Build set of covered languages — run AFTER autoLink so links are populated
-  const coveredLangIds=new Set([sourceLangId]);
-  getLinkedWords(savedWord.id).forEach(w=>coveredLangIds.add(w.langId));
-  words.forEach(w=>{
-    if(sid(w.id)===sid(savedWord.id)) return;
-    const wt=(w.fields&&w.fields['Translation']||'');
-    const wtParts=wt.split(',').map(s=>s.trim().toLowerCase());
-    if(translationParts.some(p=>wtParts.includes(p))) coveredLangIds.add(w.langId);
-  });
-
-  const sourceTags=savedWord.tags||[];
-  const sourceCategory=savedWord.category||null;
-
-  const missing=languages.filter(l=>!coveredLangIds.has(l.id));
-  if(!missing.length) return;
-
-  let count=0;
-  for(const l of missing){
-    const {data,error}=await dbInsert('words',{
-      word:'',
-      lang_id:l.id,
-      status:'pending',
-      fields:{Translation:translation},
-      tags:sourceTags,
-      category:sourceCategory,
-      is_stub:true,
-      source_word_id:savedWord.id
-    });
-    if(!error&&data){
-      words.push(data);
-      await createLink(savedWord.id,data.id,false);
-      count++;
-    }
-  }
-  if(count>0){
-    render();
-    toast(`Added to Completion queue in ${count} other language${count>1?'s':''}`,3500);
-  }
-}
 
 function saveCurrentInput(){
   const word=gword(stepData.wordId);
@@ -1846,7 +1763,6 @@ async function commitStep(){
   if(word.fields['Translation']) await autoLinkByTranslation(word);
   closeM('m-complete');
   toast('Word saved');
-  if(newStatus==='complete') await createStubsForOtherLanguages(word);
 }
 async function stepNext(){
   saveCurrentInput();
@@ -2063,7 +1979,6 @@ async function saveEdit(){
   const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus,tags:editTags,category:word.category||null},{id:word.id});
   if(error){toast('Error: '+error.message);return;}
   if(word.fields['Translation']) await autoLinkByTranslation(word);
-  if(newStatus==='complete') await createStubsForOtherLanguages(word);
   // Reload words to ensure all views have fresh data
   await reloadWords();
   closeM('m-edit');
