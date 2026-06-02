@@ -270,7 +270,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v34</div>
+      <div class="logo-sub">Personal vocabulary builder · v35</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -402,7 +402,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v34</div>
+    <div class="logo-sub">Personal vocabulary builder · v35</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -424,8 +424,8 @@ textarea.form-input{resize:none;line-height:1.5;}
 </div>
 
 <!-- Add language modal -->
-<div class="overlay" id="m-addlang">
-  <div class="mbox" style="max-width:460px">
+<div class="overlay" id="m-addlang" onclick="closeM('m-addlang')">
+  <div class="mbox" style="max-width:460px" onclick="event.stopPropagation()">
     <h3>Add a language</h3>
     <div id="addlang-error" style="display:none;font-size:13px;color:#c0392b;background:#fdf0f0;border:1px solid rgba(192,57,43,.2);border-radius:8px;padding:10px 13px;margin-bottom:14px"></div>
     <div class="form-row">
@@ -452,8 +452,8 @@ textarea.form-input{resize:none;line-height:1.5;}
 </div>
 
 <!-- Full card modal -->
-<div class="overlay" id="m-fullcard">
-  <div class="mbox" style="max-width:480px">
+<div class="overlay" id="m-fullcard" onclick="closeM('m-fullcard')">
+  <div class="mbox" style="max-width:480px" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
       <h3 style="margin:0">New card</h3>
       <button class="icon-btn" type="button" onclick="closeM('m-fullcard')"><i class="ti ti-x"></i></button>
@@ -498,7 +498,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 </div>
 
 <!-- Completion modal -->
-<div class="overlay" id="m-complete">
+<div class="overlay" id="m-complete" onclick="closeM('m-complete')">
   <div class="mbox cbox">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
       <div>
@@ -525,8 +525,8 @@ textarea.form-input{resize:none;line-height:1.5;}
 </div>
 
 <!-- Word detail modal -->
-<div class="overlay" id="m-detail">
-  <div class="mbox" style="max-width:460px">
+<div class="overlay" id="m-detail" onclick="closeM('m-detail')">
+  <div class="mbox" style="max-width:460px" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
       <div class="detail-word" id="dw-word"></div>
       <button class="icon-btn" type="button" onclick="closeM('m-detail')"><i class="ti ti-x"></i></button>
@@ -544,8 +544,8 @@ textarea.form-input{resize:none;line-height:1.5;}
 </div>
 
 <!-- Link word modal -->
-<div class="overlay" id="m-link">
-  <div class="mbox" style="max-width:420px">
+<div class="overlay" id="m-link" onclick="closeM('m-link')">
+  <div class="mbox" style="max-width:420px" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <h3 style="margin:0">Link to another word</h3>
       <button class="icon-btn" type="button" onclick="closeM('m-link')"><i class="ti ti-x"></i></button>
@@ -563,8 +563,8 @@ textarea.form-input{resize:none;line-height:1.5;}
 </div>
 
 <!-- Edit word modal -->
-<div class="overlay" id="m-edit">
-  <div class="mbox" style="max-width:480px">
+<div class="overlay" id="m-edit" onclick="closeM('m-edit')">
+  <div class="mbox" style="max-width:480px" onclick="event.stopPropagation()" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <h3 style="margin:0" id="edit-title"></h3>
       <button class="icon-btn" type="button" onclick="closeM('m-edit')"><i class="ti ti-x"></i></button>
@@ -596,8 +596,8 @@ textarea.form-input{resize:none;line-height:1.5;}
 </div>
 
 <!-- Manage categories modal -->
-<div class="overlay" id="m-categories">
-  <div class="mbox" style="max-width:400px">
+<div class="overlay" id="m-categories" onclick="closeM('m-categories')">
+  <div class="mbox" style="max-width:400px" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
       <h3 style="margin:0">Categories</h3>
       <button class="icon-btn" type="button" onclick="closeM('m-categories')"><i class="ti ti-x"></i></button>
@@ -866,9 +866,9 @@ function renderTable(){
           const w=row[l.id];
           if(w&&w.word) return `<td class="has-word" onclick="openDetail(${w.id})">${w.word}</td>`;
           if(w&&!w.word) return `<td class="has-word" onclick="openDetail(${w.id})" style="color:var(--ink-muted);font-style:italic;font-size:12px">complete…</td>`;
-          // Empty cell — find a word in this row to get the translation for a new stub
           const anyWord=Object.values(row)[0];
-          return `<td class="no-word" onclick="openAddForLang('${l.id}',${JSON.stringify(trans||'').replace(/"/g,'&quot;')},${anyWord?anyWord.id:'null'})" style="cursor:pointer" title="Click to add in ${l.name}">+</td>`;
+          const srcId=anyWord?anyWord.id:'';
+          return `<td class="no-word" style="cursor:pointer;color:var(--accent)" title="Click to add in ${l.name}" onclick="openAddForLang('${l.id}',this)">+</td>`;
         }).join('')}
       </tr>`;
     });
@@ -878,22 +878,31 @@ function renderTable(){
   wrap.innerHTML=`<table class="vocab-table">${thead}${tbody}</table>`;
 }
 
-function openAddForLang(langId,translation,sourceWordId){
-  // Open full card modal pre-filled for this language
+function openAddForLang(langId, tdEl){
+  // Find the translation for this row from any existing word in the same row
+  const tr=tdEl.closest('tr');
+  const cells=tr.querySelectorAll('td.has-word');
+  let trans='', cat=null, sourceId=null;
+  cells.forEach(td=>{
+    const onclick=td.getAttribute('onclick')||'';
+    const m=onclick.match(/openDetail\((\d+)\)/);
+    if(m){
+      const w=gword(parseInt(m[1]));
+      if(w){
+        if(!trans) trans=(w.fields&&w.fields['Translation']||'').split(',')[0].trim();
+        if(!cat) cat=w.category||null;
+        if(!sourceId) sourceId=w.id;
+      }
+    }
+  });
   openFullCard();
   setTimeout(()=>{
     const sel=document.getElementById('fc-lang');
-    if(sel) sel.value=langId;
-    renderFullCardFields();
-    // pre-fill translation
+    if(sel){sel.value=langId;renderFullCardFields();}
     const transEl=document.getElementById('fcf-Translation');
-    if(transEl&&translation){transEl.value=translation;updateFcExSuggestions();}
-    // pre-fill category from source word
-    if(sourceWordId){
-      const src=gword(sourceWordId);
-      if(src?.category) populateCatSelect('fc-category',src.category);
-    }
-  },100);
+    if(transEl&&trans){transEl.value=trans;updateFcExSuggestions();}
+    if(cat) populateCatSelect('fc-category',cat);
+  },120);
 }
 
 function tblDropEnd(e){
@@ -1090,6 +1099,16 @@ async function loadAll(){
     toast('Could not load data: '+e.message);
     languages=[]; words=[]; links=[];
   }
+}
+
+async function reloadWords(){
+  const headers={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+authToken,'Content-Type':'application/json'};
+  const [rw,rk]=await Promise.all([
+    fetch(SUPABASE_URL+'/rest/v1/words?select=*&order=created_at',{headers}).then(r=>r.json()),
+    fetch(SUPABASE_URL+'/rest/v1/links?select=*',{headers}).then(r=>r.json()),
+  ]);
+  words=(Array.isArray(rw)?rw:[]).map(w=>({...w,langId:w.lang_id,tags:Array.isArray(w.tags)?w.tags:[],fields:w.fields||{},is_stub:!!w.is_stub,source_word_id:w.source_word_id||null,category:w.category||null}));
+  links=Array.isArray(rk)?rk:[];
 }
 
 async function refreshData(){
@@ -2038,6 +2057,8 @@ async function saveEdit(){
   if(error){toast('Error: '+error.message);return;}
   if(word.fields['Translation']) await autoLinkByTranslation(word);
   if(newStatus==='complete') await createStubsForOtherLanguages(word);
+  // Reload words to ensure all views have fresh data
+  await reloadWords();
   closeM('m-edit');
   openDetail(detailWordId);
   toast('Changes saved');
@@ -2048,6 +2069,8 @@ async function deleteFromDetail(){
   words=words.filter(w=>sid(w.id)!==sid(detailWordId));
   links=links.filter(l=>sid(l.word_id_a)!==sid(detailWordId)&&sid(l.word_id_b)!==sid(detailWordId));
   closeM('m-detail');
+  await reloadWords();
+  render();
 }
 
 // ── Link modal ──
