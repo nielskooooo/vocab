@@ -270,7 +270,7 @@ textarea.form-input{resize:none;line-height:1.5;}
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v35</div>
+      <div class="logo-sub">Personal vocabulary builder · v36</div>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
@@ -402,7 +402,7 @@ textarea.form-input{resize:none;line-height:1.5;}
 <div class="drawer" id="drawer">
   <div class="logo" style="padding:20px 18px 16px">
     <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v35</div>
+    <div class="logo-sub">Personal vocabulary builder · v36</div>
   </div>
   <div class="nav" style="flex:1">
     <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
@@ -693,6 +693,13 @@ let tableColOrder=null; // set after languages load
 
 function saveCategories(){ localStorage.setItem('vocab_categories',JSON.stringify(categories)); }
 function allCategories(){ return categories; }
+
+function populateCatSelect(elId, selected){
+  const el=document.getElementById(elId);
+  if(!el) return;
+  el.innerHTML='<option value="">None</option>'+
+    categories.map(c=>`<option value="${c}"${selected===c?' selected':''}>${c}</option>`).join('');
+}
 
 // ── Helpers ──
 function sid(id){ return String(id); }
