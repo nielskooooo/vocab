@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="Vocab"/>
 <title>Paul E. Glott — Vocab</title>
 <link rel="manifest" href="manifest.json"/>
 <meta name="theme-color" content="#e8620a"/>
-<meta name="mobile-web-app-capable" content="yes"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
@@ -19,1094 +18,505 @@
 :root{
   --ink:#1a1a18;--ink-soft:#4a4a44;--ink-muted:#9a9a90;
   --bg:#ffffff;--bg2:#faf8f4;--bg3:#ede9df;
-  --accent:#e8620a;--accent-light:#fdeee4;
-  --border:rgba(26,26,24,0.12);--border2:rgba(26,26,24,0.22);
-  --green:#2d7a4f;--green-light:#edf7f0;
-  --yellow-light:#fef6e4;--yellow-text:#7a5200;
-  --nav-h:60px;--sidebar-w:220px;
+  --accent:#e8620a;--accent-l:#fdeee4;
+  --blue:#2a5d8a;--blue-l:#e8f4fd;
+  --purple:#5b4a8a;--purple-l:#f0edf8;
+  --green:#2d7a4f;--green-l:#edf7f0;
+  --border:rgba(26,26,24,.12);--border2:rgba(26,26,24,.22);
+  --radius:10px;--radius-lg:14px;
+  --sidebar:240px;--panel:380px;
 }
-html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);background:var(--bg2);}
-.app-shell{display:flex;height:100vh;overflow:hidden;}
-.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
-.logo{padding:24px 20px 18px;border-bottom:1px solid var(--border);}
-.logo-wordmark{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--ink);letter-spacing:-.01em;line-height:1.2;}
-.logo-wordmark em{color:var(--accent);font-style:italic;}
-.logo-sub{font-size:11px;color:var(--ink-muted);margin-top:4px;}
-.nav{padding:10px 8px;flex:1;overflow-y:auto;min-height:0;}
-.nav-btn{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;transition:background .15s,color .15s;margin-bottom:2px;}
-.nav-btn i{font-size:17px;opacity:.65;flex-shrink:0;}
-.nav-btn:hover{background:var(--bg);color:var(--ink);}
-.nav-btn.active{background:var(--bg);color:var(--accent);font-weight:500;}
-.nav-btn.active i{opacity:1;}
-.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:11px;border-radius:10px;padding:1px 7px;font-weight:500;display:none;}
-.lang-section{padding:10px 8px;border-top:1px solid var(--border);display:flex;flex-direction:column;min-height:0;}
-.lang-pills-scroll{overflow-y:auto;max-height:180px;flex:1;}
-.lang-section-title{font-size:10px;font-weight:500;color:var(--ink-muted);padding:2px 12px 8px;letter-spacing:.07em;text-transform:uppercase;}
-.lang-btn{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:8px;font-size:13px;color:var(--ink-soft);cursor:pointer;border:none;background:none;width:100%;font-family:'DM Sans',sans-serif;transition:background .15s;}
-.lang-btn:hover{background:var(--bg);}
-.lang-btn.active{background:var(--bg);font-weight:500;color:var(--ink);}
-.lang-count{margin-left:auto;font-size:11px;color:var(--ink-muted);background:var(--bg3);border-radius:10px;padding:1px 7px;}
-.add-lang-btn{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:8px;font-size:12.5px;color:var(--ink-muted);cursor:pointer;border:none;background:none;width:100%;font-family:'DM Sans',sans-serif;transition:color .15s;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);}
+
+/* ── Shell ── */
+.shell{display:flex;height:100vh;overflow:hidden;}
+
+/* ── Sidebar ── */
+.sidebar{width:var(--sidebar);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.logo-mark{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--ink);letter-spacing:-.01em;}
+.logo-mark em{color:var(--accent);font-style:italic;}
+.logo-sub{font-size:10px;color:var(--ink-muted);margin-top:3px;}
+.nav{padding:8px;flex-shrink:0;}
+.nb{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:8px;font-size:13px;color:var(--ink-soft);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;transition:background .15s,color .15s;margin-bottom:2px;}
+.nb i{font-size:16px;opacity:.6;}
+.nb:hover{background:var(--bg);color:var(--ink);}
+.nb.active{background:var(--bg);color:var(--accent);font-weight:500;}
+.nb.active i{opacity:1;}
+.nb-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;border-radius:10px;padding:1px 6px;display:none;}
+.lang-section{flex:1;overflow-y:auto;padding:8px;border-top:1px solid var(--border);}
+.lang-label{font-size:10px;font-weight:500;color:var(--ink-muted);padding:4px 11px 6px;letter-spacing:.06em;text-transform:uppercase;}
+.lang-pill{display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:8px;font-size:13px;color:var(--ink-soft);cursor:pointer;border:none;background:none;width:100%;font-family:'DM Sans',sans-serif;transition:background .15s;}
+.lang-pill:hover{background:var(--bg);}
+.lang-pill.active{background:var(--bg);font-weight:500;color:var(--ink);}
+.lang-count{margin-left:auto;font-size:10px;color:var(--ink-muted);background:var(--bg3);border-radius:8px;padding:1px 6px;}
+.add-lang-btn{display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:8px;font-size:12px;color:var(--ink-muted);cursor:pointer;border:none;background:none;width:100%;font-family:'DM Sans',sans-serif;transition:color .15s;}
 .add-lang-btn:hover{color:var(--accent);}
-.bottom-nav{padding:8px;border-top:1px solid var(--border);}
-.topbar{height:var(--nav-h);padding:0 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;background:var(--bg);flex-shrink:0;}
-.topbar-title{font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(--ink);letter-spacing:-.01em;flex:1;}
-.menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--ink-soft);font-size:22px;padding:4px;}
-.content{flex:1;overflow-y:auto;padding:28px 28px 40px;}
-.view{display:none;}
-.view.active{display:block;}
-.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:100px;font-size:13.5px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;}
+.sidebar-bottom{padding:8px;border-top:1px solid var(--border);flex-shrink:0;}
+
+/* ── Main ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.topbar{height:56px;padding:0 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;background:var(--bg);}
+.topbar-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--ink);letter-spacing:-.01em;flex:1;}
+.search-bar{flex:1;max-width:480px;position:relative;}
+.search-input{width:100%;padding:9px 14px 9px 36px;border:1.5px solid var(--border2);border-radius:100px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);outline:none;transition:border-color .15s;}
+.search-input:focus{border-color:var(--accent);}
+.search-input::placeholder{color:var(--ink-muted);}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-muted);font-size:15px;pointer-events:none;}
+.topbar-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
+
+/* ── Content area ── */
+.content-row{flex:1;display:flex;overflow:hidden;}
+.view-area{flex:1;overflow-y:auto;min-width:0;}
+.view{display:none;height:100%;}
+.view.active{display:flex;flex-direction:column;}
+
+/* ── Capture bar (persistent at top of table view) ── */
+.capture-bar{padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;}
+.capture-row{display:flex;gap:8px;align-items:center;}
+.cap-lang{padding:9px 11px;border:1.5px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);outline:none;flex-shrink:0;cursor:pointer;}
+.cap-lang:focus{border-color:var(--accent);}
+.cap-input{flex:1;min-width:0;padding:9px 14px;border:1.5px solid var(--border2);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);outline:none;transition:border-color .15s;}
+.cap-input::placeholder{color:var(--ink-muted);}
+.cap-input:focus{border-color:var(--accent);}
+
+/* ── Table ── */
+.table-scroll{flex:1;overflow:auto;}
+.vtable{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;}
+.vtable th{background:var(--bg2);color:var(--ink);font-weight:500;padding:10px 14px;border-bottom:2px solid var(--border2);white-space:nowrap;position:sticky;top:0;z-index:10;text-align:center;cursor:grab;user-select:none;}
+.vtable th:first-child{text-align:left;cursor:default;min-width:160px;}
+.vtable th.th-dragging{opacity:.4;}
+.vtable th.th-over{border-left:2px solid var(--accent);}
+.vtable td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:middle;text-align:center;}
+.vtable td:first-child{text-align:left;}
+.vtable tr:hover td{background:var(--accent-l);}
+.vtable tr.row-dragging{opacity:.3;}
+.vtable tr.row-over td{border-top:2px solid var(--accent);}
+.cat-header td{background:var(--bg2)!important;padding:12px 14px 6px;font-family:'DM Serif Display',serif;font-size:.95rem;color:var(--ink);}
+.sub-header td{background:var(--bg2)!important;padding:5px 14px 5px 28px;font-size:11px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;}
+.cell-word{font-weight:500;color:var(--ink);cursor:pointer;display:block;}
+.cell-word:hover{color:var(--accent);}
+.cell-synonym{display:block;font-size:11px;color:var(--ink-muted);margin-top:3px;padding-top:3px;border-top:1px dashed var(--border);cursor:pointer;}
+.cell-synonym:hover{color:var(--accent);}
+.cell-empty{color:var(--accent);font-size:20px;cursor:pointer;opacity:.5;transition:opacity .15s;}
+.cell-empty:hover{opacity:1;}
+.cell-pending{font-size:11px;color:var(--ink-muted);font-style:italic;cursor:pointer;}
+.cell-pending:hover{color:var(--accent);}
+
+/* ── Side panel ── */
+.panel{width:var(--panel);flex-shrink:0;border-left:1px solid var(--border);background:var(--bg);display:flex;flex-direction:column;overflow:hidden;transform:translateX(100%);transition:transform .2s cubic-bezier(.4,0,.2,1);position:relative;}
+.panel.open{transform:translateX(0);}
+.panel-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.panel-word{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--ink);letter-spacing:-.02em;line-height:1;flex:1;}
+.panel-lang{font-size:11px;color:var(--ink-muted);margin-top:3px;}
+.panel-body{flex:1;overflow-y:auto;padding:16px 18px;}
+.panel-section{margin-bottom:18px;}
+.panel-label{font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.panel-value{font-size:13.5px;color:var(--ink-soft);line-height:1.65;}
+.panel-field-input{width:100%;padding:8px 11px;border:1.5px solid var(--border2);border-radius:8px;font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg2);outline:none;resize:none;transition:border-color .15s;line-height:1.5;}
+.panel-field-input:focus{border-color:var(--accent);background:var(--bg);}
+.panel-field-input::placeholder{color:var(--ink-muted);}
+.panel-footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
+.related-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);font-size:12.5px;color:var(--ink-soft);cursor:pointer;margin:0 4px 4px 0;transition:all .15s;}
+.related-chip:hover{border-color:var(--accent);background:var(--accent-l);color:var(--accent);}
+.tag-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:100px;font-size:11px;background:var(--purple-l);color:var(--purple);border:1px solid rgba(91,74,138,.2);}
+.cat-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:100px;font-size:11px;background:var(--blue-l);color:var(--blue);border:1px solid rgba(42,93,138,.2);}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;}
 .btn-primary{background:var(--accent);color:#fff;}
 .btn-primary:hover{background:#c44f05;}
 .btn-ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--border2);}
 .btn-ghost:hover{background:var(--bg2);color:var(--ink);}
-.btn-sm{padding:7px 15px;font-size:12.5px;}
+.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-danger{color:#c0392b;border-color:rgba(192,57,43,.3);}
+.btn-danger:hover{background:#fdf0f0;}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
-.icon-btn{background:none;border:none;cursor:pointer;color:var(--ink-muted);padding:6px;border-radius:7px;font-size:17px;transition:color .15s,background .15s;line-height:1;}
-.icon-btn:hover{color:var(--accent);background:var(--accent-light);}
-.badge{display:inline-block;font-size:11px;padding:3px 9px;border-radius:100px;}
-.badge-pend{background:var(--yellow-light);color:var(--yellow-text);border:1px solid rgba(232,194,10,.25);}
-.section-label{font-size:10px;font-weight:500;color:var(--ink-muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px;}
-.word-row{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
-.word-row:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(232,98,10,.08);}
-.word-row-text{font-size:15px;font-weight:500;color:var(--ink);flex:1;}
-.empty-state{text-align:center;padding:60px 20px;color:var(--ink-muted);font-size:13.5px;line-height:2;}
-.empty-state i{font-size:30px;display:block;margin-bottom:12px;opacity:.3;}
-/* Capture */
-.capture-box{background:var(--bg);border:1px solid var(--border2);border-radius:14px;padding:24px;margin-bottom:24px;}
-.capture-desc{font-size:13.5px;color:var(--ink-muted);margin-bottom:18px;line-height:1.65;}
-.capture-row{display:flex;gap:10px;align-items:stretch;}
-.lang-sel{padding:11px 13px;border:1.5px solid var(--border2);border-radius:9px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);outline:none;flex-shrink:0;cursor:pointer;}
-.lang-sel:focus{border-color:var(--accent);}
-.word-input{flex:1;min-width:0;padding:11px 16px;border:1.5px solid var(--border2);border-radius:9px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);outline:none;transition:border-color .15s;}
-.word-input::placeholder{color:var(--ink-muted);}
-.word-input:focus{border-color:var(--accent);}
-.capture-divider{display:flex;align-items:center;gap:12px;margin:16px 0 4px;}
-.capture-divider span{font-size:11px;color:var(--ink-muted);white-space:nowrap;}
-.capture-divider::before,.capture-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-/* Vocabulary */
-.lex-filters{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap;}
-.filter-chip{padding:6px 16px;border-radius:100px;font-size:12.5px;border:1px solid var(--border);background:var(--bg2);color:var(--ink-soft);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
-.filter-chip:hover,.filter-chip.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
-.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
-.vc{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px 18px;cursor:pointer;transition:border-color .15s;}
-.vc:hover{border-color:var(--border2);}
-.vc-word{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--ink);margin-bottom:3px;letter-spacing:-.01em;}
-.vc-trans{font-size:13px;color:var(--ink-soft);margin-bottom:6px;}
-.vc-meta{font-size:12px;color:var(--ink-muted);font-style:italic;margin-bottom:2px;}
-.vc-tag{font-size:11px;padding:2px 9px;border-radius:10px;background:var(--accent-light);color:var(--accent);border:1px solid rgba(232,98,10,.2);margin-top:8px;display:inline-block;}
-/* Settings */
-.set-section-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--ink);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
-.set-hint{font-size:12px;color:var(--ink-muted);margin-top:-8px;margin-bottom:16px;line-height:1.6;}
-.lang-cfg{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
-.lang-cfg-top{display:flex;align-items:center;gap:11px;margin-bottom:14px;}
-.lang-cfg-name{font-size:14px;font-weight:500;color:var(--ink);flex:1;}
-.ftags-label{font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
-.ftags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px;}
-.ftag{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:12.5px;background:var(--bg);border:1px solid var(--border2);color:var(--ink-soft);}
-.ftag button{background:none;border:none;cursor:pointer;color:var(--ink-muted);font-size:16px;line-height:1;padding:0;}
-.ftag button:hover{color:#c0392b;}
-.add-field-row{display:flex;gap:8px;}
-.add-field-input{flex:1;padding:8px 12px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);outline:none;}
-.add-field-input:focus{border-color:var(--accent);}
-/* Modals */
-.overlay{display:none;position:fixed;inset:0;background:rgba(26,26,24,.5);align-items:center;justify-content:center;z-index:200;padding:20px;}
-.overlay.open{display:flex;}
-.mbox{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:420px;border:1px solid var(--border2);box-shadow:0 16px 60px rgba(0,0,0,.16);max-height:90vh;overflow-y:auto;}
-.mbox h3{font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(--ink);margin-bottom:20px;}
-.form-row{margin-bottom:15px;}
-.form-label{display:block;font-size:12px;font-weight:500;color:var(--ink-soft);margin-bottom:6px;letter-spacing:.02em;}
-.form-input{width:100%;padding:11px 14px;border:1.5px solid var(--border2);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);outline:none;transition:border-color .15s;}
-.form-input:focus{border-color:var(--accent);background:var(--bg);}
-textarea.form-input{resize:none;line-height:1.5;}
-.mactions{display:flex;gap:9px;justify-content:flex-end;margin-top:20px;}
-.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
-.pchip{padding:5px 13px;border-radius:100px;font-size:12.5px;border:1px solid var(--border);background:var(--bg2);color:var(--ink-soft);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
-.pchip.on{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
-/* Field order */
-.fo-list{list-style:none;display:flex;flex-direction:column;gap:5px;margin-top:2px;}
-.fo-item{display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:9px;font-size:13.5px;color:var(--ink);cursor:grab;user-select:none;transition:border-color .2s,background .2s,transform .15s;}
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--ink-muted);padding:5px;border-radius:6px;font-size:16px;transition:color .15s,background .15s;line-height:1;}
+.icon-btn:hover{color:var(--accent);background:var(--accent-l);}
+.icon-btn.danger:hover{color:#c0392b;background:#fdf0f0;}
+
+/* ── Views: stats ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:20px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;}
+.stat-num{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--accent);letter-spacing:-.02em;line-height:1;}
+.stat-label{font-size:11px;color:var(--ink-muted);margin-top:4px;}
+
+/* ── Settings ── */
+.settings-wrap{padding:24px;max-width:680px;}
+.set-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--ink);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.set-hint{font-size:12px;color:var(--ink-muted);margin-top:-6px;margin-bottom:14px;line-height:1.6;}
+.set-section{margin-bottom:28px;}
+.lang-cfg{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:10px;}
+.lang-cfg-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.fo-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.fo-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border:1.5px solid var(--border2);border-radius:8px;font-size:13px;color:var(--ink);cursor:grab;user-select:none;transition:border-color .15s,background .15s;}
 .fo-item:active{cursor:grabbing;}
-.fo-item.fo-dragging{opacity:0;}
-.fo-item.fo-over{border-color:var(--accent);background:var(--accent-light);transform:scale(1.01);}
-.fo-handle{color:var(--ink-muted);font-size:16px;flex-shrink:0;}
+.fo-item.fo-dragging{opacity:.3;}
+.fo-item.fo-over{border-color:var(--accent);background:var(--accent-l);}
+.fo-handle{color:var(--ink-muted);font-size:15px;}
 .fo-name{flex:1;}
-.fo-remove{background:none;border:none;cursor:pointer;color:var(--ink-muted);font-size:17px;padding:2px 4px;border-radius:4px;line-height:1;transition:color .15s;}
+.fo-remove{background:none;border:none;cursor:pointer;color:var(--ink-muted);font-size:15px;padding:2px;border-radius:4px;line-height:1;}
 .fo-remove:hover{color:#c0392b;}
-/* Complete modal */
-.cbox{max-width:460px;}
-.cbox-word{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--accent);letter-spacing:-.02em;line-height:1.1;}
-.cbox-lang{font-size:12px;color:var(--ink-muted);margin-bottom:20px;margin-top:4px;}
-.prog-wrap{margin-bottom:4px;display:flex;align-items:center;gap:10px;}
-.prog-track{flex:1;height:4px;background:var(--bg3);border-radius:10px;overflow:hidden;}
-.prog-fill{height:100%;background:var(--accent);border-radius:10px;transition:width .35s cubic-bezier(.4,0,.2,1);}
-.prog-text{font-size:11px;color:var(--ink-muted);white-space:nowrap;}
-.step-field-name{font-size:11px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;margin-top:20px;}
-.step-input{width:100%;padding:12px 15px;border:1.5px solid var(--border2);border-radius:9px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg2);outline:none;resize:none;transition:border-color .15s;line-height:1.5;}
-.step-input:focus{border-color:var(--accent);background:var(--bg);}
-.step-input::placeholder{color:var(--ink-muted);}
-.step-hint{font-size:12px;color:var(--ink-muted);margin-top:7px;line-height:1.55;}
-.step-nav{display:flex;align-items:center;justify-content:space-between;margin-top:20px;}
-.skip-btn{font-size:12.5px;color:var(--ink-muted);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:5px 8px;border-radius:7px;}
-.skip-btn:hover{color:var(--ink);}
-/* Detail modal */
-.detail-word{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--ink);margin-bottom:4px;}
-.detail-lang{font-size:12px;color:var(--ink-muted);margin-bottom:18px;}
-.detail-field{margin-bottom:13px;}
-.detail-field-label{font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
-.detail-field-value{font-size:14px;color:var(--ink-soft);line-height:1.65;}
-.detail-divider{height:1px;background:var(--border);margin:18px 0;}
-.related-title{font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
-.related-sublabel{font-size:11px;color:var(--ink-muted);margin-bottom:6px;margin-top:10px;}
-.related-chip{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:9px;background:var(--bg2);border:1px solid var(--border);font-size:13px;color:var(--ink-soft);cursor:pointer;margin:0 6px 6px 0;transition:all .15s;font-family:'DM Sans',sans-serif;}
-.related-chip:hover{border-color:var(--accent);background:var(--accent-light);}
-.related-chip .rc-word{font-weight:500;color:var(--ink);}
-.related-chip:hover .rc-word{color:var(--accent);}
-/* Link search */
-.link-search-wrap{position:relative;}
-.link-results{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;box-shadow:0 6px 24px rgba(0,0,0,.1);z-index:300;margin-top:3px;overflow:hidden;display:none;max-height:200px;overflow-y:auto;}
-.link-results.open{display:block;}
-.link-result-item{padding:9px 14px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);}
+.add-field-row{display:flex;gap:7px;margin-top:8px;}
+.add-field-input{flex:1;padding:7px 11px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);outline:none;}
+.add-field-input:focus{border-color:var(--accent);}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;}
+.toggle-label{font-size:13.5px;font-weight:500;color:var(--ink);}
+.toggle-sub{font-size:11.5px;color:var(--ink-muted);margin-top:2px;}
+.toggle-btn{width:42px;height:24px;border-radius:100px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
+.toggle-btn span{position:absolute;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.cat-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:8px;}
+.cat-item-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sub-item{display:flex;align-items:center;gap:6px;padding:5px 0 5px 16px;border-top:1px solid var(--border);}
+.export-row{display:flex;gap:10px;flex-wrap:wrap;}
+
+/* ── Modals ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(26,26,24,.5);align-items:center;justify-content:center;z-index:500;padding:20px;}
+.overlay.open{display:flex;}
+.mbox{background:var(--bg);border-radius:var(--radius-lg);padding:24px;width:100%;max-width:420px;border:1px solid var(--border2);box-shadow:0 16px 60px rgba(0,0,0,.16);max-height:90vh;overflow-y:auto;}
+.mbox h3{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--ink);margin-bottom:18px;}
+.form-row{margin-bottom:13px;}
+.form-label{display:block;font-size:11px;font-weight:500;color:var(--ink-soft);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em;}
+.form-input{width:100%;padding:10px 13px;border:1.5px solid var(--border2);border-radius:8px;font-size:13.5px;font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:var(--accent);background:var(--bg);}
+textarea.form-input{resize:none;line-height:1.55;}
+.cat-select{width:100%;padding:9px 12px;border:1.5px solid var(--border2);border-radius:8px;font-size:13.5px;font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);outline:none;}
+.cat-select:focus{border-color:var(--accent);}
+.pchip{padding:4px 12px;border-radius:100px;font-size:12px;border:1px solid var(--border);background:var(--bg2);color:var(--ink-soft);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;display:inline-block;margin:3px 3px 0 0;}
+.pchip.on{border-color:var(--accent);background:var(--accent-l);color:var(--accent);}
+.mactions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
+.tag-sugg{position:absolute;top:100%;left:0;right:0;background:var(--bg);border:1px solid var(--border2);border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.1);z-index:600;margin-top:3px;overflow:hidden;display:none;}
+.tag-sugg.open{display:block;}
+.tag-sugg-item{padding:8px 13px;font-size:13px;color:var(--ink-soft);cursor:pointer;}
+.tag-sugg-item:hover{background:var(--accent-l);color:var(--accent);}
+.tag-input-wrap{position:relative;}
+.tag-input{width:100%;padding:8px 11px;border:1.5px solid var(--border2);border-radius:8px;font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg2);outline:none;}
+.tag-input:focus{border-color:var(--purple);}
+.tag-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:100px;font-size:11px;background:var(--purple-l);color:var(--purple);border:1px solid rgba(91,74,138,.2);margin:2px;}
+.tag-x{background:none;border:none;cursor:pointer;color:inherit;font-size:13px;padding:0;opacity:.7;}
+.tags-row{display:flex;flex-wrap:wrap;gap:3px;min-height:6px;}
+.link-result-item{padding:8px 13px;font-size:13px;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
 .link-result-item:last-child{border-bottom:none;}
-.link-result-item:hover{background:var(--accent-light);color:var(--accent);}
-/* Login */
-.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg2);padding:20px;}
-.login-box{background:#fff;border-radius:16px;padding:36px;width:100%;max-width:360px;border:1px solid var(--border2);box-shadow:0 8px 40px rgba(0,0,0,.1);}
+.link-result-item:hover{background:var(--accent-l);color:var(--accent);}
+.link-results{position:absolute;top:100%;left:0;right:0;background:var(--bg);border:1px solid var(--border2);border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.1);z-index:600;margin-top:3px;max-height:200px;overflow-y:auto;display:none;}
+.link-results.open{display:block;}
+
+/* ── Login / Loading ── */
+.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg2);}
+.login-box{background:var(--bg);border-radius:var(--radius-lg);padding:36px;width:100%;max-width:360px;border:1px solid var(--border2);box-shadow:0 8px 40px rgba(0,0,0,.1);}
 .login-logo{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--ink);margin-bottom:4px;}
 .login-logo em{color:var(--accent);font-style:italic;}
-.login-sub{font-size:13px;color:var(--ink-muted);margin-bottom:28px;line-height:1.5;}
-.login-error{font-size:13px;color:#c0392b;background:#fdf0f0;border:1px solid rgba(192,57,43,.2);border-radius:8px;padding:10px 13px;margin-bottom:14px;display:none;}
-/* Toast */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:10px 18px;border-radius:100px;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;white-space:nowrap;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-/* Loading */
+.login-error{font-size:13px;color:#c0392b;background:#fdf0f0;border:1px solid rgba(192,57,43,.2);border-radius:8px;padding:10px 13px;margin-bottom:12px;display:none;}
 .loading-screen{display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg2);font-size:13px;color:var(--ink-muted);}
-.spinner{width:24px;height:24px;border:2.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin-right:12px;}
+.spinner{width:22px;height:22px;border:2.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin-right:10px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .spin-once{animation:spin .6s linear;}
-/* Mobile */
-.mobile-header{display:none;height:56px;background:var(--bg);border-bottom:1px solid var(--border);padding:0 18px;align-items:center;justify-content:space-between;flex-shrink:0;}
-.mobile-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--ink);}
-.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);z-index:100;padding:6px 0 max(6px,env(safe-area-inset-bottom));}
-.mobile-nav-inner{display:flex;justify-content:space-around;}
-.mob-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 16px;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--ink-muted);font-size:11px;border-radius:8px;transition:color .15s;position:relative;}
-.mob-btn i{font-size:22px;}
+
+/* ── Toast ── */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:9px 16px;border-radius:100px;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;white-space:nowrap;font-family:'DM Sans',sans-serif;}
+
+/* ── Mobile ── */
+.mob-header{display:none;height:52px;background:var(--bg);border-bottom:1px solid var(--border);padding:0 16px;align-items:center;justify-content:space-between;flex-shrink:0;}
+.mob-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--ink);}
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);z-index:100;padding:4px 0 max(4px,env(safe-area-inset-bottom));}
+.mob-nav-inner{display:flex;justify-content:space-around;}
+.mob-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 14px;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--ink-muted);font-size:10px;border-radius:8px;transition:color .15s;position:relative;}
+.mob-btn i{font-size:20px;}
 .mob-btn.active{color:var(--accent);}
-.mob-badge{position:absolute;top:4px;right:8px;background:var(--accent);color:#fff;font-size:10px;border-radius:10px;padding:0 5px;min-width:16px;text-align:center;line-height:16px;display:none;}
-.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,24,.4);z-index:150;}
+.mob-badge{position:absolute;top:3px;right:8px;background:var(--accent);color:#fff;font-size:9px;border-radius:8px;padding:0 4px;min-width:14px;text-align:center;line-height:14px;display:none;}
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,24,.4);z-index:400;}
 .drawer-overlay.open{display:block;}
-.drawer{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--bg2);border-right:1px solid var(--border);z-index:151;transform:translateX(-100%);transition:transform .25s;display:flex;flex-direction:column;}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--bg2);border-right:1px solid var(--border);z-index:401;transform:translateX(-100%);transition:transform .25s;display:flex;flex-direction:column;}
 .drawer.open{transform:translateX(0);}
+/* mobile panel as bottom sheet */
 @media(max-width:700px){
   .sidebar{display:none;}
-  .mobile-header{display:flex;}
-  .mobile-nav{display:block;}
-  .content{padding:20px 18px 100px;}
+  .mob-header{display:flex;}
+  .mob-nav{display:block;}
+  .view-area{padding-bottom:60px;}
   .topbar{display:none;}
-  .vocab-grid{grid-template-columns:1fr;}
-  .capture-row{flex-wrap:wrap;}
-  .capture-row .word-input{order:-1;width:100%;}
+  .panel{position:fixed;inset:0;top:auto;height:80vh;width:100%;border-left:none;border-top:1px solid var(--border);border-radius:var(--radius-lg) var(--radius-lg) 0 0;transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);z-index:300;}
+  .panel.open{transform:translateY(0);}
+  .capture-bar{padding:12px 14px;}
 }
-/* Cross-language table */
-.vocab-table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;}
-.vocab-table th{background:var(--bg2);color:var(--ink);font-weight:500;padding:10px 14px;border-bottom:2px solid var(--border2);white-space:nowrap;position:sticky;top:0;z-index:10;}
-.vocab-table th.dragging{opacity:.4;}
-.vocab-table th.drag-over{border-left:2px solid var(--accent);}
-.vocab-table td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top;min-width:120px;max-width:180px;}
-.vocab-table tr:hover td{background:var(--accent-light);}
-.vocab-table td.has-word{cursor:pointer;color:var(--ink);font-weight:500;}
-.vocab-table td.no-word{color:var(--ink-muted);font-style:italic;font-size:12px;}
-.vocab-table td.cat-cell{color:var(--ink-soft);font-size:12px;}
-.table-word-sub{font-size:11px;color:var(--ink-muted);font-weight:400;margin-top:2px;}
-/* Category pill */
-.cat-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11.5px;background:#e8f4fd;color:#2a5d8a;border:1px solid rgba(42,93,138,.2);font-family:'DM Sans',sans-serif;}
-.cat-pill-sm{font-size:10.5px;padding:2px 8px;}
-/* Category select */
-.cat-select{width:100%;padding:9px 12px;border:1.5px solid var(--border2);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);outline:none;}
-.cat-select:focus{border-color:#2a5d8a;background:var(--bg);}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
-.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
-.stat-num{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--accent);letter-spacing:-.02em;line-height:1;}
-.stat-label{font-size:12px;color:var(--ink-muted);margin-top:4px;}
-/* Toggle */
-.toggle-on{background:var(--accent)!important;}
-.toggle-off{background:#ccc!important;}
-.toggle-on span{left:21px!important;}
-.toggle-off span{left:3px!important;}
-.tag-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11.5px;background:#f0edf8;color:#5b4a8a;border:1px solid rgba(91,74,138,.2);font-family:'DM Sans',sans-serif;}
-.tag-pill.clickable{cursor:pointer;transition:all .15s;}
-.tag-pill.clickable:hover{background:#e4dff5;}
-.tag-pill.active{background:#5b4a8a;color:#fff;border-color:#5b4a8a;}
-.tag-pill .tag-x{background:none;border:none;cursor:pointer;color:inherit;font-size:14px;padding:0;line-height:1;opacity:.7;margin-left:1px;}
-.tag-pill .tag-x:hover{opacity:1;}
-.tags-row{display:flex;flex-wrap:wrap;gap:5px;min-height:10px;}
-.tag-input-wrap{position:relative;}
-.tag-input{width:100%;padding:8px 12px;border:1.5px solid var(--border2);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg2);outline:none;transition:border-color .15s;}
-.tag-input:focus{border-color:#5b4a8a;background:var(--bg);}
-.tag-sugg{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border2);border-radius:9px;box-shadow:0 6px 24px rgba(0,0,0,.1);z-index:400;margin-top:3px;overflow:hidden;display:none;}
-.tag-sugg.open{display:block;}
-.tag-sugg-item{padding:9px 14px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;}
-.tag-sugg-item:hover{background:#f0edf8;color:#5b4a8a;}
 </style>
 </head>
 <body>
-<div id="loading-screen" class="loading-screen"><div class="spinner"></div> Loading…</div>
 
+<!-- Loading -->
+<div id="loading-screen" class="loading-screen"><div class="spinner"></div>Loading…</div>
+
+<!-- Login -->
 <div id="login-screen" class="login-screen" style="display:none">
   <div class="login-box">
     <div class="login-logo">Paul E. Glott <em>Vocab</em></div>
-    <div class="login-sub">Sign in to access your vocabulary</div>
+    <div style="font-size:12px;color:var(--ink-muted);margin-bottom:24px">Personal vocabulary builder</div>
     <div class="login-error" id="login-error"></div>
     <div class="form-row"><label class="form-label">Email</label><input class="form-input" id="login-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')signIn()"/></div>
     <div class="form-row"><label class="form-label">Password</label><input class="form-input" id="login-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')signIn()"/></div>
     <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:4px" id="signin-btn" onclick="signIn()">Sign in</button>
-    <p style="font-size:12px;color:var(--ink-muted);margin-top:16px;text-align:center;line-height:1.6">First time? <a href="#" onclick="signUp()" style="color:var(--accent);text-decoration:none">Create account</a></p>
+    <p style="font-size:11px;color:var(--ink-muted);margin-top:14px;text-align:center">First time? <a href="#" onclick="signUp()" style="color:var(--accent);text-decoration:none">Create account</a></p>
   </div>
 </div>
 
+<!-- App -->
 <div id="app" style="display:none">
-<div class="app-shell">
+<div class="shell">
+
+  <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="logo">
-      <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-      <div class="logo-sub">Personal vocabulary builder · v39</div>
+    <div class="sidebar-logo">
+      <div class="logo-mark">Paul E. Glott <em>Vocab</em></div>
+      <div class="logo-sub">Personal vocabulary builder · v40</div>
     </div>
     <nav class="nav">
-      <button class="nav-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i> Quick add</button>
-      <button class="nav-btn" data-view="queue" onclick="go('queue')"><i class="ti ti-inbox"></i> Completion <span class="nav-badge" id="nb1"></span></button>
-      <button class="nav-btn" data-view="lexicon" onclick="go('lexicon')"><i class="ti ti-books"></i> My vocabulary</button>
-      <button class="nav-btn" data-view="table" onclick="go('table')"><i class="ti ti-table"></i> Cross-language</button>
-      <button class="nav-btn" data-view="stats" onclick="go('stats')"><i class="ti ti-chart-bar"></i> Progress</button>
+      <button class="nb active" data-view="table" onclick="go('table')"><i class="ti ti-table"></i> Vocabulary table</button>
+      <button class="nb" data-view="capture" onclick="go('capture')"><i class="ti ti-inbox"></i> Pending <span class="nb-badge" id="nb-pending"></span></button>
+      <button class="nb" data-view="stats" onclick="go('stats')"><i class="ti ti-chart-bar"></i> Progress</button>
     </nav>
     <div class="lang-section">
-      <div class="lang-section-title">Languages</div>
-      <div class="lang-pills-scroll">
-        <div id="lang-pills"></div>
-      </div>
-      <button class="add-lang-btn" onclick="openAddLang()"><i class="ti ti-plus" style="font-size:14px"></i> Add language</button>
+      <div class="lang-label">Languages</div>
+      <div id="lang-pills"></div>
+      <button class="add-lang-btn" onclick="openAddLang()"><i class="ti ti-plus" style="font-size:13px"></i> Add language</button>
     </div>
-    <div class="bottom-nav">
-      <button class="nav-btn" data-view="settings" onclick="go('settings')"><i class="ti ti-settings"></i> Settings</button>
-      <button class="nav-btn" onclick="signOut()"><i class="ti ti-logout"></i> Sign out</button>
+    <div class="sidebar-bottom">
+      <button class="nb" data-view="settings" onclick="go('settings')"><i class="ti ti-settings"></i> Settings</button>
+      <button class="nb" onclick="signOut()"><i class="ti ti-logout"></i> Sign out</button>
     </div>
   </aside>
 
+  <!-- Main -->
   <div class="main">
+    <!-- Desktop topbar -->
     <div class="topbar">
-      <span class="topbar-title" id="topbar-title">Quick add</span>
-      <button class="icon-btn" onclick="refreshData()" title="Sync latest data" style="font-size:20px"><i class="ti ti-refresh" id="refresh-icon"></i></button>
-    </div>
-    <div class="mobile-header">
-      <span class="mobile-title" id="mobile-title">Quick add</span>
-      <div style="display:flex;gap:2px;align-items:center">
-        <button class="icon-btn" onclick="refreshData()" title="Sync" style="font-size:20px"><i class="ti ti-refresh" id="refresh-icon-mob"></i></button>
-        <button class="menu-btn" onclick="openDrawer()"><i class="ti ti-menu-2"></i></button>
+      <span class="topbar-title" id="topbar-title">Vocabulary table</span>
+      <div class="topbar-actions">
+        <button class="icon-btn" onclick="refreshData()" title="Sync"><i class="ti ti-refresh" id="refresh-icon"></i></button>
       </div>
     </div>
-    <div class="content">
+    <!-- Mobile header -->
+    <div class="mob-header">
+      <span class="mob-title" id="mob-title">Vocabulary</span>
+      <div style="display:flex;gap:4px">
+        <button class="icon-btn" onclick="refreshData()"><i class="ti ti-refresh" id="refresh-icon-mob"></i></button>
+        <button class="icon-btn" onclick="openDrawer()"><i class="ti ti-menu-2"></i></button>
+      </div>
+    </div>
 
-      <div class="view active" id="view-capture">
-        <div class="capture-box">
-          <p class="capture-desc">Save a word in seconds — fill in the details later.</p>
-          <div class="capture-row">
-            <select class="lang-sel" id="clang"></select>
-            <input class="word-input" id="cinput" placeholder="Type a word or phrase…" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')addWord()"/>
-            <button class="btn btn-primary" onclick="addWord()"><i class="ti ti-bolt"></i> Quick add</button>
+    <div class="content-row">
+      <!-- View area -->
+      <div class="view-area">
+
+        <!-- TABLE VIEW (default) -->
+        <div class="view active" id="view-table">
+          <div class="capture-bar">
+            <div class="capture-row">
+              <select class="cap-lang" id="cap-lang"></select>
+              <input class="cap-input" id="cap-input" placeholder="Type a word to add…" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')quickAdd()"/>
+              <button class="btn btn-primary btn-sm" onclick="quickAdd()"><i class="ti ti-bolt"></i> Add</button>
+            </div>
           </div>
-          <div class="capture-divider"><span>or</span></div>
-          <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="openFullCard()"><i class="ti ti-cards"></i> Create full card now</button>
-        </div>
-        <div class="section-label" id="rlabel">Recently added</div>
-        <div id="recent-list"></div>
-      </div>
-
-      <div class="view" id="view-queue"><div id="queue-list"></div></div>
-
-      <div class="view" id="view-lexicon">
-        <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center">
-          <div style="position:relative;flex:1">
-            <i class="ti ti-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-muted);font-size:16px;pointer-events:none"></i>
-            <input id="lex-search" style="width:100%;padding:10px 14px 10px 36px;border:1.5px solid var(--border2);border-radius:9px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);outline:none;transition:border-color .15s"
-              placeholder="Search words, translations…" oninput="render()" autocomplete="off" spellcheck="false"/>
-          </div>
-        </div>
-        <div class="lex-filters" id="lex-filters"></div>
-        <div id="tag-filters" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
-        <div class="vocab-grid" id="vocab-grid"></div>
-      </div>
-
-      <div class="view" id="view-table">
-        <div style="overflow-x:auto">
-          <div id="table-wrap"></div>
-        </div>
-      </div>
-
-      <div class="view" id="view-stats">
-        <div id="set-stats"></div>
-        <div style="margin-top:28px">
-          <div class="set-section-title">Export</div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button class="btn btn-ghost" onclick="exportCSV()"><i class="ti ti-file-text"></i> Export to CSV</button>
-            <button class="btn btn-ghost" onclick="exportAnki()"><i class="ti ti-cards"></i> Export for Anki</button>
+          <div class="table-scroll">
+            <div id="table-wrap" style="min-width:100%"></div>
           </div>
         </div>
-      </div>
 
-      <div class="view" id="view-settings">
-        <!-- Categories -->
-        <div class="set-section-title">Categories &amp; Subcategories</div>
-        <p class="set-hint">Define your category framework. The order here determines the table row order.</p>
-        <div id="settings-cat-list" style="margin-bottom:12px"></div>
-        <div style="display:flex;gap:8px;margin-bottom:28px">
-          <input class="add-field-input" id="settings-new-cat" placeholder="Add a category…" onkeydown="if(event.key==='Enter')addCategoryFromSettings()"/>
-          <button class="btn btn-ghost btn-sm" type="button" onclick="addCategoryFromSettings()"><i class="ti ti-plus"></i></button>
+        <!-- PENDING VIEW -->
+        <div class="view" id="view-capture">
+          <div style="padding:20px;flex:1;overflow-y:auto">
+            <div id="pending-list"></div>
+          </div>
         </div>
 
-        <!-- Language config -->
-        <div class="set-section-title">Language configuration</div>
-        <p class="set-hint">Fields shown in this order during completion.</p>
-        <div id="set-langs"></div>
-        <button class="btn btn-ghost btn-sm" onclick="openAddLang()" style="margin-top:12px"><i class="ti ti-plus"></i> Add language</button>
+        <!-- STATS VIEW -->
+        <div class="view" id="view-stats">
+          <div style="padding:20px;flex:1;overflow-y:auto">
+            <div id="stats-content"></div>
+          </div>
+        </div>
+
+        <!-- SETTINGS VIEW -->
+        <div class="view" id="view-settings">
+          <div class="settings-wrap">
+            <div id="settings-content"></div>
+          </div>
+        </div>
+
       </div>
 
+      <!-- Side panel -->
+      <aside class="panel" id="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-word" id="panel-word"></div>
+            <div class="panel-lang" id="panel-lang"></div>
+          </div>
+          <button class="icon-btn" onclick="closePanel()"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="panel-body" id="panel-body"></div>
+        <div class="panel-footer" id="panel-footer"></div>
+      </aside>
     </div>
   </div>
 </div>
 
-<nav class="mobile-nav">
-  <div class="mobile-nav-inner">
-    <button class="mob-btn active" data-view="capture" onclick="go('capture')"><i class="ti ti-bolt"></i><span>Quick add</span></button>
-    <button class="mob-btn" data-view="queue" onclick="go('queue')"><i class="ti ti-inbox"></i><span>Completion</span><span class="mob-badge" id="mb1"></span></button>
-    <button class="mob-btn" data-view="lexicon" onclick="go('lexicon')"><i class="ti ti-books"></i><span>Vocabulary</span></button>
-    <button class="mob-btn" data-view="table" onclick="go('table')"><i class="ti ti-table"></i><span>Table</span></button>
+<!-- Mobile nav -->
+<nav class="mob-nav">
+  <div class="mob-nav-inner">
+    <button class="mob-btn active" data-view="table" onclick="go('table')"><i class="ti ti-table"></i><span>Table</span></button>
+    <button class="mob-btn" data-view="capture" onclick="go('capture')"><i class="ti ti-inbox"></i><span>Pending</span><span class="mob-badge" id="mob-pending"></span></button>
     <button class="mob-btn" data-view="stats" onclick="go('stats')"><i class="ti ti-chart-bar"></i><span>Progress</span></button>
+    <button class="mob-btn" data-view="settings" onclick="go('settings')"><i class="ti ti-settings"></i><span>Settings</span></button>
   </div>
 </nav>
 
+<!-- Drawer (mobile) -->
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
-  <div class="logo" style="padding:20px 18px 16px">
-    <div class="logo-wordmark">Paul E. Glott <em>Vocab</em></div>
-    <div class="logo-sub">Personal vocabulary builder · v39</div>
+  <div class="sidebar-logo" style="padding:18px 16px 14px">
+    <div class="logo-mark">Paul E. Glott <em>Vocab</em></div>
   </div>
-  <div class="nav" style="flex:1">
-    <button class="nav-btn" onclick="go('capture');closeDrawer()"><i class="ti ti-bolt"></i> Quick add</button>
-    <button class="nav-btn" onclick="go('queue');closeDrawer()"><i class="ti ti-inbox"></i> Completion</button>
-    <button class="nav-btn" onclick="go('lexicon');closeDrawer()"><i class="ti ti-books"></i> My vocabulary</button>
-    <button class="nav-btn" onclick="go('table');closeDrawer()"><i class="ti ti-table"></i> Cross-language</button>
-    <button class="nav-btn" onclick="go('stats');closeDrawer()"><i class="ti ti-chart-bar"></i> Progress</button>
-    <button class="nav-btn" onclick="go('settings');closeDrawer()"><i class="ti ti-settings"></i> Settings</button>
-  </div>
-  <div class="lang-section">
-    <div class="lang-section-title">Languages</div>
-    <div id="drawer-lang-pills"></div>
-    <button class="add-lang-btn" onclick="openAddLang();closeDrawer()"><i class="ti ti-plus" style="font-size:14px"></i> Add language</button>
+  <div style="padding:8px;flex:1;overflow-y:auto">
+    <button class="nb" onclick="go('table');closeDrawer()"><i class="ti ti-table"></i> Vocabulary table</button>
+    <button class="nb" onclick="go('capture');closeDrawer()"><i class="ti ti-inbox"></i> Pending</button>
+    <button class="nb" onclick="go('stats');closeDrawer()"><i class="ti ti-chart-bar"></i> Progress</button>
+    <button class="nb" onclick="go('settings');closeDrawer()"><i class="ti ti-settings"></i> Settings</button>
   </div>
   <div style="padding:8px;border-top:1px solid var(--border)">
-    <button class="nav-btn" onclick="signOut()"><i class="ti ti-logout"></i> Sign out</button>
+    <div class="lang-label" style="padding:4px 11px 6px">Languages</div>
+    <div id="drawer-lang-pills"></div>
+    <button class="add-lang-btn" onclick="openAddLang();closeDrawer()"><i class="ti ti-plus" style="font-size:13px"></i> Add language</button>
+  </div>
+  <div style="padding:8px;border-top:1px solid var(--border)">
+    <button class="nb" onclick="signOut()"><i class="ti ti-logout"></i> Sign out</button>
   </div>
 </div>
 </div>
 
 <!-- Add language modal -->
 <div class="overlay" id="m-addlang" onclick="closeM('m-addlang')">
-  <div class="mbox" style="max-width:460px" onclick="event.stopPropagation()">
+  <div class="mbox" onclick="event.stopPropagation()">
     <h3>Add a language</h3>
-    <div id="addlang-error" style="display:none;font-size:13px;color:#c0392b;background:#fdf0f0;border:1px solid rgba(192,57,43,.2);border-radius:8px;padding:10px 13px;margin-bottom:14px"></div>
+    <div id="addlang-error" style="display:none;font-size:12px;color:#c0392b;background:#fdf0f0;border-radius:7px;padding:9px 12px;margin-bottom:12px"></div>
     <div class="form-row">
-      <input class="form-input" id="nl-name" placeholder="e.g. Norwegian, Swahili, Latin…" autocomplete="off" spellcheck="false"/>
+      <label class="form-label">Language name</label>
+      <input class="form-input" id="nl-name" placeholder="e.g. Norwegian, Latin…" autocomplete="off"/>
     </div>
     <div class="form-row">
-      <label class="form-label">Card fields <span style="font-weight:400;color:var(--ink-muted)">— toggle or add your own</span></label>
-      <div class="presets" id="nl-presets"></div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <input class="form-input" id="nl-custom-field" placeholder="Add a custom field…" style="font-size:13px;padding:8px 12px" autocomplete="off"
-          onkeydown="if(event.key==='Enter'){event.preventDefault();addModalField()}"/>
+      <label class="form-label">Card fields — toggle or add your own</label>
+      <div id="nl-presets" style="margin-bottom:8px"></div>
+      <div style="display:flex;gap:7px">
+        <input class="form-input" id="nl-custom-field" placeholder="Custom field…" style="font-size:12px;padding:7px 10px" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();addModalField()}"/>
         <button class="btn btn-ghost btn-sm" type="button" onclick="addModalField()"><i class="ti ti-plus"></i></button>
       </div>
     </div>
     <div class="form-row">
-      <label class="form-label">Field order <span style="font-weight:400;color:var(--ink-muted)">— drag to reorder</span></label>
+      <label class="form-label">Field order — drag to reorder</label>
       <ul class="fo-list" id="nl-field-order"></ul>
     </div>
     <div class="mactions">
       <button class="btn btn-ghost btn-sm" type="button" onclick="closeM('m-addlang')">Cancel</button>
-      <button class="btn btn-primary btn-sm" type="button" onclick="saveLang()">Add language</button>
-    </div>
-  </div>
-</div>
-
-<!-- Full card modal -->
-<div class="overlay" id="m-fullcard" onclick="closeM('m-fullcard')">
-  <div class="mbox" style="max-width:480px" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-      <h3 style="margin:0">New card</h3>
-      <button class="icon-btn" type="button" onclick="closeM('m-fullcard')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="form-row">
-      <label class="form-label">Language</label>
-      <select class="form-input" id="fc-lang" onchange="renderFullCardFields()"></select>
-    </div>
-    <div class="form-row">
-      <label class="form-label">Word / phrase</label>
-      <input class="form-input" id="fc-word" placeholder="e.g. привет" autocomplete="off" spellcheck="false"/>
-    </div>
-    <div class="form-row">
-      <label class="form-label">Category <span style="font-weight:400;color:var(--ink-muted)">— broad theme</span></label>
-      <select class="cat-select" id="fc-category" onchange="onFcCatChange()">
-        <option value="">None</option>
-      </select>
-    </div>
-    <div class="form-row">
-      <label class="form-label">Subcategory</label>
-      <select class="cat-select" id="fc-subcategory" disabled>
-        <option value="">None</option>
-      </select>
-    </div>
-    <div id="fc-fields"></div>
-    <div id="fc-ex-suggestions" style="margin-bottom:4px">
-      <div id="fc-ex-placeholder" style="display:none;padding:10px 14px;background:var(--bg2);border:1px dashed var(--border2);border-radius:8px;font-size:12.5px;color:var(--ink-muted);text-align:center">
-        <i class="ti ti-bulb" style="font-size:14px;vertical-align:-2px"></i> Fill in a translation to see example sentences from linked words
-      </div>
-    </div>
-    <div class="form-row">
-      <label class="form-label">Tags <span style="font-weight:400;color:var(--ink-muted)">— e.g. adjective, food, travel</span></label>
-      <div class="tags-row" id="fc-tags-row" style="margin-bottom:8px"></div>
-      <div class="tag-input-wrap">
-        <input class="tag-input" id="fc-tag-input" placeholder="Add a tag…" autocomplete="off"
-          oninput="showTagSugg('fc-tag-input','fc-tag-sugg')"
-          onblur="hideTagSugg('fc-tag-sugg')"
-          onkeydown="tagKeydown(event,'fc-tag-input','fc-tag-sugg','fc')"/>
-        <div class="tag-sugg" id="fc-tag-sugg"></div>
-      </div>
-      <div id="fc-tag-suggestions" style="margin-top:7px"></div>
-    </div>
-    <div class="mactions">
-      <button class="btn btn-ghost btn-sm" type="button" onclick="closeM('m-fullcard')">Cancel</button>
-      <button class="btn btn-primary btn-sm" type="button" onclick="saveFullCard()"><i class="ti ti-check"></i> Save card</button>
-    </div>
-  </div>
-</div>
-
-<!-- Completion modal -->
-<div class="overlay" id="m-complete" onclick="closeM('m-complete')">
-  <div class="mbox cbox" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
-      <div>
-        <div class="cbox-word" id="cw-word"></div>
-        <div class="cbox-lang" id="cw-lang"></div>
-      </div>
-      <button class="icon-btn" type="button" onclick="closeM('m-complete')" style="margin-top:4px"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="prog-wrap">
-      <div class="prog-track"><div class="prog-fill" id="cprog"></div></div>
-      <div class="prog-text" id="cprog-text"></div>
-    </div>
-    <div class="step-field-name" id="cfield-name"></div>
-    <div id="cfield-input"></div>
-    <div class="step-hint" id="cfield-hint"></div>
-    <div class="step-nav">
-      <button class="skip-btn" type="button" onclick="stepSkip()">Skip for now</button>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button class="btn btn-ghost btn-sm" type="button" id="c-back" onclick="stepBack()" style="display:none"><i class="ti ti-arrow-left"></i> Back</button>
-        <button class="btn btn-primary btn-sm" type="button" id="c-next" onclick="stepNext()">Next <i class="ti ti-arrow-right"></i></button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Word detail modal -->
-<div class="overlay" id="m-detail" onclick="closeM('m-detail')">
-  <div class="mbox" style="max-width:460px" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
-      <div class="detail-word" id="dw-word"></div>
-      <button class="icon-btn" type="button" onclick="closeM('m-detail')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="detail-lang" id="dw-lang"></div>
-    <div id="dw-tags" style="margin-bottom:14px"></div>
-    <div id="dw-fields"></div>
-    <div id="dw-related"></div>
-    <div class="mactions">
-      <button class="btn btn-ghost btn-sm" type="button" onclick="openLinkModal()"><i class="ti ti-link"></i> Link word</button>
-      <button class="btn btn-ghost btn-sm" type="button" onclick="editWord()"><i class="ti ti-pencil"></i> Edit</button>
-      <button class="btn btn-ghost btn-sm" type="button" onclick="deleteFromDetail()" style="color:#c0392b;border-color:rgba(192,57,43,.3)"><i class="ti ti-trash"></i></button>
+      <button class="btn btn-primary btn-sm" type="button" onclick="saveLang()" id="save-lang-btn">Add language</button>
     </div>
   </div>
 </div>
 
 <!-- Link word modal -->
 <div class="overlay" id="m-link" onclick="closeM('m-link')">
-  <div class="mbox" style="max-width:420px" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <h3 style="margin:0">Link to another word</h3>
-      <button class="icon-btn" type="button" onclick="closeM('m-link')"><i class="ti ti-x"></i></button>
-    </div>
-    <p style="font-size:13px;color:var(--ink-muted);margin-bottom:18px;line-height:1.6">Manually link <strong id="link-source-word"></strong> to any word in your vocabulary — useful for concepts that don't share an exact translation.</p>
-    <div class="form-row">
-      <label class="form-label">Search for a word to link</label>
-      <div class="link-search-wrap">
-        <input class="form-input" id="link-search" placeholder="Type a word…" autocomplete="off" oninput="searchLinkWords()" onblur="hideLinkResults()"/>
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Link to another word</h3>
+    <p style="font-size:12.5px;color:var(--ink-muted);margin-bottom:16px;line-height:1.6">Manually link <strong id="link-src-word"></strong> to any word regardless of translation.</p>
+    <div class="form-row" style="position:relative">
+      <label class="form-label">Search</label>
+      <div class="tag-input-wrap">
+        <input class="form-input" id="link-search" placeholder="Type a word…" autocomplete="off" oninput="searchLinks()" onblur="hideLinkResults()"/>
         <div class="link-results" id="link-results"></div>
       </div>
     </div>
-    <div id="link-existing" style="margin-top:4px"></div>
+    <div id="link-existing"></div>
+    <div class="mactions"><button class="btn btn-ghost btn-sm" onclick="closeM('m-link')">Close</button></div>
   </div>
 </div>
 
-<!-- Edit word modal -->
-<div class="overlay" id="m-edit" onclick="closeM('m-edit')">
-  <div class="mbox" style="max-width:480px" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <h3 style="margin:0" id="edit-title"></h3>
-      <button class="icon-btn" type="button" onclick="closeM('m-edit')"><i class="ti ti-x"></i></button>
-    </div>
-    <div style="font-size:12px;color:var(--ink-muted);margin-bottom:16px" id="edit-lang"></div>
-    <div class="form-row">
-      <label class="form-label">Category</label>
-      <select class="cat-select" id="edit-category" style="margin-bottom:0" onchange="onEditCatChange()">
-        <option value="">None</option>
-      </select>
-    </div>
-    <div class="form-row">
-      <label class="form-label">Subcategory</label>
-      <select class="cat-select" id="edit-subcategory" disabled>
-        <option value="">None</option>
-      </select>
-    </div>
-    <div id="edit-fields"></div>
-    <div class="form-row">
-      <label class="form-label">Tags</label>
-      <div class="tags-row" id="edit-tags-row" style="margin-bottom:8px"></div>
-      <div class="tag-input-wrap">
-        <input class="tag-input" id="edit-tag-input" placeholder="Add a tag…" autocomplete="off"
-          oninput="showTagSugg('edit-tag-input','edit-tag-sugg')"
-          onblur="hideTagSugg('edit-tag-sugg')"
-          onkeydown="tagKeydown(event,'edit-tag-input','edit-tag-sugg','edit')"/>
-        <div class="tag-sugg" id="edit-tag-sugg"></div>
-      </div>
-    </div>
-    <div class="mactions">
-      <button class="btn btn-ghost btn-sm" type="button" onclick="closeM('m-edit')">Cancel</button>
-      <button class="btn btn-primary btn-sm" type="button" onclick="saveEdit()"><i class="ti ti-check"></i> Save changes</button>
-    </div>
-  </div>
-</div>
-
-<!-- Manage categories modal -->
-<div class="overlay" id="m-categories" onclick="closeM('m-categories')">
-  <div class="mbox" style="max-width:400px" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-      <h3 style="margin:0">Categories</h3>
-      <button class="icon-btn" type="button" onclick="closeM('m-categories')"><i class="ti ti-x"></i></button>
-    </div>
-    <p style="font-size:13px;color:var(--ink-muted);margin-bottom:16px;line-height:1.6">Broad themes like Food, Travel or Sports. Each word belongs to one category.</p>
-    <div id="cat-list" style="margin-bottom:16px"></div>
-    <div style="display:flex;gap:8px">
-      <input class="form-input" id="new-cat-input" placeholder="New category…" style="font-size:13px;padding:8px 12px" onkeydown="if(event.key==='Enter')addCategory()"/>
-      <button class="btn btn-primary btn-sm" type="button" onclick="addCategory()"><i class="ti ti-plus"></i></button>
-    </div>
-  </div>
-</div>
-
-<div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a18;color:#fff;font-size:13px;padding:10px 18px;border-radius:100px;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;white-space:nowrap;font-family:'DM Sans',sans-serif;"></div>
+<div id="toast"></div>
 
 <script>
-const SUPABASE_URL = 'https://gpessepxegxwwlhjsqmz.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwZXNzZXB4ZWd4d3dsaGpzcW16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODYzMjUsImV4cCI6MjA5NTQ2MjMyNX0._Y1yGL2_wa6O4YJUYrVFHkzV-dk1H73LjaV5Co4U4Wg';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://gpessepxegxwwlhjsqmz.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwZXNzZXB4ZWd4d3dsaGpzcW16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODYzMjUsImV4cCI6MjA5NTQ2MjMyNX0._Y1yGL2_wa6O4YJUYrVFHkzV-dk1H73LjaV5Co4U4Wg';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const FIELD_HINTS = {
-  'Translation':'The meaning in your native language.',
-  'Romanisation':'Phonetic spelling using the Latin alphabet.',
-  'Example sentence':'Write your own sentence — the best way to remember it.',
-  'Notes':'Grammar notes, associations, memory tricks…',
-  'Category':'e.g. Travel, Food, Greetings, Work…',
-  'Gender':'e.g. masculine, feminine, neuter',
-  'Plural form':'The plural form of this word.',
-  'Part of speech':'e.g. noun, verb, adjective…',
-};
-const PRESET_FIELDS = ['Translation','Example sentence','Notes'];
-const LANG_FLAGS = {
-  afrikaans:'🇿🇦',arabic:'🇸🇦',cantonese:'🇭🇰',czech:'🇨🇿',danish:'🇩🇰',
-  dutch:'🇳🇱',finnish:'🇫🇮',french:'🇫🇷',german:'🇩🇪',greek:'🇬🇷',
-  hebrew:'🇮🇱',hindi:'🇮🇳',hungarian:'🇭🇺',indonesian:'🇮🇩',italian:'🇮🇹',
-  japanese:'🇯🇵',korean:'🇰🇷',mandarin:'🇨🇳',norwegian:'🇳🇴',farsi:'🇮🇷',
-  persian:'🇮🇷',polish:'🇵🇱',portuguese:'🇵🇹',romanian:'🇷🇴',russian:'🇷🇺',
-  spanish:'🇪🇸',swahili:'🇰🇪',swedish:'🇸🇪',thai:'🇹🇭',turkish:'🇹🇷',
-  ukrainian:'🇺🇦',vietnamese:'🇻🇳',welsh:'🏴󠁧󠁢󠁷󠁬󠁳󠁿',irish:'🇮🇪',latin:'🏛️',esperanto:'🌍',
-};
-function flagForLang(name){ return LANG_FLAGS[name.toLowerCase().trim()]||'🌐'; }
+const FIELD_HINTS={'Translation':'The meaning in your native language.','Romanisation':'Phonetic spelling using the Latin alphabet.','Example sentence':'Write your own sentence — the best way to remember it.','Notes':'Grammar notes, associations, memory tricks…','Gender':'e.g. masculine, feminine, neuter','Plural form':'The plural form of this word.','Part of speech':'e.g. noun, verb, adjective…'};
+const PRESET_FIELDS=['Translation','Example sentence','Notes'];
+const LANG_FLAGS={afrikaans:'🇿🇦',arabic:'🇸🇦',cantonese:'🇭🇰',czech:'🇨🇿',danish:'🇩🇰',dutch:'🇳🇱',finnish:'🇫🇮',french:'🇫🇷',german:'🇩🇪',greek:'🇬🇷',hebrew:'🇮🇱',hindi:'🇮🇳',hungarian:'🇭🇺',indonesian:'🇮🇩',italian:'🇮🇹',japanese:'🇯🇵',korean:'🇰🇷',mandarin:'🇨🇳',norwegian:'🇳🇴',farsi:'🇮🇷',persian:'🇮🇷',polish:'🇵🇱',portuguese:'🇵🇹',romanian:'🇷🇴',russian:'🇷🇺',spanish:'🇪🇸',swahili:'🇰🇪',swedish:'🇸🇪',thai:'🇹🇭',turkish:'🇹🇷',ukrainian:'🇺🇦',vietnamese:'🇻🇳',welsh:'🏴󠁧󠁢󠁷󠁬󠁳󠁿',irish:'🇮🇪',latin:'🏛️',esperanto:'🌍'};
+function flagForLang(n){return LANG_FLAGS[n.toLowerCase().trim()]||'🌐';}
 
-// ── DB helpers ──
-const DB = SUPABASE_URL + '/rest/v1';
-let authToken = SUPABASE_KEY; // fallback to anon, replaced after login
-
-function dbHeaders(extra={}){
-  return {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+authToken,'Content-Type':'application/json',...extra};
+// ── DB ──
+const DB=SUPABASE_URL+'/rest/v1';
+let authToken=SUPABASE_KEY;
+function dbH(x={}){return{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+authToken,'Content-Type':'application/json',...x};}
+async function dbInsert(t,b){
+  const r=await fetch(`${DB}/${t}`,{method:'POST',headers:dbH({'Prefer':'return=representation'}),body:JSON.stringify(b)});
+  const d=await r.json();
+  if(!r.ok)return{data:null,error:{message:d.message||d.details||JSON.stringify(d)}};
+  const row=Array.isArray(d)?d[0]:d;
+  if(t==='words'&&row)normalizeWord(row);
+  return{data:row,error:null};
 }
-async function dbInsert(table,body){
-  const r=await fetch(`${DB}/${table}`,{method:'POST',headers:dbHeaders({'Prefer':'return=representation'}),body:JSON.stringify(body)});
-  const data=await r.json();
-  if(!r.ok) return {data:null,error:{message:data.message||data.details||JSON.stringify(data)}};
-  const row=Array.isArray(data)?data[0]:data;
-  // normalize word rows
-  if(table==='words'&&row){
-    row.langId=row.lang_id;
-    row.tags=Array.isArray(row.tags)?row.tags:[];
-    row.fields=row.fields||{};
-    row.is_stub=!!row.is_stub;
-    row.source_word_id=row.source_word_id||null;
-    row.category=row.category||null;
-    row.subcategory=row.subcategory||null;
-  }
-  return {data:row,error:null};
+async function dbUpdate(t,b,m){
+  const q=Object.entries(m).map(([k,v])=>`${k}=eq.${v}`).join('&');
+  const r=await fetch(`${DB}/${t}?${q}`,{method:'PATCH',headers:dbH({'Prefer':'return=representation'}),body:JSON.stringify(b)});
+  if(!r.ok){const d=await r.json();return{error:{message:d.message||JSON.stringify(d)}};}
+  return{error:null};
 }
-async function dbUpdate(table,body,match){
-  const q=Object.entries(match).map(([k,v])=>`${k}=eq.${v}`).join('&');
-  const r=await fetch(`${DB}/${table}?${q}`,{method:'PATCH',headers:dbHeaders({'Prefer':'return=representation'}),body:JSON.stringify(body)});
-  if(!r.ok){const d=await r.json();return {error:{message:d.message||JSON.stringify(d)}};}
-  return {error:null};
+async function dbDelete(t,m){
+  const q=Object.entries(m).map(([k,v])=>`${k}=eq.${v}`).join('&');
+  await fetch(`${DB}/${t}?${q}`,{method:'DELETE',headers:dbH()});
 }
-async function dbDelete(table,match){
-  const q=Object.entries(match).map(([k,v])=>`${k}=eq.${v}`).join('&');
-  await fetch(`${DB}/${table}?${q}`,{method:'DELETE',headers:dbHeaders()});
+async function dbDeleteOr(t,or){
+  await fetch(`${DB}/${t}?or=${encodeURIComponent('('+or+')')}`,{method:'DELETE',headers:dbH()});
 }
-async function dbDeleteOr(table,orClause){
-  await fetch(`${DB}/${table}?or=${encodeURIComponent('('+orClause+')')}`,{method:'DELETE',headers:dbHeaders()});
+function normalizeWord(w){
+  w.langId=w.lang_id;
+  w.tags=Array.isArray(w.tags)?w.tags:[];
+  w.fields=w.fields||{};
+  w.is_stub=!!w.is_stub;
+  w.source_word_id=w.source_word_id||null;
+  w.category=w.category||null;
+  w.subcategory=w.subcategory||null;
+  return w;
 }
 
 // ── State ──
-let languages=[], words=[], links=[];
-let activeLang=null, currentView='capture';
-let stepData={wordId:null,step:0,draft:{}};
-let detailWordId=null;
-let modalFields=[];
-let foSrcIdx=null;
-let activeTagFilter=null;
-let activeCatFilter=null;
-let fcTags=[], editTags=[];
-// Categories: [{name:'Food',subs:['Fruits','Vegetables']}, ...]
-function migrateCategories(raw){
-  try{
-    const parsed=JSON.parse(raw);
-    if(!parsed||!parsed.length) return [];
-    // already new format
-    if(typeof parsed[0]==='object') return parsed;
-    // migrate from flat string array
-    return parsed.map(name=>({name,subs:[]}));
-  }catch(e){ return []; }
-}
-let categories=migrateCategories(localStorage.getItem('vocab_categories'));
-if(!categories.length) categories=[
-  {name:'Food and Drinks',subs:['Fruits','Vegetables','Drinks']},
-  {name:'Travel',subs:[]},
-  {name:'Nature',subs:[]},
-  {name:'Daily life',subs:[]},
-];
+let languages=[],words=[],links=[];
+let currentView='table',activeLang=null;
+let panelWordId=null;
+// modalFields and foSrcIdx declared in state above
+let panelTags=[];
+let linkSearchWordId=null;
 
-function saveCategories(){ localStorage.setItem('vocab_categories',JSON.stringify(categories)); }
-function allCategories(){ return categories; }
-function catNames(){ return categories.map(c=>c.name); }
-function subsForCat(catName){ return (categories.find(c=>c.name===catName)||{subs:[]}).subs; }
+// Categories
+function migrateCats(raw){try{const p=JSON.parse(raw);if(!p||!p.length)return[];return typeof p[0]==='object'?p:p.map(n=>({name:n,subs:[]}));}catch(e){return[];}}
+let categories=migrateCats(localStorage.getItem('vocab_categories'));
+if(!categories.length)categories=[{name:'Food and Drinks',subs:['Fruits','Vegetables','Drinks']},{name:'Travel',subs:[]},{name:'Nature',subs:[]},{name:'Daily life',subs:[]}];
+function saveCats(){localStorage.setItem('vocab_categories',JSON.stringify(categories));}
+function subsForCat(n){return(categories.find(c=>c.name===n)||{subs:[]}).subs;}
 
-function populateCatSelect(elId, selectedCat, selectedSub){
-  const el=document.getElementById(elId);
-  if(!el) return;
-  el.innerHTML='<option value="">None</option>'+
-    categories.map(c=>`<option value="${c.name}"${selectedCat===c.name?' selected':''}>${c.name}</option>`).join('');
-}
-function onFcCatChange(){
-  const cat=document.getElementById('fc-category')?.value||'';
-  populateSubSelect('fc-subcategory',cat,null);
-}
-function onEditCatChange(){
-  const cat=document.getElementById('edit-category')?.value||'';
-  const currentSub=document.getElementById('edit-subcategory')?.value||'';
-  populateSubSelect('edit-subcategory',cat,currentSub);
-}
-
-function populateSubSelect(elId, catName, selectedSub){
-  const el=document.getElementById(elId);
-  if(!el) return;
-  const subs=subsForCat(catName);
-  if(!subs.length){ el.innerHTML='<option value="">None</option>'; el.disabled=true; return; }
-  el.disabled=false;
-  el.innerHTML='<option value="">None</option>'+
-    subs.map(s=>`<option value="${s}"${selectedSub===s?' selected':''}>${s}</option>`).join('');
-}
+// Table col/row order
+function getColOrder(){try{const s=localStorage.getItem('tblColOrder');if(s){const a=JSON.parse(s);const all=languages.map(l=>l.id);return[...a.filter(id=>all.includes(id)),...all.filter(id=>!a.includes(id))];}}catch(e){}return languages.map(l=>l.id);}
+function saveColOrder(o){localStorage.setItem('tblColOrder',JSON.stringify(o));}
+function getRowOrder(){try{return JSON.parse(localStorage.getItem('tblRowOrder')||'[]');}catch(e){return[];}}
+function saveRowOrder(o){localStorage.setItem('tblRowOrder',JSON.stringify(o));}
 
 // ── Helpers ──
-function sid(id){ return String(id); }
-function gword(id){ return words.find(w=>sid(w.id)===sid(id)); }
-function glang(id){ return languages.find(l=>l.id===id); }
+function sid(id){return String(id);}
+function gword(id){return words.find(w=>sid(w.id)===sid(id));}
+function glang(id){return languages.find(l=>l.id===id);}
+function allTags(){return[...new Set(words.flatMap(w=>w.tags||[]))].sort();}
 
-function allTags(){
-  const set=new Set();
-  words.forEach(w=>(w.tags||[]).forEach(t=>set.add(t)));
-  return [...set].sort();
-}
-
-// ── Category management ──
-function openManageCategories(){
-  renderCatList();
-  document.getElementById('new-cat-input').value='';
-  document.getElementById('m-categories').classList.add('open');
-}
-function renderCatList(){
-  document.getElementById('cat-list').innerHTML=categories.length
-    ?categories.map((c,i)=>`
-      <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
-        <span style="flex:1;font-size:14px;color:var(--ink)">${c}</span>
-        <span style="font-size:11px;color:var(--ink-muted)">${words.filter(w=>w.category===c).length} words</span>
-        <button class="icon-btn" style="font-size:14px" type="button" onclick="deleteCategory(${i})"><i class="ti ti-trash"></i></button>
-      </div>`).join('')
-    :`<p style="font-size:13px;color:var(--ink-muted)">No categories yet.</p>`;
-}
-function addCategory(){
-  const inp=document.getElementById('new-cat-input');
-  const val=inp.value.trim();
-  if(!val||categories.includes(val)) return;
-  categories.push(val);
-  saveCategories();
-  inp.value='';
-  renderCatList();
-}
-function deleteCategory(idx){
-  if(!confirm(`Remove category "${categories[idx]}"? Words keep their category label.`)) return;
-  categories.splice(idx,1);
-  saveCategories();
-  renderCatList();
-}
-
-// ── Export ──
-function exportCSV(){
-  const allFields=[...new Set(languages.flatMap(l=>l.fields))];
-  const headers=['Word','Language','Status','Category','Tags',...allFields];
-  const rows=words.filter(w=>!w.is_stub).map(w=>{
-    const l=glang(w.langId);
-    return [
-      `"${(w.word||'').replace(/"/g,'""')}"`,
-      `"${l?l.name:''}"`,
-      w.status,
-      `"${w.category||''}"`,
-      `"${(w.tags||[]).join(', ')}"`,
-      ...allFields.map(f=>`"${((w.fields||{})[f]||'').replace(/"/g,'""')}"`)
-    ].join(',');
-  });
-  const csv=[headers.join(','),...rows].join('\n');
-  const blob=new Blob([csv],{type:'text/csv'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`vocabulary_${new Date().toISOString().split('T')[0]}.csv`;
-  a.click();
-  toast('CSV exported');
-}
-
-function exportAnki(){
-  // Anki TSV: front TAB back (word + romanisation \n\n translation + example)
-  const rows=words.filter(w=>w.status==='complete'&&!w.is_stub).map(w=>{
-    const f=w.fields||{};
-    const l=glang(w.langId);
-    const front=`${w.word}${f['Romanisation']?`<br><small>${f['Romanisation']}</small>`:''}`;
-    const back=[
-      f['Translation']?`<b>${f['Translation']}</b>`:'',
-      f['Example sentence']?`<i>${f['Example sentence']}</i>`:'',
-      f['Notes']?`<small>${f['Notes']}</small>`:''
-    ].filter(Boolean).join('<br>');
-    const tags=(w.tags||[]).join(' ');
-    return `${front}\t${back}\t${tags}`;
-  });
-  const tsv=rows.join('\n');
-  const blob=new Blob([tsv],{type:'text/plain'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`vocabulary_anki_${new Date().toISOString().split('T')[0]}.txt`;
-  a.click();
-  toast('Anki file exported — import as TSV with 3 fields');
-}
-
-// ── Cross-language table ──
-let tableDragSrcIdx=null;
-
-function getTableColOrder(){
-  const stored=localStorage.getItem('tableColOrder');
-  if(stored){
-    try{
-      const arr=JSON.parse(stored);
-      // ensure all current language ids are represented
-      const all=languages.map(l=>l.id);
-      const filtered=arr.filter(id=>all.includes(id));
-      const missing=all.filter(id=>!filtered.includes(id));
-      return [...filtered,...missing];
-    }catch(e){}
-  }
-  return languages.map(l=>l.id);
-}
-
-function saveTableColOrder(order){ localStorage.setItem('tableColOrder',JSON.stringify(order)); }
-
-// ── Table row order ──
-function getRowOrder(){ try{return JSON.parse(localStorage.getItem('tableRowOrder')||'[]');}catch(e){return[];} }
-function saveRowOrder(o){ localStorage.setItem('tableRowOrder',JSON.stringify(o)); }
-let tblRowDragIdx=null;
-
-function renderTable(){
-  const wrap=document.getElementById('table-wrap');
-  if(!languages.length){wrap.innerHTML=`<div class="empty-state"><i class="ti ti-table"></i>Add some languages first.</div>`;return;}
-
-  const colOrder=getTableColOrder();
-  const orderedLangs=colOrder.map(id=>glang(id)).filter(Boolean);
-
-  // Build groups — synonyms (same translation) go in same cell
-  const visited=new Set();
-  const rows=[];
-
-  words.filter(w=>!w.is_stub&&(w.status==='complete'||w.status==='pending')).forEach(w=>{
-    if(visited.has(sid(w.id))) return;
-    const linked=getLinkedWords(w.id).filter(lw=>!lw.is_stub);
-    const group=[w,...linked];
-    group.forEach(gw=>visited.add(sid(gw.id)));
-    // For each language, collect ALL words (synonyms) in that language from the group
-    const byLang={};
-    group.forEach(gw=>{
-      if(!byLang[gw.langId]) byLang[gw.langId]=[];
-      byLang[gw.langId].push(gw);
-    });
-    const cat=group.find(gw=>gw.category)?.category||'';
-    const sub=group.find(gw=>gw.subcategory)?.subcategory||'';
-    const trans=(group[0]?.fields?.Translation||'').split(',')[0].trim();
-    const key=trans||sid(w.id);
-    rows.push({byLang,cat,sub,trans,key});
-  });
-
-  words.filter(w=>!w.is_stub&&!visited.has(sid(w.id))&&(w.status==='complete'||w.status==='pending')).forEach(w=>{
-    const byLang={};byLang[w.langId]=[w];
-    const trans=(w.fields?.Translation||'').split(',')[0].trim();
-    const key=trans||sid(w.id);
-    rows.push({byLang,cat:w.category||'',sub:w.subcategory||'',trans,key});
-  });
-
-  if(!rows.length){wrap.innerHTML=`<div class="empty-state"><i class="ti ti-table"></i>No completed words yet.</div>`;return;}
-
-  // Apply row order
-  const savedOrder=getRowOrder();
-  if(savedOrder.length){
-    rows.sort((a,b)=>{
-      const ai=savedOrder.indexOf(a.key); const bi=savedOrder.indexOf(b.key);
-      if(ai<0&&bi<0) return 0;
-      if(ai<0) return 1; if(bi<0) return -1;
-      return ai-bi;
-    });
-  }
-
-  const thDrag=(langId,idx)=>
-    `ondragstart="tblDragStart(event,${idx})"
-     ondragover="tblDragOver(event,${idx})"
-     ondrop="tblDrop(event,${idx})"
-     ondragend="tblDragEnd()"
-     draggable="true"`;
-
-  const thead=`<thead><tr ondragover="event.preventDefault()" ondrop="tblDropEnd(event)">
-    <th style="min-width:130px;text-align:center">Translation</th>
-    ${orderedLangs.map((l,i)=>`<th ${thDrag(l.id,i)} style="cursor:grab;text-align:center" title="Drag to reorder">${l.flag} ${l.name}</th>`).join('')}
-  </tr></thead>`;
-
-  // Group by category → subcategory
-  const catOrder=[...categories.map(c=>c.name),'__other__'];
-  let tbody='<tbody>';
-  let rowIdx=0;
-
-  catOrder.forEach(cat=>{
-    const catName=cat==='__other__'?'Other':cat;
-    const catRows=rows.filter(r=>(cat==='__other__'?(r.cat===''||!r.cat||!catOrder.slice(0,-1).includes(r.cat)):r.cat===cat));
-    if(!catRows.length) return;
-
-    // Category header
-    tbody+=`<tr><td colspan="${orderedLangs.length+1}" style="padding:14px 14px 6px;font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--ink);border-bottom:2px solid var(--border2);background:var(--bg2)">${catName}</td></tr>`;
-
-    // Sub-group by subcategory
-    const subNames=[...new Set(catRows.map(r=>r.sub||''))];
-    const orderedSubs=['__none__',...(categories.find(c=>c.name===cat)?.subs||[])];
-
-    orderedSubs.forEach(sub=>{
-      const subRows=catRows.filter(r=>(sub==='__none__'?(r.sub===''||!r.sub):r.sub===sub));
-      if(!subRows.length) return;
-      if(sub!=='__none__'){
-        tbody+=`<tr><td colspan="${orderedLangs.length+1}" style="padding:8px 14px 4px 22px;font-size:12px;font-weight:500;color:var(--ink-soft);border-bottom:1px solid var(--border);background:var(--bg2);text-transform:uppercase;letter-spacing:.05em">↳ ${sub}</td></tr>`;
-      }
-      subRows.forEach(({byLang,trans,key},ri)=>{
-        const rIdx=rowIdx++;
-        tbody+=`<tr draggable="true"
-          ondragstart="tblRowDragStart(event,${rIdx})"
-          ondragover="tblRowDragOver(event,${rIdx})"
-          ondrop="tblRowDrop(event,'${key}',${rIdx})"
-          ondragend="tblRowDragEnd()"
-          style="cursor:grab">
-          <td style="font-size:13px;color:var(--ink-soft);text-align:center;font-style:${trans?'normal':'italic'}">${trans||'—'}</td>
-          ${orderedLangs.map(l=>{
-            const wordsInCell=byLang[l.id]||[];
-            if(wordsInCell.length){
-              const cellContent=wordsInCell.map((w,wi)=>
-                `<span onclick="event.stopPropagation();openDetail(${w.id})" style="cursor:pointer;display:block;text-align:center${wi>0?';margin-top:4px;padding-top:4px;border-top:1px dashed var(--border)':''}">`+
-                (w.word
-                  ?`<strong>${wi+1>1?`${wi+1}. `:''} ${w.word}</strong>`
-                  :`<em style="color:var(--ink-muted);font-size:11px">complete…</em>`)
-                +`</span>`
-              ).join('');
-              return `<td style="text-align:center;vertical-align:middle">${cellContent}</td>`;
-            }
-            return `<td style="text-align:center;cursor:pointer;color:var(--accent);font-size:18px" title="Add in ${l.name}" onclick="openAddForLang('${l.id}',this)">+</td>`;
-          }).join('')}
-        </tr>`;
-      });
-    });
-  });
-
-  tbody+='</tbody>';
-  wrap.innerHTML=`<table class="vocab-table">${thead}${tbody}</table>`;
-}
-
-let tblRowDragSrcIdx=null, tblRowDragKey=null;
-function tblRowDragStart(e,idx){ tblRowDragSrcIdx=idx; e.dataTransfer.effectAllowed='move'; requestAnimationFrame(()=>e.currentTarget.style.opacity='.4'); }
-function tblRowDragOver(e,idx){ e.preventDefault(); e.dataTransfer.dropEffect='move'; }
-function tblRowDrop(e,key,idx){
-  e.preventDefault();
-  if(tblRowDragSrcIdx===null||tblRowDragSrcIdx===idx) return;
-  // Save new order based on current rendered order
-  const rows=document.querySelectorAll('.vocab-table tbody tr[draggable="true"]');
-  const keys=[];
-  rows.forEach(tr=>{const d=tr.getAttribute('ondrop')||''; const m=d.match(/'([^']+)'/); if(m)keys.push(m[1]);});
-  const srcKey=keys[tblRowDragSrcIdx];
-  keys.splice(tblRowDragSrcIdx,1);
-  keys.splice(idx,0,srcKey);
-  saveRowOrder(keys);
-  tblRowDragSrcIdx=null;
-  renderTable();
-}
-function tblRowDragEnd(){ tblRowDragSrcIdx=null; document.querySelectorAll('.vocab-table tbody tr').forEach(tr=>tr.style.opacity=''); }
-
-function openAddForLang(langId, tdEl){
-  // Find the translation for this row from any existing word in the same row
-  const tr=tdEl.closest('tr');
-  const cells=tr.querySelectorAll('td.has-word');
-  let trans='', cat=null, sourceId=null;
-  cells.forEach(td=>{
-    const onclick=td.getAttribute('onclick')||'';
-    const m=onclick.match(/openDetail\((\d+)\)/);
-    if(m){
-      const w=gword(parseInt(m[1]));
-      if(w){
-        if(!trans) trans=(w.fields&&w.fields['Translation']||'').split(',')[0].trim();
-        if(!cat) cat=w.category||null;
-        if(!sourceId) sourceId=w.id;
-      }
-    }
-  });
-  openFullCard();
-  setTimeout(()=>{
-    const sel=document.getElementById('fc-lang');
-    if(sel){sel.value=langId;renderFullCardFields();}
-    const transEl=document.getElementById('fcf-Translation');
-    if(transEl&&trans){transEl.value=trans;updateFcExSuggestions();}
-    if(cat) populateCatSelect('fc-category',cat);
-  },120);
-}
-
-function tblDropEnd(e){
-  // Drop at the end (after last column)
-  if(tableDragSrcIdx===null) return;
-  const order=getTableColOrder();
-  const moved=order.splice(tableDragSrcIdx,1)[0];
-  order.push(moved);
-  saveTableColOrder(order);
-  tableDragSrcIdx=null;
-  renderTable();
-}
-function tblDragStart(e,idx){
-  tableDragSrcIdx=idx;
-  e.dataTransfer.effectAllowed='move';
-  requestAnimationFrame(()=>e.currentTarget.classList.add('dragging'));
-}
-function tblDragOver(e,idx){
-  e.preventDefault();
-  e.dataTransfer.dropEffect='move';
-  document.querySelectorAll('.vocab-table thead th').forEach((th,i)=>{
-    // th index 0 = Translation column, th index i+1 = lang column i
-    th.classList.toggle('drag-over', i>0 && (i-1)===idx && idx!==tableDragSrcIdx);
-  });
-}
-function tblDrop(e,idx){
-  e.preventDefault();
-  if(tableDragSrcIdx===null||tableDragSrcIdx===idx) return;
-  const order=getTableColOrder();
-  const moved=order.splice(tableDragSrcIdx,1)[0];
-  order.splice(idx,0,moved);
-  saveTableColOrder(order);
-  tableDragSrcIdx=null;
-  renderTable();
-}
-function tblDragEnd(){
-  tableDragSrcIdx=null;
-  document.querySelectorAll('.vocab-table th').forEach(th=>th.classList.remove('dragging','drag-over'));
-}
-function showTagSugg(inputId, suggId){
-  const inp=document.getElementById(inputId);
-  const sugg=document.getElementById(suggId);
-  if(!inp||!sugg) return;
-  // for step modal, delegate to step-specific handler
-  if(inputId==='sinp'){ showTagSuggStep(); return; }
-  const val=inp.value.trim().toLowerCase();
-  const existing=inputId.startsWith('fc')?fcTags:editTags;
-  const matches=allTags().filter(t=>t.toLowerCase().includes(val)&&!existing.includes(t));
-  if(!matches.length||!val){sugg.classList.remove('open');return;}
-  sugg.innerHTML=matches.slice(0,6).map(t=>
-    `<div class="tag-sugg-item" onmousedown="pickTag('${t}','${inputId}','${suggId}')">${t}</div>`
-  ).join('');
-  sugg.classList.add('open');
-}
-function hideTagSugg(suggId){setTimeout(()=>document.getElementById(suggId)?.classList.remove('open'),150);}
-function pickTag(t,inputId,suggId){
-  document.getElementById(inputId).value='';
-  document.getElementById(suggId).classList.remove('open');
-  const prefix=inputId.startsWith('fc')?'fc':'edit';
-  addTagToModal(t,prefix);
-}
-function tagKeydown(e,inputId,suggId,prefix){
-  if(e.key==='Enter'||e.key===','){
-    e.preventDefault();
-    const val=document.getElementById(inputId).value.trim().replace(/,$/,'');
-    if(val){addTagToModal(val,prefix);}
-    document.getElementById(inputId).value='';
-    document.getElementById(suggId).classList.remove('open');
-  }
-}
-function addTagToModal(t,prefix){
-  const arr=prefix==='fc'?fcTags:editTags;
-  if(!t||arr.includes(t)) return;
-  arr.push(t);
-  renderModalTags(prefix);
-}
-function removeTagFromModal(t,prefix){
-  if(prefix==='fc') fcTags=fcTags.filter(x=>x!==t);
-  else editTags=editTags.filter(x=>x!==t);
-  renderModalTags(prefix);
-}
-function renderModalTags(prefix){
-  const arr=prefix==='fc'?fcTags:editTags;
-  const rowId=prefix+'-tags-row';
-  document.getElementById(rowId).innerHTML=arr.map(t=>
-    `<span class="tag-pill">${t}<button class="tag-x" type="button" onclick="removeTagFromModal('${t}','${prefix}')">×</button></span>`
-  ).join('');
-}
-
-// ── Toast ──
 function toast(msg,dur=2800){
   const el=document.getElementById('toast');
-  if(!el) return;
-  el.textContent=msg;
-  el.style.opacity='1';
-  el.style.transform='translateX(-50%) translateY(0)';
+  el.textContent=msg;el.style.opacity='1';el.style.transform='translateX(-50%) translateY(0)';
   setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(-50%) translateY(20px)';},dur);
 }
 
@@ -1116,10 +526,10 @@ async function signIn(){
   const pw=document.getElementById('login-password').value;
   const btn=document.getElementById('signin-btn');
   const err=document.getElementById('login-error');
-  err.style.display='none'; btn.disabled=true; btn.textContent='Signing in…';
-  const {error}=await sb.auth.signInWithPassword({email,password:pw});
-  btn.disabled=false; btn.textContent='Sign in';
-  if(error){err.textContent=error.message; err.style.display='block';}
+  err.style.display='none';btn.disabled=true;btn.textContent='Signing in…';
+  const{error}=await sb.auth.signInWithPassword({email,password:pw});
+  btn.disabled=false;btn.textContent='Sign in';
+  if(error){err.textContent=error.message;err.style.display='block';}
 }
 async function signUp(){
   const email=document.getElementById('login-email').value.trim();
@@ -1127,9 +537,9 @@ async function signUp(){
   const err=document.getElementById('login-error');
   err.style.display='none';
   if(!email||!pw){err.textContent='Please enter email and password.';err.style.display='block';return;}
-  const {error}=await sb.auth.signUp({email,password:pw});
+  const{error}=await sb.auth.signUp({email,password:pw});
   if(error){err.textContent=error.message;err.style.display='block';}
-  else toast('Account created — check your email to confirm, then sign in.',5000);
+  else toast('Account created — check your email, then sign in.',5000);
 }
 async function signOut(){
   await sb.auth.signOut();
@@ -1138,12 +548,11 @@ async function signOut(){
 }
 
 // ── Boot ──
-let appInitialized = false;
-
+let appReady=false;
 async function showApp(token){
-  if(appInitialized) return;
-  appInitialized = true;
-  authToken = token;
+  if(appReady)return;
+  appReady=true;
+  authToken=token;
   document.getElementById('login-screen').style.display='none';
   document.getElementById('loading-screen').style.display='flex';
   document.getElementById('app').style.display='none';
@@ -1152,111 +561,72 @@ async function showApp(token){
   document.getElementById('app').style.display='block';
   render();
 }
-
 function showLogin(){
-  appInitialized = false;
-  authToken = SUPABASE_KEY;
+  appReady=false;authToken=SUPABASE_KEY;
   document.getElementById('loading-screen').style.display='none';
   document.getElementById('app').style.display='none';
   document.getElementById('login-screen').style.display='flex';
 }
-
-sb.auth.onAuthStateChange((event, session)=>{
-  if(session){
-    authToken = session.access_token;
-    if(!appInitialized) showApp(session.access_token);
-  } else if(event === 'SIGNED_OUT'){
-    showLogin();
-  }
+sb.auth.onAuthStateChange((ev,session)=>{
+  if(session){authToken=session.access_token;if(!appReady)showApp(session.access_token);}
+  else if(ev==='SIGNED_OUT')showLogin();
 });
-
-// Explicit check on load — needed for mobile Safari where onAuthStateChange
-// may not fire reliably when restoring a persisted session
-window.addEventListener('load', async()=>{
-  if(appInitialized) return;
-  const { data:{ session } } = await sb.auth.getSession();
-  if(session){ showApp(session.access_token); }
-  else { showLogin(); }
+window.addEventListener('load',async()=>{
+  if(appReady)return;
+  const{data:{session}}=await sb.auth.getSession();
+  if(session)showApp(session.access_token);
+  else showLogin();
 });
 
 async function loadAll(){
-  try {
-    const headers = {
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + authToken,
-      'Content-Type': 'application/json'
-    };
-    const base = SUPABASE_URL + '/rest/v1';
-    const [rl,rw,rk] = await Promise.all([
-      fetch(base+'/languages?select=*&order=created_at', {headers}).then(r=>r.json()),
-      fetch(base+'/words?select=*&order=created_at', {headers}).then(r=>r.json()),
-      fetch(base+'/links?select=*', {headers}).then(r=>r.json()),
-    ]);
-    languages = Array.isArray(rl) ? rl : [];
-    words = (Array.isArray(rw) ? rw : []).map(w=>({
-      ...w,
-      langId: w.lang_id,
-      tags: Array.isArray(w.tags) ? w.tags : [],
-      fields: w.fields || {},
-      is_stub: !!w.is_stub,
-      source_word_id: w.source_word_id||null,
-      category: w.category||null,
-      subcategory: w.subcategory||null
-    }));
-    links = Array.isArray(rk) ? rk : [];
-  } catch(e) {
-    toast('Could not load data: '+e.message);
-    languages=[]; words=[]; links=[];
-  }
-}
-
-async function reloadWords(){
-  const headers={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+authToken,'Content-Type':'application/json'};
-  const [rw,rk]=await Promise.all([
-    fetch(SUPABASE_URL+'/rest/v1/words?select=*&order=created_at',{headers}).then(r=>r.json()),
-    fetch(SUPABASE_URL+'/rest/v1/links?select=*',{headers}).then(r=>r.json()),
+  const headers={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+authToken};
+  const[rl,rw,rk]=await Promise.all([
+    fetch(DB+'/languages?select=*&order=created_at',{headers}).then(r=>r.json()),
+    fetch(DB+'/words?select=*&order=created_at',{headers}).then(r=>r.json()),
+    fetch(DB+'/links?select=*',{headers}).then(r=>r.json()),
   ]);
-  words=(Array.isArray(rw)?rw:[]).map(w=>({...w,langId:w.lang_id,tags:Array.isArray(w.tags)?w.tags:[],fields:w.fields||{},is_stub:!!w.is_stub,source_word_id:w.source_word_id||null,category:w.category||null}));
+  languages=Array.isArray(rl)?rl:[];
+  words=(Array.isArray(rw)?rw:[]).map(normalizeWord);
   links=Array.isArray(rk)?rk:[];
 }
-
+async function reloadWords(){
+  const headers={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+authToken};
+  const[rw,rk]=await Promise.all([
+    fetch(DB+'/words?select=*&order=created_at',{headers}).then(r=>r.json()),
+    fetch(DB+'/links?select=*',{headers}).then(r=>r.json()),
+  ]);
+  words=(Array.isArray(rw)?rw:[]).map(normalizeWord);
+  links=Array.isArray(rk)?rk:[];
+}
 async function refreshData(){
-  const icons=['refresh-icon','refresh-icon-mob'];
-  icons.forEach(id=>document.getElementById(id)?.classList.add('spin-once'));
-  await loadAll();
-  render();
-  icons.forEach(id=>document.getElementById(id)?.classList.remove('spin-once'));
+  ['refresh-icon','refresh-icon-mob'].forEach(id=>document.getElementById(id)?.classList.add('spin-once'));
+  await reloadWords();render();
+  setTimeout(()=>['refresh-icon','refresh-icon-mob'].forEach(id=>document.getElementById(id)?.classList.remove('spin-once')),600);
   toast('Synced');
 }
+
+// ── Navigation ──
 function go(view){
   currentView=view;
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.nav-btn[data-view],.mob-btn[data-view]').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nb[data-view],.mob-btn[data-view]').forEach(b=>b.classList.remove('active'));
   document.getElementById('view-'+view).classList.add('active');
-  document.querySelectorAll('[data-view="'+view+'"]').forEach(b=>b.classList.add('active'));
-  const titles={capture:'Quick add',queue:'Completion',lexicon:'My vocabulary',table:'Cross-language',stats:'Progress',settings:'Settings'};
+  document.querySelectorAll(`[data-view="${view}"]`).forEach(b=>b.classList.add('active'));
+  const titles={table:'Vocabulary table',capture:'Pending',stats:'Progress',settings:'Settings'};
   const t=titles[view]||view;
   document.getElementById('topbar-title').textContent=t;
-  document.getElementById('mobile-title').textContent=t;
-  if(view==='table') renderTable();
-  if(view==='stats') renderStats();
+  document.getElementById('mob-title').textContent=t;
   render();
 }
 function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
 
-// ── Badges ──
-function updateBadges(){
-  const n=words.filter(w=>w.status==='pending').length;
-  ['nb1','mb1'].forEach(id=>{const el=document.getElementById(id);el.textContent=n;el.style.display=n?'':'none';});
-}
-
-// ── Render ──
+// ── Lang pills ──
 function renderLangPills(){
   const html=languages.map(l=>{
-    const n=words.filter(w=>w.langId===l.id).length;
-    return `<button class="lang-btn ${activeLang===l.id?'active':''}" onclick="toggleLang('${l.id}')">
-      <span style="font-size:16px">${l.flag}</span><span style="color:#1a1a18">${l.name}</span>
+    const n=words.filter(w=>w.langId===l.id&&!w.is_stub).length;
+    return `<button class="lang-pill ${activeLang===l.id?'active':''}" onclick="toggleLang('${l.id}')">
+      <span style="font-size:15px">${l.flag}</span><span>${l.name}</span>
       <span class="lang-count">${n}</span></button>`;
   }).join('');
   document.getElementById('lang-pills').innerHTML=html;
@@ -1264,988 +634,582 @@ function renderLangPills(){
 }
 function toggleLang(id){activeLang=activeLang===id?null:id;render();}
 
-function stubLabel(w){
-  const sourceWord=w.source_word_id?gword(w.source_word_id):null;
-  const trans=(w.fields&&w.fields['Translation'])||'';
-  const sourceLang=sourceWord?glang(sourceWord.langId):null;
-  if(sourceWord&&sourceLang){
-    return `How do you say <em>"${trans}"</em> in ${glang(w.langId)?.name||''}? <span style="font-size:11px;color:var(--ink-muted)">(from ${sourceLang.flag} ${sourceWord.word})</span>`;
-  }
-  return `How do you say <em>"${trans}"</em> in ${glang(w.langId)?.name||''}?`;
+// ── Badges ──
+function updateBadges(){
+  const n=words.filter(w=>w.status==='pending'&&!w.is_stub).length;
+  ['nb-pending','mob-pending'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent=n;el.style.display=n?'':'none';}});
 }
 
-function renderCapture(){
-  const sel=document.getElementById('clang');
-  const cur=sel.value;
-  sel.innerHTML=languages.map(l=>`<option value="${l.id}">${l.flag} ${l.name}</option>`).join('');
-  if(cur&&languages.find(l=>l.id===cur)) sel.value=cur;
-  const pending=words.filter(w=>w.status==='pending');
-  document.getElementById('rlabel').textContent=pending.length?`Pending completion (${pending.length})`:'Recently added';
-  const c=document.getElementById('recent-list');
-  if(!pending.length){c.innerHTML=`<div class="empty-state"><i class="ti ti-leaf"></i>Add your first word above.</div>`;return;}
-  c.innerHTML=pending.slice().reverse().map(w=>{
-    const l=glang(w.langId);
-    const isStub=w.is_stub;
-    return `<div class="word-row" onclick="openComplete(${w.id})">
-      <span style="font-size:18px">${l?l.flag:''}</span>
-      <span class="word-row-text">${isStub?stubLabel(w):w.word}</span>
-      <span class="badge badge-pend">${isStub?'Suggested':'Pending'}</span>
-      <button class="icon-btn" type="button" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
-    </div>`;
-  }).join('');
-}
-
-function renderQueue(){
-  const pending=words.filter(w=>w.status==='pending');
-  const c=document.getElementById('queue-list');
-  if(!pending.length){c.innerHTML=`<div class="empty-state"><i class="ti ti-circle-check"></i>You're all caught up.</div>`;return;}
-
-  const stubs=pending.filter(w=>w.is_stub);
-  const own=pending.filter(w=>!w.is_stub);
-
-  let html=`<p style="font-size:13.5px;color:var(--ink-muted);margin-bottom:18px;line-height:1.7">${pending.length} word${pending.length>1?'s':''} waiting. Click any to fill in its fields.</p>`;
-
-  if(own.length){
-    html+=`<div style="font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Your words</div>`;
-    html+=own.map(w=>{
-      const l=glang(w.langId);
-      return `<div class="word-row" onclick="openComplete(${w.id})">
-        <span style="font-size:18px">${l?l.flag:''}</span>
-        <span class="word-row-text">${w.word}</span>
-        <span style="font-size:12px;color:var(--ink-muted);margin-right:4px">${l?l.name:''}</span>
-        <span class="badge badge-pend">Incomplete</span>
-        <button class="icon-btn" type="button" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
-      </div>`;
-    }).join('');
-  }
-
-  if(stubs.length){
-    if(own.length) html+=`<div style="height:12px"></div>`;
-    html+=`<div style="font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Suggested from other languages</div>`;
-    html+=stubs.map(w=>{
-      const l=glang(w.langId);
-      return `<div class="word-row" onclick="openComplete(${w.id})">
-        <span style="font-size:18px">${l?l.flag:''}</span>
-        <span class="word-row-text" style="font-style:italic">${stubLabel(w)}</span>
-        <button class="icon-btn" type="button" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
-      </div>`;
-    }).join('');
-  }
-
-  c.innerHTML=html;
-}
-
-function wordCard(w){
-  const l=glang(w.langId);const f=w.fields||{};
-  const hasLinks=getLinkedWords(w.id).length>0;
-  const tagHtml=(w.tags||[]).map(t=>`<span class="tag-pill" style="font-size:10.5px;padding:2px 8px">${t}</span>`).join('');
-  const transRaw=f['Translation']||'';
-  const transDisplay=transRaw.includes(',')?transRaw.split(',').map((p,i)=>`${i+1}. ${p.trim()}`).join('  '):transRaw;
-  const hasMeta=w.category||(w.tags||[]).length;
-  return `<div class="vc" onclick="openDetail(${w.id})">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-      <span style="font-size:15px">${l?l.flag:''}</span>
-      <span class="vc-word">${w.word||''}</span>
-      ${hasLinks?`<i class="ti ti-link" style="font-size:12px;color:var(--ink-muted);margin-left:auto"></i>`:''}
-    </div>
-    ${transDisplay?`<div class="vc-trans">${transDisplay}</div>`:''}
-    ${f['Romanisation']?`<div class="vc-meta">${f['Romanisation']}</div>`:''}
-    ${f['Example sentence']?`<div class="vc-meta">"${f['Example sentence'].substring(0,55)}${f['Example sentence'].length>55?'…':''}"</div>`:''}
-    ${hasMeta?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">
-      ${w.category?`<span class="cat-pill cat-pill-sm">${w.category}</span>`:''}
-      ${tagHtml}
-    </div>`:''}
-  </div>`;
-}
-
-function renderLexicon(){
-  document.getElementById('lex-filters').innerHTML=[{id:null,name:'All',flag:''},...languages].map(l=>
-    `<button class="filter-chip ${activeLang===l.id?'active':''}" onclick="toggleLang(${l.id?`'${l.id}'`:'null'})">${l.flag} ${l.name}</button>`
-  ).join('');
-
-  // Category filter chips
-  const tags=allTags();
-  const usedCats=[...new Set(words.filter(w=>w.category).map(w=>w.category))].sort();
-  const tf=document.getElementById('tag-filters');
-  tf.innerHTML=[
-    ...usedCats.map(c=>`<span class="cat-pill" style="cursor:pointer;opacity:${activeCatFilter===c?1:.6}" onclick="toggleCatFilter('${c}')">${c}</span>`),
-    ...tags.map(t=>`<span class="tag-pill clickable ${activeTagFilter===t?'active':''}" onclick="toggleTagFilter('${t}')">${t}</span>`)
-  ].join('');
-
-  const searchEl=document.getElementById('lex-search');
-  const q=searchEl?searchEl.value.trim().toLowerCase():'';
-
-  let ws=words.filter(w=>w.status==='complete'&&!w.is_stub);
-  if(activeLang) ws=ws.filter(w=>w.langId===activeLang);
-  if(activeTagFilter) ws=ws.filter(w=>(w.tags||[]).includes(activeTagFilter));
-  if(activeCatFilter) ws=ws.filter(w=>w.category===activeCatFilter);
-  if(q) ws=ws.filter(w=>
-    (w.word||'').toLowerCase().includes(q)||
-    Object.values(w.fields||{}).some(v=>v&&v.toLowerCase().includes(q))||
-    (w.tags||[]).some(t=>t.toLowerCase().includes(q))||
-    (w.category||'').toLowerCase().includes(q)
-  );
-
-  ws.sort((a,b)=>{
-    const li=languages.findIndex(l=>l.id===a.langId)-languages.findIndex(l=>l.id===b.langId);
-    if(li!==0) return li;
-    return (a.word||'').localeCompare(b.word||'');
-  });
-
-  const g=document.getElementById('vocab-grid');
-  if(!ws.length){
-    g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-books"></i>${q||activeTagFilter||activeLang?'No matching words.':'No completed words yet.'}</div>`;
-    return;
-  }
-
-  // Group by language when not filtered to one language
-  let html='';
-  if(!activeLang){
-    const byLang={};
-    ws.forEach(w=>{
-      if(!byLang[w.langId]) byLang[w.langId]=[];
-      byLang[w.langId].push(w);
-    });
-    languages.filter(l=>byLang[l.id]).forEach(l=>{
-      html+=`<div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;margin-top:8px;margin-bottom:4px">
-        <span style="font-size:20px">${l.flag}</span>
-        <span style="font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--ink)">${l.name}</span>
-        <span style="font-size:12px;color:var(--ink-muted)">${byLang[l.id].length} word${byLang[l.id].length>1?'s':''}</span>
-      </div>`;
-      html+=byLang[l.id].map(w=>wordCard(w)).join('');
-    });
-  } else {
-    html=ws.map(w=>wordCard(w)).join('');
-  }
-  g.innerHTML=html;
-}
-function toggleTagFilter(t){activeTagFilter=activeTagFilter===t?null:t;render();}
-function toggleCatFilter(c){activeCatFilter=activeCatFilter===c?null:c;render();}
-
-function renderStats(){
-  const completed=words.filter(w=>w.status==='complete'&&!w.is_stub);
-  const pending=words.filter(w=>w.status==='pending'&&!w.is_stub);
-  const totalLinks=links.length;
-  const langBreakdown=languages.map(l=>{
-    const n=words.filter(w=>w.langId===l.id&&w.status==='complete'&&!w.is_stub).length;
-    return `<div class="stat-card"><div class="stat-num">${n}</div><div class="stat-label">${l.flag} ${l.name}</div></div>`;
-  }).join('');
-  const el=document.getElementById('set-stats');
-  if(el) el.innerHTML=`
-    <div class="set-section-title">My progress</div>
-    <div class="stats-grid" style="margin-bottom:12px">
-      <div class="stat-card"><div class="stat-num">${completed.length}</div><div class="stat-label">Words learned</div></div>
-      <div class="stat-card"><div class="stat-num">${pending.length}</div><div class="stat-label">Pending</div></div>
-      <div class="stat-card"><div class="stat-num">${totalLinks}</div><div class="stat-label">Cross-language links</div></div>
-      <div class="stat-card"><div class="stat-num">${languages.length}</div><div class="stat-label">Languages</div></div>
-    </div>
-    <div class="stats-grid">${langBreakdown}</div>`;
-}
-
-function renderSettings(){
-  const catListEl=document.getElementById('settings-cat-list');
-  if(catListEl){
-    catListEl.innerHTML=categories.length
-      ?categories.map((c,ci)=>`
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:${c.subs&&c.subs.length?'10px':'0'}">
-            <span style="flex:1;font-size:14px;font-weight:500;color:var(--ink)">${c.name}</span>
-            <span style="font-size:11px;color:var(--ink-muted)">${words.filter(w=>w.category===c.name).length} words</span>
-            <button class="icon-btn" style="font-size:14px" type="button" onclick="deleteCategoryFromSettings(${ci})"><i class="ti ti-trash"></i></button>
-          </div>
-          ${(c.subs||[]).map((s,si)=>`
-            <div style="display:flex;align-items:center;gap:6px;padding:5px 0 5px 16px;border-top:1px solid var(--border)">
-              <span style="font-size:11px;color:var(--ink-muted);flex-shrink:0">↳</span>
-              <span style="flex:1;font-size:13px;color:var(--ink-soft)">${s}</span>
-              <span style="font-size:11px;color:var(--ink-muted)">${words.filter(w=>w.subcategory===s).length}</span>
-              <button class="icon-btn" style="font-size:13px" type="button" onclick="deleteSubcategory(${ci},${si})"><i class="ti ti-trash"></i></button>
-            </div>`).join('')}
-          <div style="display:flex;gap:6px;margin-top:8px;padding-left:16px">
-            <input class="add-field-input" id="new-sub-${ci}" placeholder="Add subcategory…" style="font-size:12px;padding:5px 9px" onkeydown="if(event.key==='Enter')addSubcategory(${ci})"/>
-            <button class="btn btn-ghost btn-sm" type="button" onclick="addSubcategory(${ci})" style="font-size:11px;padding:5px 10px"><i class="ti ti-plus"></i></button>
-          </div>
-        </div>`).join('')
-      :`<p style="font-size:13px;color:var(--ink-muted);margin-bottom:8px">No categories yet.</p>`;
-  }
-  document.getElementById('set-langs').innerHTML=languages.map(l=>`
-    <div class="lang-cfg">
-      <div class="lang-cfg-top">
-        <span style="font-size:24px">${l.flag}</span>
-        <span class="lang-cfg-name">${l.name}</span>
-        <button class="icon-btn" type="button" onclick="removeLang('${l.id}')"><i class="ti ti-trash"></i></button>
-      </div>
-      <div class="ftags-label">Card fields (drag to reorder)</div>
-      <ul class="fo-list" id="set-fo-${l.id}" style="margin-bottom:10px">
-        ${l.fields.map((f,i)=>`
-          <li class="fo-item" draggable="true"
-            ondragstart="setFoDragStart(event,'${l.id}',${i})"
-            ondragover="setFoDragOver(event,${i})"
-            ondrop="setFoDrop(event,'${l.id}',${i})"
-            ondragend="setFoDragEnd('${l.id}')">
-            <i class="ti ti-grip-vertical fo-handle"></i>
-            <span class="fo-name">${f}</span>
-            <button class="fo-remove" type="button" onclick="removeField('${l.id}','${f}')">×</button>
-          </li>`).join('')}
-      </ul>
-      <div class="add-field-row">
-        <input class="add-field-input" id="nf-${l.id}" placeholder="Add a field…" onkeydown="if(event.key==='Enter')addField('${l.id}')"/>
-        <button class="btn btn-ghost btn-sm" type="button" onclick="addField('${l.id}')"><i class="ti ti-plus"></i></button>
-      </div>
-    </div>`).join('');
-}
-
-function addCategoryFromSettings(){
-  const inp=document.getElementById('settings-new-cat');
-  const val=inp.value.trim();
-  if(!val||categories.find(c=>c.name===val)) return;
-  categories.push({name:val,subs:[]});
-  saveCategories();
-  inp.value='';
-  renderSettings();
-}
-function deleteCategoryFromSettings(ci){
-  if(!confirm(`Remove category "${categories[ci].name}"? Words keep their category label and appear in Other.`)) return;
-  categories.splice(ci,1);
-  saveCategories();
-  renderSettings();
-}
-function addSubcategory(ci){
-  const inp=document.getElementById(`new-sub-${ci}`);
-  const val=inp.value.trim();
-  if(!val) return;
-  if(!categories[ci].subs) categories[ci].subs=[];
-  if(categories[ci].subs.includes(val)) return;
-  categories[ci].subs.push(val);
-  saveCategories();
-  inp.value='';
-  renderSettings();
-}
-function deleteSubcategory(ci,si){
-  if(!confirm(`Remove subcategory "${categories[ci].subs[si]}"?`)) return;
-  categories[ci].subs.splice(si,1);
-  saveCategories();
-  renderSettings();
-}
-
-// Settings field drag-reorder
-let setFoSrcIdx=null, setFoLangId=null;
-function setFoDragStart(e,langId,idx){setFoSrcIdx=idx;setFoLangId=langId;requestAnimationFrame(()=>e.currentTarget.classList.add('fo-dragging'));}
-function setFoDragOver(e,idx){e.preventDefault();document.querySelectorAll(`#set-fo-${setFoLangId} .fo-item`).forEach((el,i)=>{el.classList.toggle('fo-over',i===idx&&idx!==setFoSrcIdx);});}
-async function setFoDrop(e,langId,idx){
-  e.preventDefault();
-  if(setFoSrcIdx===null||setFoSrcIdx===idx) return;
-  const l=glang(langId);
-  if(!l) return;
-  const moved=l.fields.splice(setFoSrcIdx,1)[0];
-  l.fields.splice(idx,0,moved);
-  await dbUpdate('languages',{fields:l.fields},{id:langId});
-  setFoSrcIdx=null;
-  renderSettings();
-}
-function setFoDragEnd(langId){
-  setFoSrcIdx=null;
-  document.querySelectorAll(`#set-fo-${langId} .fo-item`).forEach(el=>el.classList.remove('fo-dragging','fo-over'));
-}
-
+// ── Master render ──
 function render(){
-  renderLangPills(); updateBadges();
-  if(currentView==='capture') renderCapture();
-  if(currentView==='queue') renderQueue();
-  if(currentView==='lexicon') renderLexicon();
-  if(currentView==='table') renderTable();
-  if(currentView==='stats') renderStats();
-  if(currentView==='settings') renderSettings();
+  renderLangPills();updateBadges();
+  if(currentView==='table')renderTable();
+  else if(currentView==='capture')renderPending();
+  else if(currentView==='stats')renderStats();
+  else if(currentView==='settings')renderSettings();
 }
 
 // ── Quick add ──
-async function addWord(){
-  const input=document.getElementById('cinput');
-  const langId=document.getElementById('clang').value;
-  const word=input.value.trim();
-  if(!word||!langId){toast('Please select a language and enter a word');return;}
-  const btn=document.querySelector('.capture-row .btn-primary');
-  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin .7s linear infinite"></i>';
-  const {data,error}=await dbInsert('words',{word,lang_id:langId,status:'pending',fields:{}});
-  btn.disabled=false; btn.innerHTML='<i class="ti ti-bolt"></i> Quick add';
-  if(error){toast('Error: '+error.message);return;}
-  words.push({...data,langId:data.lang_id});
-  input.value=''; input.focus();
-  render();
-}
-async function delWord(id){
-  if(!confirm('Delete this word?')) return;
-  await dbDelete('words',{id});
-  words=words.filter(w=>sid(w.id)!==sid(id));
-  render();
-}
-
-// ── Full card ──
-function openFullCard(){
-  const sel=document.getElementById('fc-lang');
-  sel.innerHTML=languages.map(l=>`<option value="${l.id}">${l.flag} ${l.name}</option>`).join('');
-  const lastLang=localStorage.getItem('lastLangId');
-  if(lastLang&&languages.find(l=>l.id===lastLang)) sel.value=lastLang;
-  document.getElementById('fc-word').value='';
-  document.getElementById('fc-tag-input').value='';
-  fcTags=[];
-  renderModalTags('fc');
-  const ts=document.getElementById('fc-tag-suggestions');
-  if(ts) ts.innerHTML='';
-  populateCatSelect('fc-category',null);
-  populateSubSelect('fc-subcategory','',null);
-  renderFullCardFields();
-  document.getElementById('m-fullcard').classList.add('open');
-  setTimeout(()=>document.getElementById('fc-word').focus(),80);
-}
-function renderFullCardFields(){
-  const langId=document.getElementById('fc-lang').value;
-  const l=glang(langId);
-  const fields=l?l.fields:[];
-  document.getElementById('fc-fields').innerHTML=fields.map(f=>{
-    const isLong=f==='Example sentence'||f==='Notes';
-    const extraAttrs=f==='Translation'?'oninput="updateFcExSuggestions()"':'';
-    return `<div class="form-row"><label class="form-label">${f}</label>
-      ${isLong
-        ?`<textarea class="form-input" id="fcf-${f.replace(/\s/g,'_')}" rows="2" placeholder="${f}…"></textarea>`
-        :`<input class="form-input" id="fcf-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…" ${extraAttrs}/>`}
-    </div>`;
-  }).join('');
-  // show placeholder only if there's an Example sentence field
-  const hasExField=fields.includes('Example sentence');
-  const ph=document.getElementById('fc-ex-placeholder');
-  if(ph) ph.style.display=hasExField?'block':'none';
-  const sugg=document.getElementById('fc-ex-suggestions');
-  // clear any previous suggestions except placeholder
-  Array.from(sugg.children).forEach(c=>{ if(c.id!=='fc-ex-placeholder') c.remove(); });
-}
-function updateFcExSuggestions(){
-  const transEl=document.getElementById('fcf-Translation');
-  const container=document.getElementById('fc-ex-suggestions');
-  const placeholder=document.getElementById('fc-ex-placeholder');
-  if(!transEl||!container) return;
-  // remove old suggestion cards (keep placeholder)
-  Array.from(container.children).forEach(c=>{ if(c.id!=='fc-ex-placeholder') c.remove(); });
-  const trans=transEl.value.trim();
-  if(!trans){
-    if(placeholder) placeholder.style.display='block';
-    return;
-  }
-  const parts=trans.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
-  const matches=words.filter(w=>
-    w.status==='complete'&&
-    parts.some(p=>{
-      const wt=(w.fields&&w.fields['Translation']||'');
-      return wt.split(',').map(s=>s.trim().toLowerCase()).includes(p);
-    })
-  );
-  if(!matches.length){
-    if(placeholder) placeholder.style.display='block';
-    return;
-  }
-  if(placeholder) placeholder.style.display='none';
-
-  // Suggest tags from matched words — show next to Tags field
-  const suggestedTags=[...new Set(matches.flatMap(w=>w.tags||[]).filter(t=>!fcTags.includes(t)))];
-  const tagSuggEl=document.getElementById('fc-tag-suggestions');
-  if(tagSuggEl){
-    tagSuggEl.innerHTML=suggestedTags.length
-      ?`<div style="font-size:10px;color:var(--ink-muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Suggested</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px">
-          ${suggestedTags.map(t=>`<span class="tag-pill clickable" onclick="addTagToModal('${t}','fc');updateFcExSuggestions()">${t} <span style="font-size:13px">+</span></span>`).join('')}
-        </div>`
-      :'';
-  }
-
-  // Example sentences in a grid
-  const exMatches=matches.filter(w=>w.fields&&w.fields['Example sentence']);
-  const exHtml=exMatches.length?`
-    <div>
-      <div style="font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Example sentences from linked words</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px">
-        ${exMatches.map(w=>{
-          const l=glang(w.langId);
-          const escaped=w.fields['Example sentence'].replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-          return `<div style="padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;gap:6px">
-            <div style="font-size:10px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em">${l?l.flag+' '+l.name:''}</div>
-            <div style="font-size:12.5px;font-style:italic;color:var(--ink-soft);flex:1">"${w.fields['Example sentence']}"</div>
-            <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:4px 10px;align-self:flex-start"
-              onclick="document.getElementById('fcf-Example_sentence').value='${escaped}';this.closest('div').style.opacity='.4'">Use</button>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`:'';
-
-  if(!exHtml) return;
-  const wrap=document.createElement('div');
-  wrap.style.cssText='margin-bottom:14px';
-  wrap.innerHTML=exHtml;
-  container.appendChild(wrap);
-}
-
-async function saveFullCard(){
-  const langId=document.getElementById('fc-lang').value;
-  const word=document.getElementById('fc-word').value.trim();
-  if(!word||!langId){toast('Please enter a word');return;}
-  localStorage.setItem('lastLangId',langId);
-  const btn=document.querySelector('#m-fullcard .btn-primary');
-  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin .7s linear infinite"></i> Saving…';}
-  const l=glang(langId);
-  const fields={};
-  if(l) l.fields.forEach(f=>{
-    const el=document.getElementById('fcf-'+f.replace(/\s/g,'_'));
-    if(el) fields[f]=el.value.trim();
-  });
-  const status=Object.values(fields).some(v=>v)?'complete':'pending';
-  const category=document.getElementById('fc-category')?.value||null;
-  const subcategory=document.getElementById('fc-subcategory')?.value||null;
-  const {data,error}=await dbInsert('words',{word,lang_id:langId,status,fields,tags:fcTags,category:category||null,subcategory:subcategory||null});
-  if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save card';}
+async function quickAdd(){
+  const inp=document.getElementById('cap-input');
+  const langId=document.getElementById('cap-lang').value;
+  const word=inp.value.trim();
+  if(!word||!langId){toast('Select a language and type a word');return;}
+  const btn=document.querySelector('.capture-bar .btn-primary');
+  if(btn){btn.disabled=true;}
+  inp.value='';
+  const{data,error}=await dbInsert('words',{word,lang_id:langId,status:'pending',fields:{},tags:[]});
+  if(btn)btn.disabled=false;
   if(error){toast('Error: '+error.message);return;}
   words.push(data);
-  if(fields['Translation']) await autoLinkByTranslation(data);
-  closeM('m-fullcard');
-  toast('Card saved');
+  localStorage.setItem('lastLangId',langId);
+  // Open panel immediately to complete
+  openPanel(data.id);
+  render();
 }
 
-// ── Step-by-step completion ──
-// Steps: 0..fields.length-1 = field steps, fields.length = tags step
-function openComplete(id){
-  const word=gword(id);
-  if(!word) return;
-  const l=glang(word.langId);
-  stepData={wordId:id,step:0,draft:{...(word.fields||{})},tags:[...(word.tags||[])],isStub:!!word.is_stub,wordText:'',category:word.category||null,subcategory:word.subcategory||null};
-  document.getElementById('cw-word').textContent=word.is_stub
-    ? (word.fields&&word.fields['Translation']?`"${word.fields['Translation']}" in ${l?l.name:''}`:'New word')
-    : word.word;
-  document.getElementById('cw-lang').textContent=l?l.flag+' '+l.name:'';
-  renderStep();
-  document.getElementById('m-complete').classList.add('open');
+// ── Linked words ──
+function getLinked(id){
+  const sid_=sid(id);
+  return links.filter(l=>sid(l.word_id_a)===sid_||sid(l.word_id_b)===sid_)
+    .map(l=>gword(sid(l.word_id_a)===sid_?l.word_id_b:l.word_id_a)).filter(Boolean);
 }
-function getFields(wordId){
-  const word=gword(wordId);
-  const l=glang(word?.langId);
-  return l?l.fields:[];
-}
-// Steps: [word entry if stub] + fields + category + tags
-function totalSteps(wordId){
-  const word=gword(wordId);
-  return getFields(wordId).length + 3 + (word?.is_stub?1:0); // +3 for category+subcategory+tags
-}
-
-function getExSuggestions(wordId){
-  const word=gword(wordId);
-  if(!word) return [];
-  const linked=[...getLinkedWords(wordId),...getAutoMatches(word,getLinkedWords(wordId))];
-  return linked.filter(w=>(w.fields&&w.fields['Example sentence']))
-    .map(w=>({lang:glang(w.langId),ex:w.fields['Example sentence']}));
-}
-
-function renderStep(){
-  const word=gword(stepData.wordId);
-  const fields=getFields(stepData.wordId);
-  const total=totalSteps(stepData.wordId);
-  const step=stepData.step;
-  const isStub=word?.is_stub;
-  const isWordStep=isStub&&step===0;
-  const offset=isStub?1:0;
-  const fieldStep=step-offset;
-  const isCatStep=step===fields.length+offset;
-  const isSubCatStep=step===fields.length+offset+1;
-  const isTagStep=step===fields.length+offset+2;
-
-  document.getElementById('cprog').style.width=Math.round(step/total*100)+'%';
-  document.getElementById('cprog-text').textContent=`${step+1} / ${total}`;
-
-  if(isWordStep){
-    const trans=(word.fields&&word.fields['Translation'])||'';
-    const sourceWord=word.source_word_id?gword(word.source_word_id):null;
-    const sourceLang=sourceWord?glang(sourceWord.langId):null;
-    document.getElementById('cfield-name').textContent='Word';
-    document.getElementById('cfield-input').innerHTML=`<input class="step-input" id="sinp" type="text" placeholder="How do you say this in ${glang(word.langId)?.name||'this language'}?" value="${stepData.wordText||''}"/>`;
-    document.getElementById('cfield-hint').innerHTML=`What is <strong>"${trans}"</strong> in ${glang(word.langId)?.name||'this language'}?${sourceLang?` <span style="color:var(--ink-muted)">(from ${sourceLang.flag} <em>${sourceWord.word}</em>)</span>`:''}`;
-    document.getElementById('sinp').onkeydown=e=>{if(e.key==='Enter') stepNext();};
-  } else if(isCatStep){
-    document.getElementById('cfield-name').textContent='Category';
-    document.getElementById('cfield-hint').textContent='Assign a broad theme to help organise your vocabulary.';
-    document.getElementById('cfield-input').innerHTML=`<select class="cat-select" id="sinp" onchange="updateStepSubCatHint()">
-      <option value="">None</option>
-      ${categories.map(c=>`<option value="${c.name}" ${stepData.category===c.name?'selected':''}>${c.name}</option>`).join('')}
-    </select>`;
-  } else if(isSubCatStep){
-    const catName=stepData.category||'';
-    const subs=subsForCat(catName);
-    document.getElementById('cfield-name').textContent='Subcategory';
-    document.getElementById('cfield-hint').textContent=catName?`Subcategory within "${catName}"`:'Select a category first to see subcategories.';
-    document.getElementById('cfield-input').innerHTML=`<select class="cat-select" id="sinp" ${!subs.length?'disabled':''}>
-      <option value="">None</option>
-      ${subs.map(s=>`<option value="${s}" ${stepData.subcategory===s?'selected':''}>${s}</option>`).join('')}
-    </select>`;
-  } else if(isTagStep){
-    document.getElementById('cfield-name').textContent='Tags';
-    document.getElementById('cfield-hint').textContent='Group this word by theme or grammar class.';
-    const existingHtml=(stepData.tags||[]).map(t=>
-      `<span class="tag-pill">${t}<button class="tag-x" type="button" onclick="removeStepTag('${t}')">×</button></span>`
-    ).join('');
-    document.getElementById('cfield-input').innerHTML=`
-      <div class="tags-row" id="step-tags-row" style="margin-bottom:8px">${existingHtml}</div>
-      <div class="tag-input-wrap">
-        <input class="step-input" id="sinp" placeholder="Add a tag…" autocomplete="off" style="width:100%"
-          oninput="showTagSugg('sinp','sinp-sugg')"
-          onblur="hideTagSugg('sinp-sugg')"
-          onkeydown="stepTagKeydown(event)"/>
-        <div class="tag-sugg" id="sinp-sugg"></div>
-      </div>`;
-  } else {
-    const field=fields[fieldStep]||'';
-    document.getElementById('cfield-name').textContent=field;
-    const val=stepData.draft[field]||'';
-    const isLong=field==='Example sentence'||field==='Notes';
-    let suggHtml='';
-    if(field==='Example sentence'&&!val){
-      const suggs=getExSuggestions(stepData.wordId);
-      if(suggs.length){
-        suggHtml=suggs.map(({lang:sl,ex})=>`
-          <div style="margin-top:8px;padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px">
-            <div style="font-size:10px;color:var(--ink-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">${sl?sl.flag+' '+sl.name:''}</div>
-            <div style="font-size:13px;font-style:italic;color:var(--ink-soft);margin-bottom:6px">"${ex}"</div>
-            <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:4px 10px"
-              onclick="document.getElementById('sinp').value=\`${ex.replace(/`/g,"'")}\`;this.closest('div').style.display='none'">Use as starting point</button>
-          </div>`).join('');
-      }
-    }
-    document.getElementById('cfield-input').innerHTML=(isLong
-      ?`<textarea class="step-input" id="sinp" rows="3" placeholder="${field}…">${val}</textarea>`
-      :`<input class="step-input" id="sinp" type="text" placeholder="${field}…" value="${val}"/>`)
-      +suggHtml;
-    document.getElementById('cfield-hint').textContent=FIELD_HINTS[field]||'';
-    document.getElementById('sinp').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey) stepNext();};
-  }
-
-  const isLast=step>=total-1;
-  document.getElementById('c-next').innerHTML=isLast?'<i class="ti ti-check"></i> Save word':'Next <i class="ti ti-arrow-right"></i>';
-  document.getElementById('c-back').style.display=step>0?'':'none';
-  if(!isTagStep) setTimeout(()=>document.getElementById('sinp')?.focus(),80);
-}
-
-function removeStepTag(t){
-  stepData.tags=(stepData.tags||[]).filter(x=>x!==t);
-  renderStep();
-}
-function stepTagKeydown(e){
-  if(e.key==='Enter'||e.key===','){
-    e.preventDefault();
-    const val=document.getElementById('sinp').value.trim().replace(/,$/,'');
-    if(val&&!(stepData.tags||[]).includes(val)){
-      stepData.tags=[...(stepData.tags||[]),val];
-    }
-    document.getElementById('sinp').value='';
-    document.getElementById('sinp-sugg')?.classList.remove('open');
-    // re-render tags row only
-    const row=document.getElementById('step-tags-row');
-    if(row) row.innerHTML=(stepData.tags||[]).map(t=>
-      `<span class="tag-pill">${t}<button class="tag-x" type="button" onclick="removeStepTag('${t}')">×</button></span>`
-    ).join('');
-  }
-}
-
-// override showTagSugg for step modal which uses stepData.tags
-function showTagSuggStep(){
-  const val=document.getElementById('sinp').value.trim().toLowerCase();
-  const sugg=document.getElementById('sinp-sugg');
-  if(!sugg) return;
-  const existing=stepData.tags||[];
-  const matches=allTags().filter(t=>t.toLowerCase().includes(val)&&!existing.includes(t));
-  if(!matches.length||!val){sugg.classList.remove('open');return;}
-  sugg.innerHTML=matches.slice(0,6).map(t=>
-    `<div class="tag-sugg-item" onmousedown="pickStepTag('${t}')">${t}</div>`
-  ).join('');
-  sugg.classList.add('open');
-}
-function pickStepTag(t){
-  if(!(stepData.tags||[]).includes(t)){
-    stepData.tags=[...(stepData.tags||[]),t];
-    const row=document.getElementById('step-tags-row');
-    if(row) row.innerHTML=(stepData.tags||[]).map(t=>
-      `<span class="tag-pill">${t}<button class="tag-x" type="button" onclick="removeStepTag('${t}')">×</button></span>`
-    ).join('');
-  }
-  document.getElementById('sinp').value='';
-  document.getElementById('sinp-sugg')?.classList.remove('open');
-}
-
-// ── Suggest word in other languages ──
-
-function saveCurrentInput(){
-  const word=gword(stepData.wordId);
-  const fields=getFields(stepData.wordId);
-  const el=document.getElementById('sinp');
-  if(!el) return;
-  const isStub=word?.is_stub;
-  const isWordStep=isStub&&stepData.step===0;
-  const offset2=isStub?1:0;
-  const fieldStep=stepData.step-offset2;
-  const isCatStep=stepData.step===fields.length+offset2;
-  const isSubCatStep=stepData.step===fields.length+offset2+1;
-  const isTagStep=stepData.step===fields.length+offset2+2;
-  if(isWordStep){
-    stepData.wordText=el.value.trim();
-  } else if(isCatStep){
-    stepData.category=el.value||null;
-    stepData.subcategory=null; // reset subcategory when category changes
-  } else if(isSubCatStep){
-    stepData.subcategory=el.value||null;
-  } else if(!isTagStep){
-    const field=fields[fieldStep];
-    if(field) stepData.draft[field]=el.value.trim();
-  }
-}
-
-async function syncCategoryToLinked(word){
-  const linked=getLinkedWords(word.id);
-  for(const lw of linked){
-    if(lw.category===word.category&&lw.subcategory===word.subcategory) continue;
-    lw.category=word.category;
-    lw.subcategory=word.subcategory||null;
-    await dbUpdate('words',{category:word.category||null,subcategory:word.subcategory||null},{id:lw.id});
-  }
-}
-
-async function commitStep(){
-  const word=gword(stepData.wordId);
-  if(!word){closeM('m-complete');return;}
-  const fields=getFields(stepData.wordId);
-  word.fields={...stepData.draft};
-  word.tags=stepData.tags||[];
-  if(stepData.category!==undefined) word.category=stepData.category||null;
-  if(stepData.subcategory!==undefined) word.subcategory=stepData.subcategory||null;
-  if(word.is_stub&&stepData.wordText){
-    word.word=stepData.wordText;
-    word.is_stub=false;
-  }
-  const newStatus=(fields.some(f=>word.fields[f])||word.word)?'complete':'pending';
-  word.status=newStatus;
-  const {error}=await dbUpdate('words',{
-    word:word.word||'',
-    fields:word.fields,
-    status:newStatus,
-    tags:word.tags,
-    category:word.category||null,
-    subcategory:word.subcategory||null,
-    is_stub:!!word.is_stub
-  },{id:word.id});
-  if(error){toast('Error saving: '+error.message);return;}
-  if(word.fields['Translation']) await autoLinkByTranslation(word);
-  if(word.category!==undefined) await syncCategoryToLinked(word);
-  closeM('m-complete');
-  toast('Word saved');
-}
-function updateStepSubCatHint(){
-  // When category changes in step, update subcategory hint (will be applied next step)
-  const el=document.getElementById('sinp');
-  if(el) stepData.category=el.value||null;
-}
-
-async function stepNext(){
-  saveCurrentInput();
-  const word=gword(stepData.wordId);
-  const fields=getFields(stepData.wordId);
-  const total=totalSteps(stepData.wordId);
-  const isStub=word?.is_stub;
-  const fieldStep=isStub?stepData.step-1:stepData.step;
-  // Auto-link after translation step
-  const justFinishedField=fields[fieldStep];
-  if(justFinishedField==='Translation'&&stepData.draft['Translation']){
-    if(word){
-      word.fields={...word.fields,...stepData.draft};
-      await autoLinkByTranslation(word);
-    }
-  }
-  if(stepData.step>=total-1){commitStep();}
-  else{stepData.step++;renderStep();}
-}
-function stepBack(){saveCurrentInput();if(stepData.step>0){stepData.step--;renderStep();}}
-function stepSkip(){
-  saveCurrentInput();
-  if(stepData.step<totalSteps(stepData.wordId)-1){stepData.step++;renderStep();}
-  else{commitStep();}
-}
-
-// ── Auto-link by translation ──
-async function autoLinkByTranslation(savedWord){
-  const trans=(savedWord.fields&&savedWord.fields['Translation']||'');
+function getAutoMatches(word){
+  if(!word)return[];
+  const trans=(word.fields?.Translation||'');
   const parts=trans.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
-  if(!parts.length) return;
-  const matches=words.filter(w=>
-    sid(w.id)!==sid(savedWord.id)&&
-    w.status==='complete'&&
-    parts.some(p=>{
-      const wt=(w.fields&&w.fields['Translation']||'');
-      return wt.split(',').map(s=>s.trim().toLowerCase()).includes(p);
-    })
-  );
-  for(const m of matches) await createLink(savedWord.id,m.id,false);
+  if(!parts.length)return[];
+  return words.filter(w=>sid(w.id)!==sid(word.id)&&w.status==='complete'&&parts.some(p=>{
+    return(w.fields?.Translation||'').split(',').map(s=>s.trim().toLowerCase()).includes(p);
+  }));
 }
-
-// ── Links ──
-function getLinkedWords(wordId){
-  const id=sid(wordId);
-  return links
-    .filter(l=>sid(l.word_id_a)===id||sid(l.word_id_b)===id)
-    .map(l=>sid(l.word_id_a)===id?gword(l.word_id_b):gword(l.word_id_a))
-    .filter(Boolean);
+async function autoLink(savedWord){
+  const trans=(savedWord.fields?.Translation||'');
+  const parts=trans.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  if(!parts.length)return;
+  const matches=words.filter(w=>sid(w.id)!==sid(savedWord.id)&&w.status==='complete'&&parts.some(p=>(w.fields?.Translation||'').split(',').map(s=>s.trim().toLowerCase()).includes(p)));
+  for(const m of matches)await createLink(savedWord.id,m.id,false);
 }
 async function createLink(aId,bId,showToast=true){
   const a=sid(aId),b=sid(bId);
-  const already=links.find(l=>(sid(l.word_id_a)===a&&sid(l.word_id_b)===b)||(sid(l.word_id_a)===b&&sid(l.word_id_b)===a));
-  if(already) return;
-  const {data,error}=await dbInsert('links',{word_id_a:aId,word_id_b:bId});
-  if(error&&!error.message.includes('unique')){if(showToast)toast('Error: '+error.message);return;}
-  if(data) links.push(data);
-  if(showToast) toast('Words linked');
+  if(links.find(l=>(sid(l.word_id_a)===a&&sid(l.word_id_b)===b)||(sid(l.word_id_a)===b&&sid(l.word_id_b)===a)))return;
+  const{data,error}=await dbInsert('links',{word_id_a:aId,word_id_b:bId});
+  if(error&&!error.message.includes('unique'))return;
+  if(data)links.push(data);
+  if(showToast)toast('Words linked');
 }
 async function removeLink(aId,bId){
   const a=sid(aId),b=sid(bId);
   await dbDeleteOr('links',`and(word_id_a.eq.${a},word_id_b.eq.${b}),and(word_id_a.eq.${b},word_id_b.eq.${a})`);
   links=links.filter(l=>!((sid(l.word_id_a)===a&&sid(l.word_id_b)===b)||(sid(l.word_id_a)===b&&sid(l.word_id_b)===a)));
-  openDetail(detailWordId);
+}
+async function syncCatToLinked(word){
+  const linked=getLinked(word.id);
+  for(const lw of linked){
+    if(lw.category===word.category&&lw.subcategory===word.subcategory)continue;
+    lw.category=word.category;lw.subcategory=word.subcategory||null;
+    await dbUpdate('words',{category:word.category||null,subcategory:word.subcategory||null},{id:lw.id});
+  }
 }
 
-// ── Detail ──
-function formatTranslation(val){
-  if(!val) return '';
-  const parts=val.split(',').map(s=>s.trim()).filter(Boolean);
-  if(parts.length<=1) return val;
-  return parts.map((p,i)=>`<span style="display:block">${i+1}. ${p}</span>`).join('');
-}
-
-function openDetail(id){
+// ── Panel (word detail + edit) ──
+function openPanel(id){
   const word=gword(id);
-  if(!word) return;
-  detailWordId=id;
-  const l=glang(word.langId);
-  document.getElementById('dw-word').textContent=word.word;
-  document.getElementById('dw-lang').textContent=l?l.flag+' '+l.name:'';
-  // Tags
-  const tags=word.tags||[];
-  document.getElementById('dw-tags').innerHTML=(word.category||tags.length)
-    ?`<div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center">
-        ${word.category?`<span class="cat-pill">${word.category}</span>`:''}
-        ${tags.map(t=>`<span class="tag-pill">${t}</span>`).join('')}
-      </div>`
-    :'';
-  // Fields
-  const fields=l?l.fields:[];
-  document.getElementById('dw-fields').innerHTML=fields.map(f=>{
-    const v=(word.fields||{})[f];if(!v) return '';
-    const display=f==='Translation'?formatTranslation(v):v;
-    return `<div class="detail-field"><div class="detail-field-label">${f}</div><div class="detail-field-value">${display}</div></div>`;
-  }).join('');
-  // Related
-  renderRelated(id,word);
-  // Always open modal
-  document.getElementById('m-detail').classList.add('open');
+  if(!word)return;
+  panelWordId=id;
+  panelTags=[...(word.tags||[])];
+  renderPanel();
+  document.getElementById('panel').classList.add('open');
+}
+function closePanel(){
+  document.getElementById('panel').classList.remove('open');
+  panelWordId=null;
 }
 
-function getAutoMatches(word,linked){
-  const trans=(word.fields&&word.fields['Translation']||'');
-  const parts=trans.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
-  if(!parts.length) return [];
-  return words.filter(w=>
-    sid(w.id)!==sid(word.id)&&
-    w.status==='complete'&&
-    !linked.find(lw=>sid(lw.id)===sid(w.id))&&
-    parts.some(p=>{
-      const wt=(w.fields&&w.fields['Translation']||'');
-      return wt.split(',').map(s=>s.trim().toLowerCase()).includes(p);
-    })
-  );
-}
-
-function renderRelated(id,word){
-  const linked=getLinkedWords(id);
-  const autoMatches=getAutoMatches(word,linked);
-  const allRelated=[...linked,...autoMatches];
-  if(!allRelated.length){document.getElementById('dw-related').innerHTML='';return;}
-  const same=allRelated.filter(w=>w.langId===word.langId);
-  const other=allRelated.filter(w=>w.langId!==word.langId);
-  let html=`<div class="detail-divider"></div><div class="related-title"><i class="ti ti-link" style="font-size:12px"></i> Related words</div>`;
-  if(same.length){
-    html+=`<div class="related-sublabel">Synonyms</div>`;
-    html+=same.map(w=>relChip(w,id)).join('');
-  }
-  if(other.length){
-    html+=`<div class="related-sublabel" style="margin-top:${same.length?10:0}px">In other languages</div>`;
-    html+=other.map(w=>relChip(w,id)).join('');
-  }
-  document.getElementById('dw-related').innerHTML=html;
-}
-function relChip(w,sourceId){
-  const l=glang(w.langId);
-  const trans=(w.fields||{})['Translation'];
-  const isManual=links.find(lk=>{
-    const a=sid(lk.word_id_a),b=sid(lk.word_id_b);
-    return (a===sid(w.id)&&b===sid(sourceId))||(a===sid(sourceId)&&b===sid(w.id));
-  });
-  return `<button class="related-chip" onclick="switchDetail(${w.id})">
-    <span style="font-size:15px">${l?l.flag:''}</span>
-    <span class="rc-word">${w.word}</span>
-    ${trans?`<span style="font-size:12px;color:var(--ink-muted)">${trans}</span>`:''}
-    ${isManual?`<i class="ti ti-link" style="font-size:11px;color:var(--ink-muted)" title="Manually linked"></i>`:''}
-  </button>
-  <button class="icon-btn" style="font-size:13px;padding:3px" title="Remove link" onclick="removeLink(${sourceId},${w.id})"><i class="ti ti-x"></i></button>`;
-}
-function switchDetail(id){detailWordId=id;openDetail(id);}
-function editWord(){
-  document.getElementById('m-detail').classList.remove('open');
-  const word=gword(detailWordId);
-  if(!word) return;
+function renderPanel(){
+  const word=gword(panelWordId);
+  if(!word)return;
   const l=glang(word.langId);
   const fields=l?l.fields:[];
-  document.getElementById('edit-title').textContent=word.word||'New word';
-  document.getElementById('edit-lang').textContent=l?l.flag+' '+l.name:'';
-  populateCatSelect('edit-category',word.category);
-  populateSubSelect('edit-subcategory',word.category||'',word.subcategory);
-  // Populate tags
-  editTags=[...(word.tags||[])];
-  document.getElementById('edit-tag-input').value='';
-  renderModalTags('edit');
-  // Example sentence suggestions from linked words
-  const linked=[...getLinkedWords(detailWordId),...getAutoMatches(word,getLinkedWords(detailWordId))];
-  const exSuggestions=linked
-    .filter(w=>(w.fields&&w.fields['Example sentence']))
-    .map(w=>({lang:glang(w.langId),ex:w.fields['Example sentence']}));
-  document.getElementById('edit-fields').innerHTML=fields.map(f=>{
+
+  document.getElementById('panel-word').textContent=word.word||'…';
+  document.getElementById('panel-lang').textContent=l?l.flag+' '+l.name:'';
+
+  // Body: editable fields
+  let html='';
+
+  // Category + Subcategory
+  html+=`<div class="panel-section">
+    <div class="panel-label">Category</div>
+    <select class="cat-select" id="pf-category" onchange="onPanelCatChange()" style="margin-bottom:6px">
+      <option value="">None</option>
+      ${categories.map(c=>`<option value="${c.name}"${word.category===c.name?' selected':''}>${c.name}</option>`).join('')}
+    </select>
+    <select class="cat-select" id="pf-subcategory" ${!subsForCat(word.category||'').length?'disabled':''}>
+      <option value="">None</option>
+      ${subsForCat(word.category||'').map(s=>`<option value="${s}"${word.subcategory===s?' selected':''}>${s}</option>`).join('')}
+    </select>
+  </div>`;
+
+  // Language fields
+  fields.forEach(f=>{
     const v=(word.fields||{})[f]||'';
     const isLong=f==='Example sentence'||f==='Notes';
-    const hint=FIELD_HINTS[f]?`<div style="font-size:11px;color:var(--ink-muted);margin-top:4px">${FIELD_HINTS[f]}</div>`:'';
-    const transhint=f==='Translation'?`<div style="font-size:11px;color:var(--ink-muted);margin-top:4px">Separate multiple translations with commas, e.g. "to do, to make"</div>`:'';
+    const hint=FIELD_HINTS[f]?`<div style="font-size:11px;color:var(--ink-muted);margin-top:3px">${FIELD_HINTS[f]}</div>`:'';
+    // Example sentence suggestions
     let sugg='';
-    if(f==='Example sentence'&&exSuggestions.length&&!v){
-      sugg=exSuggestions.map(({lang:sl,ex})=>`
-        <div style="margin-top:7px;padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px">
-          <div style="font-size:10px;color:var(--ink-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">${sl?sl.flag+' '+sl.name:''}</div>
-          <div style="font-size:13px;font-style:italic;color:var(--ink-soft);margin-bottom:6px">"${ex}"</div>
-          <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:4px 10px" onclick="useExSugg(this,'${ex.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">Use as starting point</button>
-        </div>`).join('');
+    if(f==='Example sentence'&&!v){
+      const linked=[...getLinked(panelWordId),...getAutoMatches(word)];
+      const exs=linked.filter(w=>w.fields?.['Example sentence']).map(w=>({l:glang(w.langId),ex:w.fields['Example sentence']}));
+      if(exs.length){
+        sugg=`<div style="margin-top:6px">${exs.map(({l:sl,ex})=>`
+          <div style="padding:7px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;margin-bottom:4px">
+            <div style="font-size:10px;color:var(--ink-muted);margin-bottom:2px">${sl?sl.flag+' '+sl.name:''}</div>
+            <div style="font-size:12px;font-style:italic;color:var(--ink-soft);margin-bottom:5px">"${ex}"</div>
+            <button class="btn btn-ghost btn-sm" type="button" style="font-size:11px;padding:3px 9px" onclick="usePanelExSugg(this,'${ex.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">Use</button>
+          </div>`).join('')}</div>`;
+      }
     }
-    return `<div class="form-row">
-      <label class="form-label">${f}</label>
+    html+=`<div class="panel-section">
+      <div class="panel-label">${f}</div>
       ${isLong
-        ?`<textarea class="form-input" id="ef-${f.replace(/\s/g,'_')}" rows="3" placeholder="${f}…">${v}</textarea>`
-        :`<input class="form-input" id="ef-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…" value="${v}"/>`}
-      ${hint}${transhint}${sugg}
+        ?`<textarea class="panel-field-input" id="pf-${f.replace(/\s/g,'_')}" rows="3" placeholder="${f}…">${v}</textarea>`
+        :`<input class="panel-field-input" id="pf-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…" value="${v}"/>`}
+      ${hint}${sugg}
     </div>`;
-  }).join('');
-  document.getElementById('m-edit').classList.add('open');
+  });
+
+  // Tags
+  html+=`<div class="panel-section">
+    <div class="panel-label">Tags</div>
+    <div class="tags-row" id="panel-tags-row" style="margin-bottom:6px">${panelTags.map(t=>`<span class="tag-pill">${t}<button class="tag-x" onclick="removePanelTag('${t}')">×</button></span>`).join('')}</div>
+    <div class="tag-input-wrap">
+      <input class="tag-input" id="panel-tag-input" placeholder="Add a tag…" autocomplete="off"
+        oninput="showPanelTagSugg()" onblur="hidePanelTagSugg()"
+        onkeydown="panelTagKeydown(event)" style="font-size:13px;padding:7px 10px"/>
+      <div class="tag-sugg" id="panel-tag-sugg"></div>
+    </div>
+  </div>`;
+
+  // Related words
+  const linked=getLinked(panelWordId);
+  const autoM=getAutoMatches(word).filter(w=>!linked.find(lw=>sid(lw.id)===sid(w.id)));
+  const allRel=[...linked,...autoM];
+  if(allRel.length){
+    const same=allRel.filter(w=>w.langId===word.langId);
+    const other=allRel.filter(w=>w.langId!==word.langId);
+    html+=`<div class="panel-section">
+      <div class="panel-label">Related words</div>
+      ${same.length?`<div style="font-size:10px;color:var(--ink-muted);margin-bottom:5px">Synonyms</div>`+same.map(w=>relChip(w)).join(''):''}
+      ${other.length?`<div style="font-size:10px;color:var(--ink-muted);margin-bottom:5px;margin-top:${same.length?8:0}px">Other languages</div>`+other.map(w=>relChip(w)).join(''):''}
+    </div>`;
+  }
+
+  document.getElementById('panel-body').innerHTML=html;
+
+  // Footer
+  document.getElementById('panel-footer').innerHTML=`
+    <button class="btn btn-primary btn-sm" onclick="savePanel()" style="flex:1;justify-content:center"><i class="ti ti-check"></i> Save</button>
+    <button class="btn btn-ghost btn-sm icon-btn" onclick="openLinkModal()" title="Link word"><i class="ti ti-link"></i></button>
+    <button class="btn btn-ghost btn-sm icon-btn danger" onclick="deletePanel()" title="Delete word"><i class="ti ti-trash"></i></button>
+  `;
 }
 
-function useExSugg(btn,text){
-  const el=document.getElementById('ef-Example_sentence');
-  if(el){el.value=text;el.focus();}
+function onPanelCatChange(){
+  const cat=document.getElementById('pf-category')?.value||'';
+  const sub=document.getElementById('pf-subcategory');
+  if(!sub)return;
+  const subs=subsForCat(cat);
+  sub.innerHTML='<option value="">None</option>'+subs.map(s=>`<option value="${s}">${s}</option>`).join('');
+  sub.disabled=!subs.length;
+}
+
+function usePanelExSugg(btn,text){
+  const el=document.getElementById('pf-Example_sentence');
+  if(el){el.value=text;}
   btn.closest('div[style]').style.display='none';
 }
 
-async function saveEdit(){
-  const word=gword(detailWordId);
-  if(!word) return;
+function relChip(w){
+  const l=glang(w.langId);
+  const trans=(w.fields?.Translation||'').split(',')[0].trim();
+  return `<button class="related-chip" onclick="openPanel(${w.id})">
+    <span style="font-size:14px">${l?l.flag:''}</span>
+    <span style="font-weight:500">${w.word||'…'}</span>
+    ${trans?`<span style="font-size:11px;color:var(--ink-muted)">${trans}</span>`:''}
+  </button>`;
+}
+
+// Panel tags
+function showPanelTagSugg(){
+  const val=document.getElementById('panel-tag-input').value.trim().toLowerCase();
+  const sugg=document.getElementById('panel-tag-sugg');
+  const matches=allTags().filter(t=>t.toLowerCase().includes(val)&&!panelTags.includes(t));
+  if(!matches.length||!val){sugg.classList.remove('open');return;}
+  sugg.innerHTML=matches.slice(0,6).map(t=>`<div class="tag-sugg-item" onmousedown="pickPanelTag('${t}')">${t}</div>`).join('');
+  sugg.classList.add('open');
+}
+function hidePanelTagSugg(){setTimeout(()=>document.getElementById('panel-tag-sugg')?.classList.remove('open'),150);}
+function pickPanelTag(t){panelTags.push(t);document.getElementById('panel-tag-input').value='';renderPanelTags();}
+function removePanelTag(t){panelTags=panelTags.filter(x=>x!==t);renderPanelTags();}
+function renderPanelTags(){
+  const row=document.getElementById('panel-tags-row');
+  if(row)row.innerHTML=panelTags.map(t=>`<span class="tag-pill">${t}<button class="tag-x" onclick="removePanelTag('${t}')">×</button></span>`).join('');
+}
+function panelTagKeydown(e){
+  if(e.key==='Enter'||e.key===','){
+    e.preventDefault();
+    const val=document.getElementById('panel-tag-input').value.trim().replace(/,$/,'');
+    if(val&&!panelTags.includes(val))panelTags.push(val);
+    document.getElementById('panel-tag-input').value='';
+    document.getElementById('panel-tag-sugg')?.classList.remove('open');
+    renderPanelTags();
+  }
+}
+
+async function savePanel(){
+  const word=gword(panelWordId);
+  if(!word)return;
   const l=glang(word.langId);
   const fields=l?l.fields:[];
   fields.forEach(f=>{
-    const el=document.getElementById('ef-'+f.replace(/\s/g,'_'));
-    if(el) word.fields[f]=el.value.trim();
+    const el=document.getElementById('pf-'+f.replace(/\s/g,'_'));
+    if(el)word.fields[f]=el.value.trim();
   });
-  word.tags=editTags;
-  word.category=document.getElementById('edit-category')?.value||null;
-  word.subcategory=document.getElementById('edit-subcategory')?.value||null;
-  const newStatus=fields.some(f=>word.fields[f])?'complete':'pending';
+  word.tags=panelTags;
+  word.category=document.getElementById('pf-category')?.value||null;
+  word.subcategory=document.getElementById('pf-subcategory')?.value||null;
+  const wordEl=document.getElementById('pf-word');
+  if(wordEl)word.word=wordEl.value.trim();
+  const newStatus=fields.some(f=>word.fields[f])||word.word?'complete':'pending';
   word.status=newStatus;
-  const {error}=await dbUpdate('words',{fields:word.fields,status:newStatus,tags:editTags,category:word.category||null,subcategory:word.subcategory||null},{id:word.id});
+  const{error}=await dbUpdate('words',{word:word.word||'',fields:word.fields,status:newStatus,tags:word.tags,category:word.category||null,subcategory:word.subcategory||null},{id:word.id});
   if(error){toast('Error: '+error.message);return;}
-  if(word.fields['Translation']) await autoLinkByTranslation(word);
-  if(word.category!==undefined) await syncCategoryToLinked(word);
-  // Reload words to ensure all views have fresh data
-  await reloadWords();
-  closeM('m-edit');
-  openDetail(detailWordId);
-  toast('Changes saved');
-}
-async function deleteFromDetail(){
-  if(!confirm('Delete this word?')) return;
-  await dbDelete('words',{id:detailWordId});
-  words=words.filter(w=>sid(w.id)!==sid(detailWordId));
-  links=links.filter(l=>sid(l.word_id_a)!==sid(detailWordId)&&sid(l.word_id_b)!==sid(detailWordId));
-  closeM('m-detail');
-  await reloadWords();
+  if(word.fields.Translation)await autoLink(word);
+  await syncCatToLinked(word);
+  document.getElementById('panel-word').textContent=word.word||'…';
+  toast('Saved');
   render();
 }
 
-// ── Link modal ──
-function openLinkModal(){
-  document.getElementById('link-source-word').textContent=gword(detailWordId)?.word||'';
-  document.getElementById('link-search').value='';
-  document.getElementById('link-results').classList.remove('open');
-  renderExistingLinks();
-  document.getElementById('m-link').classList.add('open');
-  setTimeout(()=>document.getElementById('link-search').focus(),80);
+async function deletePanel(){
+  if(!confirm('Delete this word?'))return;
+  await dbDelete('words',{id:panelWordId});
+  words=words.filter(w=>sid(w.id)!==sid(panelWordId));
+  links=links.filter(l=>sid(l.word_id_a)!==sid(panelWordId)&&sid(l.word_id_b)!==sid(panelWordId));
+  closePanel();render();
 }
-function renderExistingLinks(){
-  const linked=getLinkedWords(detailWordId);
-  const el=document.getElementById('link-existing');
-  if(!linked.length){el.innerHTML='';return;}
-  el.innerHTML=`<div style="font-size:11px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Current links</div>`+
-    linked.map(w=>{
+
+// ── Pending view ──
+function renderPending(){
+  const pending=words.filter(w=>w.status==='pending'&&!w.is_stub);
+  const el=document.getElementById('pending-list');
+  if(!pending.length){el.innerHTML=`<div style="text-align:center;padding:60px 20px;color:var(--ink-muted)"><i class="ti ti-circle-check" style="font-size:32px;display:block;margin-bottom:12px;opacity:.3"></i>All caught up — nothing pending.</div>`;return;}
+  el.innerHTML=`<p style="font-size:13px;color:var(--ink-muted);margin-bottom:16px">${pending.length} word${pending.length>1?'s':''} waiting. Click to fill in details.</p>`+
+    pending.map(w=>{
       const l=glang(w.langId);
-      return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
-        <span style="font-size:15px">${l?l.flag:''}</span>
-        <span style="font-size:13.5px;font-weight:500;flex:1;color:var(--ink)">${w.word}</span>
-        <span style="font-size:12px;color:var(--ink-muted)">${(w.fields||{})['Translation']||''}</span>
-        <button class="icon-btn" style="font-size:14px" type="button" onclick="removeLink(${detailWordId},${w.id});renderExistingLinks()"><i class="ti ti-x"></i></button>
+      return `<div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:7px;cursor:pointer;transition:border-color .15s" onclick="openPanel(${w.id})" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        <span style="font-size:17px">${l?l.flag:''}</span>
+        <span style="font-size:14px;font-weight:500;color:var(--ink);flex:1">${w.word}</span>
+        <span style="font-size:11px;color:var(--ink-muted)">${l?l.name:''}</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:100px;background:#fef6e4;color:#7a5200;border:1px solid rgba(232,194,10,.25)">Pending</span>
+        <button class="icon-btn" style="font-size:15px" onclick="event.stopPropagation();delWord(${w.id})"><i class="ti ti-trash"></i></button>
       </div>`;
     }).join('');
 }
-function searchLinkWords(){
-  const q=document.getElementById('link-search').value.trim().toLowerCase();
-  const res=document.getElementById('link-results');
-  if(!q){res.classList.remove('open');return;}
-  const linked=getLinkedWords(detailWordId).map(w=>sid(w.id));
-  const matches=words.filter(w=>
-    sid(w.id)!==sid(detailWordId)&&
-    !linked.includes(sid(w.id))&&
-    (w.word.toLowerCase().includes(q)||(w.fields&&w.fields['Translation']||'').toLowerCase().includes(q))
-  ).slice(0,8);
-  if(!matches.length){res.classList.remove('open');return;}
-  res.innerHTML=matches.map(w=>{
-    const l=glang(w.langId);
-    const trans=(w.fields||{})['Translation'];
-    return `<div class="link-result-item" onmousedown="pickLink(${w.id})">
-      <span style="font-size:15px">${l?l.flag:''}</span>
-      <span style="font-weight:500;color:var(--ink)">${w.word}</span>
-      ${trans?`<span style="font-size:12px;color:var(--ink-muted)">${trans}</span>`:''}
-    </div>`;
-  }).join('');
-  res.classList.add('open');
+async function delWord(id){
+  if(!confirm('Delete this word?'))return;
+  await dbDelete('words',{id});
+  words=words.filter(w=>sid(w.id)!==sid(id));
+  links=links.filter(l=>sid(l.word_id_a)!==sid(id)&&sid(l.word_id_b)!==sid(id));
+  if(sid(panelWordId)===sid(id))closePanel();
+  render();
 }
-function hideLinkResults(){setTimeout(()=>document.getElementById('link-results').classList.remove('open'),150);}
-async function pickLink(targetId){
-  document.getElementById('link-results').classList.remove('open');
-  document.getElementById('link-search').value='';
-  await createLink(detailWordId,targetId,true);
-  renderExistingLinks();
+
+// ── Table ──
+let thDragIdx=null,trDragIdx=null;
+
+function renderTable(){
+  const wrap=document.getElementById('table-wrap');
+  const capSel=document.getElementById('cap-lang');
+  if(capSel){
+    const cur=capSel.value;
+    capSel.innerHTML=languages.map(l=>`<option value="${l.id}">${l.flag} ${l.name}</option>`).join('');
+    if(cur&&languages.find(l=>l.id===cur))capSel.value=cur;
+    else{const last=localStorage.getItem('lastLangId');if(last&&languages.find(l=>l.id===last))capSel.value=last;}
+  }
+  if(!languages.length){wrap.innerHTML=`<div style="padding:40px;text-align:center;color:var(--ink-muted)">Add a language to get started.</div>`;return;}
+
+  const colOrder=getColOrder();
+  const cols=colOrder.map(id=>glang(id)).filter(Boolean);
+  // apply lang filter
+  const visibleCols=activeLang?cols.filter(l=>l.id===activeLang):cols;
+  if(!visibleCols.length){wrap.innerHTML=`<div style="padding:40px;text-align:center;color:var(--ink-muted)">No languages visible.</div>`;return;}
+
+  // Build rows
+  const visited=new Set();
+  const rows=[];
+  words.filter(w=>!w.is_stub).forEach(w=>{
+    if(visited.has(sid(w.id)))return;
+    const linked=getLinked(w.id).filter(lw=>!lw.is_stub);
+    const group=[w,...linked];
+    group.forEach(gw=>visited.add(sid(gw.id)));
+    // by lang: collect all synonyms
+    const byLang={};
+    group.forEach(gw=>{if(!byLang[gw.langId])byLang[gw.langId]=[];byLang[gw.langId].push(gw);});
+    const cat=group.find(gw=>gw.category)?.category||'';
+    const sub=group.find(gw=>gw.subcategory)?.subcategory||'';
+    const trans=(group[0]?.fields?.Translation||'').split(',')[0].trim();
+    const key=trans||sid(w.id);
+    rows.push({byLang,cat,sub,trans,key});
+  });
+  // unvisited
+  words.filter(w=>!w.is_stub&&!visited.has(sid(w.id))).forEach(w=>{
+    const byLang={};byLang[w.langId]=[w];
+    const trans=(w.fields?.Translation||'').split(',')[0].trim();
+    rows.push({byLang,cat:w.category||'',sub:w.subcategory||'',trans,key:trans||sid(w.id)});
+  });
+
+  // apply row order
+  const ro=getRowOrder();
+  if(ro.length)rows.sort((a,b)=>{const ai=ro.indexOf(a.key),bi=ro.indexOf(b.key);if(ai<0&&bi<0)return 0;if(ai<0)return 1;if(bi<0)return -1;return ai-bi;});
+
+  // thead
+  const ths=visibleCols.map((l,i)=>`<th draggable="true"
+    ondragstart="thDragStart(event,${i})" ondragover="thDragOver(event,${i})"
+    ondrop="thDrop(event,${i})" ondragend="thDragEnd()">${l.flag} ${l.name}</th>`).join('');
+  let html=`<table class="vtable"><thead><tr ondragover="event.preventDefault()" ondrop="thDropEnd()"><th>Translation</th>${ths}</tr></thead><tbody>`;
+
+  // rows grouped by category/subcategory
+  const catOrder=[...categories.map(c=>c.name),'__other__'];
+  let ri=0;
+  catOrder.forEach(cat=>{
+    const catName=cat==='__other__'?'Other':cat;
+    const catRows=rows.filter(r=>cat==='__other__'?(!r.cat||!categories.find(c=>c.name===r.cat)):r.cat===cat);
+    if(!catRows.length)return;
+    html+=`<tr class="cat-header"><td colspan="${visibleCols.length+1}">${catName}</td></tr>`;
+    const orderedSubs=['',...(categories.find(c=>c.name===cat)?.subs||[])];
+    orderedSubs.forEach(sub=>{
+      const subRows=catRows.filter(r=>sub===''?(r.sub===''||!r.sub):r.sub===sub);
+      if(!subRows.length)return;
+      if(sub)html+=`<tr class="sub-header"><td colspan="${visibleCols.length+1}">↳ ${sub}</td></tr>`;
+      subRows.forEach(({byLang,trans,key})=>{
+        const idx=ri++;
+        html+=`<tr draggable="true" ondragstart="trDragStart(event,${idx})" ondragover="trDragOver(event,${idx})" ondrop="trDrop(event,'${key.replace(/'/g,"\\'")}',${idx})" ondragend="trDragEnd()">
+          <td style="color:var(--ink-soft);font-style:${trans?'normal':'italic'}">${trans||'—'}</td>
+          ${visibleCols.map(l=>{
+            const ws=byLang[l.id]||[];
+            if(ws.length){
+              const content=ws.map((w,wi)=>{
+                const cls=w.status==='pending'?'cell-pending':'cell-word';
+                const num=ws.length>1?`<span style="color:var(--ink-muted);font-size:11px;margin-right:2px">${wi+1}.</span>`:'';
+                return `<span class="${cls}" onclick="openPanel(${w.id})">${num}${w.word||'fill in…'}</span>`;
+              }).join('');
+              return `<td>${content}</td>`;
+            }
+            return `<td><span class="cell-empty" onclick="addInLang('${l.id}',this)" title="Add in ${l.name}">+</span></td>`;
+          }).join('')}
+        </tr>`;
+      });
+    });
+  });
+  html+=`</tbody></table>`;
+  wrap.innerHTML=html;
+}
+
+// table drag — columns
+function thDragStart(e,i){thDragIdx=i;requestAnimationFrame(()=>e.currentTarget.classList.add('th-dragging'));}
+function thDragOver(e,i){e.preventDefault();document.querySelectorAll('.vtable thead th').forEach((th,j)=>th.classList.toggle('th-over',j===i+1&&i!==thDragIdx));}
+function thDrop(e,i){e.preventDefault();if(thDragIdx===null||thDragIdx===i)return;const o=getColOrder();const m=o.splice(thDragIdx,1)[0];o.splice(i,0,m);saveColOrder(o);thDragIdx=null;renderTable();}
+function thDragEnd(){thDragIdx=null;document.querySelectorAll('.vtable th').forEach(th=>th.classList.remove('th-dragging','th-over'));}
+function thDropEnd(){if(thDragIdx===null)return;const o=getColOrder();const m=o.splice(thDragIdx,1)[0];o.push(m);saveColOrder(o);thDragIdx=null;renderTable();}
+// table drag — rows
+function trDragStart(e,i){trDragIdx=i;requestAnimationFrame(()=>e.currentTarget.style.opacity='.3');}
+function trDragOver(e,i){e.preventDefault();document.querySelectorAll('.vtable tbody tr[draggable]').forEach((tr,j)=>tr.classList.toggle('row-over',j===i&&i!==trDragIdx));}
+function trDrop(e,key,i){
+  e.preventDefault();if(trDragIdx===null||trDragIdx===i)return;
+  const trs=document.querySelectorAll('.vtable tbody tr[draggable]');
+  const keys=[];trs.forEach(tr=>{const d=tr.getAttribute('ondrop')||'';const m=d.match(/'([^']+)'/);if(m)keys.push(m[1]);});
+  const srcKey=keys[trDragIdx];keys.splice(trDragIdx,1);keys.splice(i,0,srcKey);
+  saveRowOrder(keys);trDragIdx=null;renderTable();
+}
+function trDragEnd(){trDragIdx=null;document.querySelectorAll('.vtable tbody tr').forEach(tr=>tr.style.opacity='');}
+
+// Add word in specific language from empty cell
+function addInLang(langId,tdEl){
+  const tr=tdEl.closest('tr');
+  const cells=tr.querySelectorAll('td .cell-word,.cell-pending');
+  let trans='',cat=null,sub=null;
+  cells.forEach(span=>{
+    const onclick=span.getAttribute('onclick')||'';
+    const m=onclick.match(/openPanel\((\d+)\)/);
+    if(m){const w=gword(parseInt(m[1]));if(w){if(!trans)trans=(w.fields?.Translation||'').split(',')[0].trim();if(!cat)cat=w.category;if(!sub)sub=w.subcategory;}}
+  });
+  openAddInLangPanel(langId,trans,cat,sub);
+}
+async function openAddInLangPanel(langId,trans,cat,sub){
+  // Create a pending word and open it in the panel
+  const{data,error}=await dbInsert('words',{word:'',lang_id:langId,status:'pending',fields:trans?{Translation:trans}:{},tags:[],category:cat||null,subcategory:sub||null});
+  if(error){toast('Error: '+error.message);return;}
+  words.push(data);
+  openPanel(data.id);
+  render();
+}
+
+// ── Stats ──
+function renderStats(){
+  const completed=words.filter(w=>w.status==='complete'&&!w.is_stub);
+  const pending=words.filter(w=>w.status==='pending'&&!w.is_stub);
+  const el=document.getElementById('stats-content');
+  const langCards=languages.map(l=>`<div class="stat-card"><div class="stat-num">${words.filter(w=>w.langId===l.id&&w.status==='complete'&&!w.is_stub).length}</div><div class="stat-label">${l.flag} ${l.name}</div></div>`).join('');
+  el.innerHTML=`
+    <div class="set-title">My progress</div>
+    <div class="stats-grid" style="padding:0 0 20px">${[
+      {n:completed.length,l:'Words learned'},{n:pending.length,l:'Pending'},
+      {n:links.length,l:'Cross-language links'},{n:languages.length,l:'Languages'}
+    ].map(s=>`<div class="stat-card"><div class="stat-num">${s.n}</div><div class="stat-label">${s.l}</div></div>`).join('')}</div>
+    <div class="stats-grid" style="padding:0 0 28px">${langCards}</div>
+    <div class="set-title" style="margin-top:8px">Export</div>
+    <div class="export-row">
+      <button class="btn btn-ghost" onclick="exportCSV()"><i class="ti ti-file-text"></i> Export to CSV</button>
+      <button class="btn btn-ghost" onclick="exportAnki()"><i class="ti ti-cards"></i> Export for Anki</button>
+    </div>`;
+}
+
+function exportCSV(){
+  const allFields=[...new Set(languages.flatMap(l=>l.fields))];
+  const headers=['Word','Language','Status','Category','Subcategory','Tags',...allFields];
+  const rows=words.filter(w=>!w.is_stub).map(w=>{
+    const l=glang(w.langId);
+    return[`"${(w.word||'').replace(/"/g,'""')}"`,`"${l?l.name:''}"`,w.status,`"${w.category||''}"`,`"${w.subcategory||''}"`,`"${(w.tags||[]).join(', ')}"`,
+      ...allFields.map(f=>`"${((w.fields||{})[f]||'').replace(/"/g,'""')}"`),].join(',');
+  });
+  const blob=new Blob([[headers.join(','),...rows].join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`vocabulary_${new Date().toISOString().split('T')[0]}.csv`;a.click();toast('CSV exported');
+}
+function exportAnki(){
+  const rows=words.filter(w=>w.status==='complete'&&!w.is_stub).map(w=>{
+    const f=w.fields||{};
+    const front=`${w.word}${f.Romanisation?`<br><small>${f.Romanisation}</small>`:''}`;
+    const back=[f.Translation?`<b>${f.Translation}</b>`:'',f['Example sentence']?`<i>${f['Example sentence']}</i>`:'',f.Notes?`<small>${f.Notes}</small>`:''].filter(Boolean).join('<br>');
+    return`${front}\t${back}\t${(w.tags||[]).join(' ')}`;
+  });
+  const blob=new Blob([rows.join('\n')],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`vocab_anki_${new Date().toISOString().split('T')[0]}.txt`;a.click();toast('Anki export ready');
+}
+
+// ── Settings ──
+function renderSettings(){
+  const el=document.getElementById('settings-content');
+  // toggle
+  const togOn=localStorage.getItem('expandEnabled')==='true';
+  // lang configs
+  const langHtml=languages.map(l=>`
+    <div class="lang-cfg">
+      <div class="lang-cfg-top">
+        <span style="font-size:22px">${l.flag}</span>
+        <span style="font-size:14px;font-weight:500;color:var(--ink);flex:1">${l.name}</span>
+        <button class="icon-btn danger" onclick="removeLang('${l.id}')"><i class="ti ti-trash"></i></button>
+      </div>
+      <div style="font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Fields (drag to reorder)</div>
+      <ul class="fo-list" id="set-fo-${l.id}" style="margin-bottom:8px">
+        ${l.fields.map((f,i)=>`<li class="fo-item" draggable="true"
+          ondragstart="setFoStart(event,'${l.id}',${i})" ondragover="setFoOver(event,${i})"
+          ondrop="setFoDrop(event,'${l.id}',${i})" ondragend="setFoEnd('${l.id}')">
+          <i class="ti ti-grip-vertical fo-handle"></i><span class="fo-name">${f}</span>
+          <button class="fo-remove" onclick="removeField('${l.id}','${f}')">×</button>
+        </li>`).join('')}
+      </ul>
+      <div class="add-field-row">
+        <input class="add-field-input" id="nf-${l.id}" placeholder="Add a field…" onkeydown="if(event.key==='Enter')addField('${l.id}')"/>
+        <button class="btn btn-ghost btn-sm" onclick="addField('${l.id}')"><i class="ti ti-plus"></i></button>
+      </div>
+    </div>`).join('');
+  // categories
+  const catHtml=categories.map((c,ci)=>`
+    <div class="cat-item">
+      <div class="cat-item-top">
+        <span style="flex:1;font-size:13.5px;font-weight:500;color:var(--ink)">${c.name}</span>
+        <span style="font-size:11px;color:var(--ink-muted)">${words.filter(w=>w.category===c.name).length} words</span>
+        <button class="icon-btn danger" onclick="deleteCat(${ci})"><i class="ti ti-trash"></i></button>
+      </div>
+      ${(c.subs||[]).map((s,si)=>`<div class="sub-item">
+        <span style="font-size:11px;color:var(--ink-muted)">↳</span>
+        <span style="flex:1;font-size:13px;color:var(--ink-soft)">${s}</span>
+        <span style="font-size:11px;color:var(--ink-muted)">${words.filter(w=>w.subcategory===s).length}</span>
+        <button class="icon-btn danger" style="font-size:13px" onclick="deleteSub(${ci},${si})"><i class="ti ti-trash"></i></button>
+      </div>`).join('')}
+      <div class="add-field-row" style="padding-left:16px;margin-top:6px">
+        <input class="add-field-input" id="new-sub-${ci}" placeholder="Add subcategory…" style="font-size:12px;padding:5px 9px" onkeydown="if(event.key==='Enter')addSub(${ci})"/>
+        <button class="btn btn-ghost btn-sm" onclick="addSub(${ci})" style="font-size:11px;padding:4px 9px"><i class="ti ti-plus"></i></button>
+      </div>
+    </div>`).join('');
+
+  el.innerHTML=`
+    <div class="set-section">
+      <div class="set-title">Languages</div>
+      ${langHtml}
+      <button class="btn btn-ghost btn-sm" onclick="openAddLang()" style="margin-top:8px"><i class="ti ti-plus"></i> Add language</button>
+    </div>
+    <div class="set-section">
+      <div class="set-title">Categories &amp; Subcategories</div>
+      <div class="set-hint">The order here sets the table row order.</div>
+      ${catHtml}
+      <div class="add-field-row" style="margin-top:8px">
+        <input class="add-field-input" id="new-cat-input" placeholder="Add a category…" onkeydown="if(event.key==='Enter')addCat()"/>
+        <button class="btn btn-ghost btn-sm" onclick="addCat()"><i class="ti ti-plus"></i></button>
+      </div>
+    </div>`;
+}
+
+// Categories
+function addCat(){const inp=document.getElementById('new-cat-input');const v=inp.value.trim();if(!v||categories.find(c=>c.name===v))return;categories.push({name:v,subs:[]});saveCats();inp.value='';renderSettings();}
+function deleteCat(ci){if(!confirm(`Remove "${categories[ci].name}"?`))return;categories.splice(ci,1);saveCats();renderSettings();}
+function addSub(ci){const inp=document.getElementById(`new-sub-${ci}`);const v=inp.value.trim();if(!v||categories[ci].subs.includes(v))return;categories[ci].subs.push(v);saveCats();inp.value='';renderSettings();}
+function deleteSub(ci,si){if(!confirm(`Remove subcategory "${categories[ci].subs[si]}"?`))return;categories[ci].subs.splice(si,1);saveCats();renderSettings();}
+
+// Settings field drag
+let setFoSrcIdx=null,setFoLangId=null;
+function setFoStart(e,langId,i){setFoSrcIdx=i;setFoLangId=langId;requestAnimationFrame(()=>e.currentTarget.classList.add('fo-dragging'));}
+function setFoOver(e,i){e.preventDefault();document.querySelectorAll(`#set-fo-${setFoLangId} .fo-item`).forEach((el,j)=>el.classList.toggle('fo-over',j===i&&i!==setFoSrcIdx));}
+async function setFoDrop(e,langId,i){
+  e.preventDefault();if(setFoSrcIdx===null||setFoSrcIdx===i)return;
+  const l=glang(langId);if(!l)return;
+  const m=l.fields.splice(setFoSrcIdx,1)[0];l.fields.splice(i,0,m);
+  await dbUpdate('languages',{fields:l.fields},{id:langId});
+  setFoSrcIdx=null;renderSettings();
+}
+function setFoEnd(langId){setFoSrcIdx=null;document.querySelectorAll(`#set-fo-${langId} .fo-item`).forEach(el=>el.classList.remove('fo-dragging','fo-over'));}
+async function addField(langId){
+  const inp=document.getElementById('nf-'+langId);const f=inp.value.trim();if(!f)return;
+  const l=glang(langId);if(l&&!l.fields.includes(f)){l.fields.push(f);await dbUpdate('languages',{fields:l.fields},{id:langId});renderSettings();}
+  inp.value='';
+}
+async function removeField(langId,field){
+  const l=glang(langId);if(l){l.fields=l.fields.filter(x=>x!==field);await dbUpdate('languages',{fields:l.fields},{id:langId});renderSettings();}
+}
+async function removeLang(id){
+  if(!confirm('Remove this language?'))return;
+  await dbDelete('languages',{id});
+  languages=languages.filter(l=>l.id!==id);
+  if(activeLang===id)activeLang=null;
+  render();
 }
 
 // ── Add language modal ──
+// modalFields and foSrcIdx declared in state above
+const PRESET_FIELDS_MODAL=['Translation','Example sentence','Notes'];
 function openAddLang(){
   modalFields=['Translation','Example sentence','Notes'];
   document.getElementById('nl-name').value='';
   document.getElementById('nl-custom-field').value='';
   document.getElementById('addlang-error').style.display='none';
-  renderModalPresets();
-  renderModalFieldOrder();
+  renderModalPresets();renderModalFieldOrder();
   document.getElementById('m-addlang').classList.add('open');
   setTimeout(()=>document.getElementById('nl-name').focus(),80);
 }
 function renderModalPresets(){
-  document.getElementById('nl-presets').innerHTML=PRESET_FIELDS.map(f=>{
+  document.getElementById('nl-presets').innerHTML=PRESET_FIELDS_MODAL.map(f=>{
     const on=modalFields.includes(f);
     return `<span class="pchip ${on?'on':''}" onclick="toggleModalPreset('${f}',this)">${f}</span>`;
   }).join('');
@@ -2256,99 +1220,87 @@ function toggleModalPreset(f,el){
   renderModalFieldOrder();
 }
 function addModalField(){
-  const inp=document.getElementById('nl-custom-field');
-  const f=inp.value.trim();
-  if(!f) return;
-  if(modalFields.map(x=>x.toLowerCase()).includes(f.toLowerCase())){inp.value='';return;}
-  modalFields.push(f);
-  inp.value='';
-  renderModalPresets();
-  renderModalFieldOrder();
+  const inp=document.getElementById('nl-custom-field');const f=inp.value.trim();
+  if(!f||modalFields.map(x=>x.toLowerCase()).includes(f.toLowerCase()))return;
+  modalFields.push(f);inp.value='';renderModalPresets();renderModalFieldOrder();
 }
 function renderModalFieldOrder(){
   const ul=document.getElementById('nl-field-order');
-  if(!modalFields.length){ul.innerHTML='<li style="font-size:12px;color:var(--ink-muted);padding:6px 0;list-style:none">No fields selected yet.</li>';return;}
-  ul.innerHTML=modalFields.map((f,i)=>`
-    <li class="fo-item" draggable="true" data-idx="${i}"
-      ondragstart="foDragStart(event,${i})" ondragover="foDragOver(event,${i})"
-      ondrop="foDrop(event,${i})" ondragend="foDragEnd()">
-      <i class="ti ti-grip-vertical fo-handle"></i>
-      <span class="fo-name">${f}</span>
-      <button class="fo-remove" type="button" onclick="foRemove(${i})">×</button>
-    </li>`).join('');
+  if(!modalFields.length){ul.innerHTML='<li style="font-size:12px;color:var(--ink-muted);padding:4px 0;list-style:none">No fields selected.</li>';return;}
+  ul.innerHTML=modalFields.map((f,i)=>`<li class="fo-item" draggable="true" data-idx="${i}"
+    ondragstart="mfoDragStart(event,${i})" ondragover="mfoDragOver(event,${i})"
+    ondrop="mfoDrop(event,${i})" ondragend="mfoDragEnd()">
+    <i class="ti ti-grip-vertical fo-handle"></i>
+    <span class="fo-name">${f}</span>
+    <button class="fo-remove" type="button" onclick="mfoRemove(${i})">×</button>
+  </li>`).join('');
 }
-function foDragStart(e,idx){
-  foSrcIdx=idx;
-  e.dataTransfer.effectAllowed='move';
-  requestAnimationFrame(()=>{
-    document.querySelectorAll('.fo-item')[idx]?.classList.add('fo-dragging');
-  });
-}
-function foDragOver(e,idx){
-  e.preventDefault();
-  document.querySelectorAll('.fo-item').forEach((el,i)=>{
-    el.classList.toggle('fo-over',i===idx&&idx!==foSrcIdx);
-  });
-}
-function foDrop(e,idx){
-  e.preventDefault();
-  if(foSrcIdx===null||foSrcIdx===idx) return;
-  const moved=modalFields.splice(foSrcIdx,1)[0];
-  modalFields.splice(idx,0,moved);
-  foSrcIdx=null;
-  renderModalPresets();
-  renderModalFieldOrder();
-}
-function foDragEnd(){
-  foSrcIdx=null;
-  document.querySelectorAll('.fo-item').forEach(el=>el.classList.remove('fo-dragging','fo-over'));
-}
-function foRemove(idx){
-  modalFields.splice(idx,1);
-  renderModalPresets();
-  renderModalFieldOrder();
-}
+function mfoDragStart(e,i){foSrcIdx=i;e.dataTransfer.effectAllowed='move';requestAnimationFrame(()=>document.querySelectorAll('#nl-field-order .fo-item')[i]?.classList.add('fo-dragging'));}
+function mfoDragOver(e,i){e.preventDefault();document.querySelectorAll('#nl-field-order .fo-item').forEach((el,j)=>el.classList.toggle('fo-over',j===i&&i!==foSrcIdx));}
+function mfoDrop(e,i){e.preventDefault();if(foSrcIdx===null||foSrcIdx===i)return;const m=modalFields.splice(foSrcIdx,1)[0];modalFields.splice(i,0,m);foSrcIdx=null;renderModalPresets();renderModalFieldOrder();}
+function mfoDragEnd(){foSrcIdx=null;document.querySelectorAll('#nl-field-order .fo-item').forEach(el=>el.classList.remove('fo-dragging','fo-over'));}
+function mfoRemove(i){modalFields.splice(i,1);renderModalPresets();renderModalFieldOrder();}
 async function saveLang(){
-  const errEl=document.getElementById('addlang-error');
-  errEl.style.display='none';
+  const errEl=document.getElementById('addlang-error');errEl.style.display='none';
   const name=document.getElementById('nl-name').value.trim();
   if(!name){errEl.textContent='Please enter a language name.';errEl.style.display='block';return;}
   if(!modalFields.length){errEl.textContent='Please add at least one field.';errEl.style.display='block';return;}
-  const flag=flagForLang(name);
-  const id=name.toLowerCase().replace(/\s+/g,'_')+'_'+Date.now();
-  const btn=document.querySelector('#m-addlang .btn-primary');
-  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin .7s linear infinite"></i> Saving…';
-  const {data,error}=await dbInsert('languages',{id,name,flag,fields:[...modalFields]});
-  btn.disabled=false; btn.innerHTML='Add language';
-  if(error){
-    errEl.textContent='Error: '+error.message;
-    errEl.style.display='block';
-    return;
-  }
+  const flag=flagForLang(name);const id=name.toLowerCase().replace(/\s+/g,'_')+'_'+Date.now();
+  const btn=document.getElementById('save-lang-btn');btn.disabled=true;btn.textContent='Saving…';
+  const{data,error}=await dbInsert('languages',{id,name,flag,fields:[...modalFields]});
+  btn.disabled=false;btn.textContent='Add language';
+  if(error){errEl.textContent='Error: '+error.message;errEl.style.display='block';return;}
   languages.push(data);
-  closeM('m-addlang');
-  toast(flag+' '+name+' added');
-  render();
+  closeM('m-addlang');toast(flag+' '+name+' added');render();
 }
-async function removeLang(id){
-  if(!confirm('Remove this language? Words will be kept.')) return;
-  await dbDelete('languages',{id});
-  languages=languages.filter(l=>l.id!==id);
-  if(activeLang===id) activeLang=null;
-  render();
+
+// ── Link modal ──
+function openLinkModal(){
+  const word=gword(panelWordId);
+  document.getElementById('link-src-word').textContent=word?.word||'';
+  document.getElementById('link-search').value='';
+  document.getElementById('link-results').classList.remove('open');
+  renderLinkExisting();
+  document.getElementById('m-link').classList.add('open');
+  setTimeout(()=>document.getElementById('link-search').focus(),80);
 }
-async function addField(langId){
-  const inp=document.getElementById('nf-'+langId);
-  const f=inp.value.trim();if(!f) return;
-  const l=glang(langId);
-  if(l&&!l.fields.includes(f)){l.fields.push(f);await dbUpdate('languages',{fields:l.fields},{id:langId});render();}
-  inp.value='';
+function renderLinkExisting(){
+  const linked=getLinked(panelWordId);
+  const el=document.getElementById('link-existing');
+  if(!linked.length){el.innerHTML='';return;}
+  el.innerHTML=`<div style="font-size:10px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Current links</div>`+
+    linked.map(w=>{const l=glang(w.langId);return`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:14px">${l?l.flag:''}</span>
+      <span style="flex:1;font-size:13.5px;font-weight:500">${w.word}</span>
+      <span style="font-size:12px;color:var(--ink-muted)">${(w.fields?.Translation||'').split(',')[0].trim()}</span>
+      <button class="icon-btn danger" style="font-size:13px" onclick="unlinkWord(${panelWordId},${w.id})"><i class="ti ti-x"></i></button>
+    </div>`;}).join('');
 }
-async function removeField(langId,field){
-  const l=glang(langId);
-  if(l){l.fields=l.fields.filter(x=>x!==field);await dbUpdate('languages',{fields:l.fields},{id:langId});render();}
+function searchLinks(){
+  const q=document.getElementById('link-search').value.trim().toLowerCase();
+  const res=document.getElementById('link-results');
+  if(!q){res.classList.remove('open');return;}
+  const linked=getLinked(panelWordId).map(w=>sid(w.id));
+  const matches=words.filter(w=>sid(w.id)!==sid(panelWordId)&&!linked.includes(sid(w.id))&&(w.word.toLowerCase().includes(q)||(w.fields?.Translation||'').toLowerCase().includes(q))).slice(0,8);
+  if(!matches.length){res.classList.remove('open');return;}
+  res.innerHTML=matches.map(w=>{const l=glang(w.langId);return`<div class="link-result-item" onmousedown="pickLink(${w.id})"><span style="font-size:14px">${l?l.flag:''}</span><span style="font-weight:500">${w.word}</span><span style="font-size:12px;color:var(--ink-muted)">${(w.fields?.Translation||'').split(',')[0].trim()}</span></div>`;}).join('');
+  res.classList.add('open');
 }
-function closeM(id){document.getElementById(id).classList.remove('open');render();}
+function hideLinkResults(){setTimeout(()=>document.getElementById('link-results')?.classList.remove('open'),150);}
+async function pickLink(targetId){
+  document.getElementById('link-results').classList.remove('open');
+  document.getElementById('link-search').value='';
+  await createLink(panelWordId,targetId,true);
+  renderLinkExisting();
+}
+async function unlinkWord(aId,bId){
+  await removeLink(aId,bId);
+  renderLinkExisting();
+  if(panelWordId)renderPanel();
+  toast('Link removed');
+}
+
+function closeM(id){document.getElementById(id).classList.remove('open');}
 </script>
 </body>
 </html>
