@@ -663,9 +663,9 @@ async function quickAdd(){
   if(error){toast('Error: '+error.message);return;}
   words.push(data);
   localStorage.setItem('lastLangId',langId);
-  // Open panel immediately to complete
   openPanel(data.id);
   render();
+  setTimeout(()=>document.getElementById('pf-word')?.focus(),150);
 }
 
 // ── Linked words ──
@@ -738,6 +738,11 @@ function renderPanel(){
   // Body: editable fields
   let html='';
 
+  // Word field (editable)
+  html+=`<div class="panel-section">
+    <div class="panel-label">Word</div>
+    <input class="panel-field-input" id="pf-word" type="text" placeholder="Type the word…" value="${word.word||''}" autocomplete="off" spellcheck="false"/>
+  </div>`;
   // Category + Subcategory
   html+=`<div class="panel-section">
     <div class="panel-label">Category</div>
@@ -1001,9 +1006,12 @@ function renderTable(){
             const ws=byLang[l.id]||[];
             if(ws.length){
               const content=ws.map((w,wi)=>{
-                const cls=w.status==='pending'?'cell-pending':'cell-word';
+                const isPending=w.status==='pending';
+                const rom=(w.fields?.Romanisation||'');
                 const num=ws.length>1?`<span style="color:var(--ink-muted);font-size:11px;margin-right:2px">${wi+1}.</span>`:'';
-                return `<span class="${cls}" onclick="openPanel(${w.id})">${num}${w.word||'fill in…'}</span>`;
+                const wordText=w.word?`${num}${w.word}`:(isPending?'<em style="color:var(--ink-muted)">fill in…</em>':'');
+                const romLine=rom?`<span style="display:block;font-size:11px;color:var(--ink-muted);margin-top:1px">${rom}</span>`:'';
+                return `<span class="${isPending?'cell-pending':'cell-word'}" onclick="openPanel(${w.id})">${wordText}${romLine}</span>`;
               }).join('');
               return `<td>${content}</td>`;
             }
@@ -1048,12 +1056,13 @@ function addInLang(langId,tdEl){
   openAddInLangPanel(langId,trans,cat,sub);
 }
 async function openAddInLangPanel(langId,trans,cat,sub){
-  // Create a pending word and open it in the panel
   const{data,error}=await dbInsert('words',{word:'',lang_id:langId,status:'pending',fields:trans?{Translation:trans}:{},tags:[],category:cat||null,subcategory:sub||null});
   if(error){toast('Error: '+error.message);return;}
   words.push(data);
   openPanel(data.id);
   render();
+  // focus word field after panel renders
+  setTimeout(()=>document.getElementById('pf-word')?.focus(),150);
 }
 
 // ── Stats ──
