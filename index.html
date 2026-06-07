@@ -234,12 +234,39 @@ textarea.form-input{resize:none;line-height:1.55;}
   .sidebar{display:none;}
   .mob-header{display:flex;}
   .mob-nav{display:block;}
-  .view-area{padding-bottom:60px;}
+  .view-area{padding-bottom:70px;}
   .topbar{display:none;}
-  .panel{position:fixed;inset:0;top:auto;height:80vh;width:100%;border-left:none;border-top:1px solid var(--border);border-radius:var(--radius-lg) var(--radius-lg) 0 0;transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);z-index:300;}
+  /* Full-screen panel on mobile */
+  .panel{
+    position:fixed;inset:0;
+    width:100%;height:100%;
+    border-left:none;border-top:none;border-radius:0;
+    transform:translateY(100%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:300;
+  }
   .panel.open{transform:translateY(0);}
-  .capture-bar{padding:12px 14px;}
+  /* Bigger capture bar */
+  .capture-bar{padding:14px 14px 10px;}
+  .cap-input{font-size:16px;padding:12px 14px;} /* 16px prevents iOS zoom */
+  .cap-lang{font-size:16px;padding:12px 11px;}
+  /* Larger tap targets */
+  .nb{padding:12px 11px;font-size:14px;}
+  .mob-btn{padding:7px 10px;}
+  .mob-btn i{font-size:22px;}
+  .lang-pill{padding:10px 11px;min-height:44px;}
+  /* Panel fields larger on mobile */
+  .panel-field-input{font-size:16px;padding:12px 13px;}
+  .panel-footer .btn{flex:1;justify-content:center;padding:12px;}
+  /* Pending list bigger tap targets */
+  #pending-list > div{min-height:56px;}
+  /* Hide table on mobile, show capture-focused layout */
+  .table-scroll{display:none;}
+  .capture-bar{border-bottom:none;}
+  #mob-table-hint{display:block!important;}
 }
+/* Mobile-only capture view enhancement */
+#mob-table-hint{display:none;}
 </style>
 </head>
 <body>
@@ -317,6 +344,11 @@ textarea.form-input{resize:none;line-height:1.55;}
               <button class="btn btn-primary btn-sm" onclick="quickAdd()"><i class="ti ti-bolt"></i> Add</button>
             </div>
           </div>
+          <div id="mob-table-hint" style="padding:20px;text-align:center;color:var(--ink-muted)">
+            <i class="ti ti-table" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3"></i>
+            <div style="font-size:13px;margin-bottom:6px">The vocabulary table is best viewed on desktop.</div>
+            <div style="font-size:12px">Use the input above to capture words quickly.<br>Tap any word in <strong>Pending</strong> to fill in details.</div>
+          </div>
           <div class="table-scroll">
             <div id="table-wrap" style="min-width:100%"></div>
           </div>
@@ -348,6 +380,7 @@ textarea.form-input{resize:none;line-height:1.55;}
       <!-- Side panel -->
       <aside class="panel" id="panel">
         <div class="panel-header">
+          <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);width:36px;height:4px;background:var(--border2);border-radius:100px;display:none" id="panel-handle"></div>
           <div>
             <div class="panel-word" id="panel-word"></div>
             <div class="panel-lang" id="panel-lang"></div>
@@ -364,7 +397,7 @@ textarea.form-input{resize:none;line-height:1.55;}
 <!-- Mobile nav -->
 <nav class="mob-nav">
   <div class="mob-nav-inner">
-    <button class="mob-btn active" data-view="table" onclick="go('table')"><i class="ti ti-table"></i><span>Table</span></button>
+    <button class="mob-btn active" data-view="table" onclick="go('table')"><i class="ti ti-bolt"></i><span>Add</span></button>
     <button class="mob-btn" data-view="capture" onclick="go('capture')"><i class="ti ti-inbox"></i><span>Pending</span><span class="mob-badge" id="mob-pending"></span></button>
     <button class="mob-btn" data-view="stats" onclick="go('stats')"><i class="ti ti-chart-bar"></i><span>Progress</span></button>
     <button class="mob-btn" data-view="settings" onclick="go('settings')"><i class="ti ti-settings"></i><span>Settings</span></button>
@@ -612,9 +645,9 @@ function go(view){
   document.querySelectorAll('.nb[data-view],.mob-btn[data-view]').forEach(b=>b.classList.remove('active'));
   document.getElementById('view-'+view).classList.add('active');
   document.querySelectorAll(`[data-view="${view}"]`).forEach(b=>b.classList.add('active'));
-  const titles={table:'Vocabulary table',capture:'Pending',stats:'Progress',settings:'Settings'};
+  const titles={table:'Add word',capture:'Pending',stats:'Progress',settings:'Settings'};
   const t=titles[view]||view;
-  document.getElementById('topbar-title').textContent=t;
+  document.getElementById('topbar-title').textContent=view==='table'?'Vocabulary table':t;
   document.getElementById('mob-title').textContent=t;
   render();
 }
@@ -713,18 +746,49 @@ async function syncCatToLinked(word){
 }
 
 // ── Panel (word detail + edit) ──
+// Panel field navigation
+function panelNextField(currentId){
+  const word=gword(panelWordId);if(!word)return;
+  const l=glang(word.langId);
+  const fields=['word',...(l?l.fields:[])];
+  const ids=fields.map(f=>f==='word'?'pf-word':'pf-'+f.replace(/\s/g,'_'));
+  const idx=ids.indexOf(currentId);
+  if(idx>=0&&idx<ids.length-1){
+    document.getElementById(ids[idx+1])?.focus();
+  } else {
+    savePanel();
+  }
+}
+
 function openPanel(id){
   const word=gword(id);
   if(!word)return;
   panelWordId=id;
   panelTags=[...(word.tags||[])];
   renderPanel();
-  document.getElementById('panel').classList.add('open');
+  const panel=document.getElementById('panel');
+  panel.classList.add('open');
+  // show swipe handle on mobile
+  const handle=document.getElementById('panel-handle');
+  if(handle)handle.style.display=window.innerWidth<=700?'block':'none';
 }
 function closePanel(){
   document.getElementById('panel').classList.remove('open');
   panelWordId=null;
 }
+
+// Swipe down to dismiss panel on mobile
+(function(){
+  let startY=0,startTime=0;
+  document.getElementById('panel').addEventListener('touchstart',e=>{
+    startY=e.touches[0].clientY;startTime=Date.now();
+  },{passive:true});
+  document.getElementById('panel').addEventListener('touchend',e=>{
+    const dy=e.changedTouches[0].clientY-startY;
+    const dt=Date.now()-startTime;
+    if(dy>60&&dt<400)closePanel();
+  },{passive:true});
+})();
 
 function renderPanel(){
   const word=gword(panelWordId);
@@ -741,7 +805,8 @@ function renderPanel(){
   // Word field (editable)
   html+=`<div class="panel-section">
     <div class="panel-label">Word</div>
-    <input class="panel-field-input" id="pf-word" type="text" placeholder="Type the word…" value="${word.word||''}" autocomplete="off" spellcheck="false"/>
+    <input class="panel-field-input" id="pf-word" type="text" placeholder="Type the word…" value="${word.word||''}" autocomplete="off" spellcheck="false"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('pf-Translation')?.focus();}"/>
   </div>`;
   // Category + Subcategory
   html+=`<div class="panel-section">
@@ -779,7 +844,8 @@ function renderPanel(){
       <div class="panel-label">${f}</div>
       ${isLong
         ?`<textarea class="panel-field-input" id="pf-${f.replace(/\s/g,'_')}" rows="3" placeholder="${f}…">${v}</textarea>`
-        :`<input class="panel-field-input" id="pf-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…" value="${v}"/>`}
+        :`<input class="panel-field-input" id="pf-${f.replace(/\s/g,'_')}" type="text" placeholder="${f}…" value="${v}"
+           onkeydown="if(event.key==='Enter'){event.preventDefault();panelNextField('pf-${f.replace(/\s/g,'_')}');}"/>`}
       ${hint}${sugg}
     </div>`;
   });
@@ -818,6 +884,8 @@ function renderPanel(){
     <button class="btn btn-ghost btn-sm icon-btn" onclick="openLinkModal()" title="Link word"><i class="ti ti-link"></i></button>
     <button class="btn btn-ghost btn-sm icon-btn danger" onclick="deletePanel()" title="Delete word"><i class="ti ti-trash"></i></button>
   `;
+  // Re-attach global keyboard handler
+  document.onkeydown=e=>{if((e.metaKey||e.ctrlKey)&&e.key==='Enter'&&panelWordId){e.preventDefault();savePanel();}};
 }
 
 function onPanelCatChange(){
