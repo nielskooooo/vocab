@@ -248,7 +248,7 @@ textarea.form-input{resize:none;line-height:1.55;}
   .panel.open{transform:translateY(0);}
   /* Bigger capture bar */
   .capture-bar{padding:14px 14px 10px;}
-  .cap-input{font-size:16px;padding:12px 14px;} /* 16px prevents iOS zoom */
+  .cap-input{font-size:16px;padding:12px 14px;}
   .cap-lang{font-size:16px;padding:12px 11px;}
   /* Larger tap targets */
   .nb{padding:12px 11px;font-size:14px;}
@@ -260,12 +260,15 @@ textarea.form-input{resize:none;line-height:1.55;}
   .panel-footer .btn{flex:1;justify-content:center;padding:12px;}
   /* Pending list bigger tap targets */
   #pending-list > div{min-height:56px;}
-  /* Hide table on mobile, show capture-focused layout */
-  .table-scroll{display:none;}
-  .capture-bar{border-bottom:none;}
-  #mob-table-hint{display:block!important;}
+  /* Table on mobile — compact and scrollable */
+  .vtable{font-size:12px;}
+  .vtable th{padding:8px 10px;font-size:12px;}
+  .vtable td{padding:8px 10px;min-width:80px;}
+  .vtable td:first-child{min-width:90px;max-width:110px;font-size:11px;}
+  .cell-word{font-size:13px;}
+  .cell-empty{font-size:22px;}
+  .table-scroll{-webkit-overflow-scrolling:touch;}
 }
-/* Mobile-only capture view enhancement */
 #mob-table-hint{display:none;}
 </style>
 </head>
@@ -343,11 +346,6 @@ textarea.form-input{resize:none;line-height:1.55;}
               <input class="cap-input" id="cap-input" placeholder="Type a word to add…" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')quickAdd()"/>
               <button class="btn btn-primary btn-sm" onclick="quickAdd()"><i class="ti ti-bolt"></i> Add</button>
             </div>
-          </div>
-          <div id="mob-table-hint" style="padding:20px;text-align:center;color:var(--ink-muted)">
-            <i class="ti ti-table" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3"></i>
-            <div style="font-size:13px;margin-bottom:6px">The vocabulary table is best viewed on desktop.</div>
-            <div style="font-size:12px">Use the input above to capture words quickly.<br>Tap any word in <strong>Pending</strong> to fill in details.</div>
           </div>
           <div class="table-scroll">
             <div id="table-wrap" style="min-width:100%"></div>
